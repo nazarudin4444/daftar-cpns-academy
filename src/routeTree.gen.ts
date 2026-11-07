@@ -10,33 +10,323 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SlugRouteImport } from './routes/$slug'
+import { Route as ArtikelRouteImport } from './routes/artikel'
+import { Route as CaraDaftarCpnsRouteImport } from './routes/cara-daftar-cpns'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as DisclaimerRouteImport } from './routes/disclaimer'
+import { Route as FormasiCpnsRouteImport } from './routes/formasi-cpns'
+import { Route as JadwalCpnsRouteImport } from './routes/jadwal-cpns'
+import { Route as KebijakanPrivasiRouteImport } from './routes/kebijakan-privasi'
+import { Route as KontakRouteImport } from './routes/kontak'
+import { Route as LatihanSoalCpnsRouteImport } from './routes/latihan-soal-cpns'
+import { Route as PanduanRouteImport } from './routes/panduan'
+import { Route as PassingGradeCpnsRouteImport } from './routes/passing-grade-cpns'
+import { Route as PppkRouteImport } from './routes/pppk'
+import { Route as SekolahKedinasanRouteImport } from './routes/sekolah-kedinasan'
+import { Route as SimulasiCatCpnsRouteImport } from './routes/simulasi-cat-cpns'
+import { Route as SoalTiuRouteImport } from './routes/soal-tiu'
+import { Route as SoalTkpRouteImport } from './routes/soal-tkp'
+import { Route as SoalTwkRouteImport } from './routes/soal-twk'
+import { Route as SyaratCpnsRouteImport } from './routes/syarat-cpns'
+import { Route as SyaratKetentuanRouteImport } from './routes/syarat-ketentuan'
+import { Route as TentangKamiRouteImport } from './routes/tentang-kami'
+import { Route as TryoutCpnsGratisRouteImport } from './routes/tryout-cpns-gratis'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SlugRoute = SlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtikelRoute = ArtikelRouteImport.update({
+  id: '/artikel',
+  path: '/artikel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CaraDaftarCpnsRoute = CaraDaftarCpnsRouteImport.update({
+  id: '/cara-daftar-cpns',
+  path: '/cara-daftar-cpns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisclaimerRoute = DisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FormasiCpnsRoute = FormasiCpnsRouteImport.update({
+  id: '/formasi-cpns',
+  path: '/formasi-cpns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JadwalCpnsRoute = JadwalCpnsRouteImport.update({
+  id: '/jadwal-cpns',
+  path: '/jadwal-cpns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KebijakanPrivasiRoute = KebijakanPrivasiRouteImport.update({
+  id: '/kebijakan-privasi',
+  path: '/kebijakan-privasi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KontakRoute = KontakRouteImport.update({
+  id: '/kontak',
+  path: '/kontak',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LatihanSoalCpnsRoute = LatihanSoalCpnsRouteImport.update({
+  id: '/latihan-soal-cpns',
+  path: '/latihan-soal-cpns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PanduanRoute = PanduanRouteImport.update({
+  id: '/panduan',
+  path: '/panduan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PassingGradeCpnsRoute = PassingGradeCpnsRouteImport.update({
+  id: '/passing-grade-cpns',
+  path: '/passing-grade-cpns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PppkRoute = PppkRouteImport.update({
+  id: '/pppk',
+  path: '/pppk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SekolahKedinasanRoute = SekolahKedinasanRouteImport.update({
+  id: '/sekolah-kedinasan',
+  path: '/sekolah-kedinasan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SimulasiCatCpnsRoute = SimulasiCatCpnsRouteImport.update({
+  id: '/simulasi-cat-cpns',
+  path: '/simulasi-cat-cpns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SoalTiuRoute = SoalTiuRouteImport.update({
+  id: '/soal-tiu',
+  path: '/soal-tiu',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SoalTkpRoute = SoalTkpRouteImport.update({
+  id: '/soal-tkp',
+  path: '/soal-tkp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SoalTwkRoute = SoalTwkRouteImport.update({
+  id: '/soal-twk',
+  path: '/soal-twk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SyaratCpnsRoute = SyaratCpnsRouteImport.update({
+  id: '/syarat-cpns',
+  path: '/syarat-cpns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SyaratKetentuanRoute = SyaratKetentuanRouteImport.update({
+  id: '/syarat-ketentuan',
+  path: '/syarat-ketentuan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TentangKamiRoute = TentangKamiRouteImport.update({
+  id: '/tentang-kami',
+  path: '/tentang-kami',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TryoutCpnsGratisRoute = TryoutCpnsGratisRouteImport.update({
+  id: '/tryout-cpns-gratis',
+  path: '/tryout-cpns-gratis',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$slug': typeof SlugRoute
+  '/artikel': typeof ArtikelRoute
+  '/cara-daftar-cpns': typeof CaraDaftarCpnsRoute
+  '/dashboard': typeof DashboardRoute
+  '/disclaimer': typeof DisclaimerRoute
+  '/formasi-cpns': typeof FormasiCpnsRoute
+  '/jadwal-cpns': typeof JadwalCpnsRoute
+  '/kebijakan-privasi': typeof KebijakanPrivasiRoute
+  '/kontak': typeof KontakRoute
+  '/latihan-soal-cpns': typeof LatihanSoalCpnsRoute
+  '/panduan': typeof PanduanRoute
+  '/passing-grade-cpns': typeof PassingGradeCpnsRoute
+  '/pppk': typeof PppkRoute
+  '/sekolah-kedinasan': typeof SekolahKedinasanRoute
+  '/simulasi-cat-cpns': typeof SimulasiCatCpnsRoute
+  '/soal-tiu': typeof SoalTiuRoute
+  '/soal-tkp': typeof SoalTkpRoute
+  '/soal-twk': typeof SoalTwkRoute
+  '/syarat-cpns': typeof SyaratCpnsRoute
+  '/syarat-ketentuan': typeof SyaratKetentuanRoute
+  '/tentang-kami': typeof TentangKamiRoute
+  '/tryout-cpns-gratis': typeof TryoutCpnsGratisRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$slug': typeof SlugRoute
+  '/artikel': typeof ArtikelRoute
+  '/cara-daftar-cpns': typeof CaraDaftarCpnsRoute
+  '/dashboard': typeof DashboardRoute
+  '/disclaimer': typeof DisclaimerRoute
+  '/formasi-cpns': typeof FormasiCpnsRoute
+  '/jadwal-cpns': typeof JadwalCpnsRoute
+  '/kebijakan-privasi': typeof KebijakanPrivasiRoute
+  '/kontak': typeof KontakRoute
+  '/latihan-soal-cpns': typeof LatihanSoalCpnsRoute
+  '/panduan': typeof PanduanRoute
+  '/passing-grade-cpns': typeof PassingGradeCpnsRoute
+  '/pppk': typeof PppkRoute
+  '/sekolah-kedinasan': typeof SekolahKedinasanRoute
+  '/simulasi-cat-cpns': typeof SimulasiCatCpnsRoute
+  '/soal-tiu': typeof SoalTiuRoute
+  '/soal-tkp': typeof SoalTkpRoute
+  '/soal-twk': typeof SoalTwkRoute
+  '/syarat-cpns': typeof SyaratCpnsRoute
+  '/syarat-ketentuan': typeof SyaratKetentuanRoute
+  '/tentang-kami': typeof TentangKamiRoute
+  '/tryout-cpns-gratis': typeof TryoutCpnsGratisRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$slug': typeof SlugRoute
+  '/artikel': typeof ArtikelRoute
+  '/cara-daftar-cpns': typeof CaraDaftarCpnsRoute
+  '/dashboard': typeof DashboardRoute
+  '/disclaimer': typeof DisclaimerRoute
+  '/formasi-cpns': typeof FormasiCpnsRoute
+  '/jadwal-cpns': typeof JadwalCpnsRoute
+  '/kebijakan-privasi': typeof KebijakanPrivasiRoute
+  '/kontak': typeof KontakRoute
+  '/latihan-soal-cpns': typeof LatihanSoalCpnsRoute
+  '/panduan': typeof PanduanRoute
+  '/passing-grade-cpns': typeof PassingGradeCpnsRoute
+  '/pppk': typeof PppkRoute
+  '/sekolah-kedinasan': typeof SekolahKedinasanRoute
+  '/simulasi-cat-cpns': typeof SimulasiCatCpnsRoute
+  '/soal-tiu': typeof SoalTiuRoute
+  '/soal-tkp': typeof SoalTkpRoute
+  '/soal-twk': typeof SoalTwkRoute
+  '/syarat-cpns': typeof SyaratCpnsRoute
+  '/syarat-ketentuan': typeof SyaratKetentuanRoute
+  '/tentang-kami': typeof TentangKamiRoute
+  '/tryout-cpns-gratis': typeof TryoutCpnsGratisRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/$slug'
+    | '/artikel'
+    | '/cara-daftar-cpns'
+    | '/dashboard'
+    | '/disclaimer'
+    | '/formasi-cpns'
+    | '/jadwal-cpns'
+    | '/kebijakan-privasi'
+    | '/kontak'
+    | '/latihan-soal-cpns'
+    | '/panduan'
+    | '/passing-grade-cpns'
+    | '/pppk'
+    | '/sekolah-kedinasan'
+    | '/simulasi-cat-cpns'
+    | '/soal-tiu'
+    | '/soal-tkp'
+    | '/soal-twk'
+    | '/syarat-cpns'
+    | '/syarat-ketentuan'
+    | '/tentang-kami'
+    | '/tryout-cpns-gratis'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/$slug'
+    | '/artikel'
+    | '/cara-daftar-cpns'
+    | '/dashboard'
+    | '/disclaimer'
+    | '/formasi-cpns'
+    | '/jadwal-cpns'
+    | '/kebijakan-privasi'
+    | '/kontak'
+    | '/latihan-soal-cpns'
+    | '/panduan'
+    | '/passing-grade-cpns'
+    | '/pppk'
+    | '/sekolah-kedinasan'
+    | '/simulasi-cat-cpns'
+    | '/soal-tiu'
+    | '/soal-tkp'
+    | '/soal-twk'
+    | '/syarat-cpns'
+    | '/syarat-ketentuan'
+    | '/tentang-kami'
+    | '/tryout-cpns-gratis'
+  id:
+    | '__root__'
+    | '/'
+    | '/$slug'
+    | '/artikel'
+    | '/cara-daftar-cpns'
+    | '/dashboard'
+    | '/disclaimer'
+    | '/formasi-cpns'
+    | '/jadwal-cpns'
+    | '/kebijakan-privasi'
+    | '/kontak'
+    | '/latihan-soal-cpns'
+    | '/panduan'
+    | '/passing-grade-cpns'
+    | '/pppk'
+    | '/sekolah-kedinasan'
+    | '/simulasi-cat-cpns'
+    | '/soal-tiu'
+    | '/soal-tkp'
+    | '/soal-twk'
+    | '/syarat-cpns'
+    | '/syarat-ketentuan'
+    | '/tentang-kami'
+    | '/tryout-cpns-gratis'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SlugRoute: typeof SlugRoute
+  ArtikelRoute: typeof ArtikelRoute
+  CaraDaftarCpnsRoute: typeof CaraDaftarCpnsRoute
+  DashboardRoute: typeof DashboardRoute
+  DisclaimerRoute: typeof DisclaimerRoute
+  FormasiCpnsRoute: typeof FormasiCpnsRoute
+  JadwalCpnsRoute: typeof JadwalCpnsRoute
+  KebijakanPrivasiRoute: typeof KebijakanPrivasiRoute
+  KontakRoute: typeof KontakRoute
+  LatihanSoalCpnsRoute: typeof LatihanSoalCpnsRoute
+  PanduanRoute: typeof PanduanRoute
+  PassingGradeCpnsRoute: typeof PassingGradeCpnsRoute
+  PppkRoute: typeof PppkRoute
+  SekolahKedinasanRoute: typeof SekolahKedinasanRoute
+  SimulasiCatCpnsRoute: typeof SimulasiCatCpnsRoute
+  SoalTiuRoute: typeof SoalTiuRoute
+  SoalTkpRoute: typeof SoalTkpRoute
+  SoalTwkRoute: typeof SoalTwkRoute
+  SyaratCpnsRoute: typeof SyaratCpnsRoute
+  SyaratKetentuanRoute: typeof SyaratKetentuanRoute
+  TentangKamiRoute: typeof TentangKamiRoute
+  TryoutCpnsGratisRoute: typeof TryoutCpnsGratisRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +338,187 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$slug': {
+      id: '/$slug'
+      path: '/$slug'
+      fullPath: '/$slug'
+      preLoaderRoute: typeof SlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artikel': {
+      id: '/artikel'
+      path: '/artikel'
+      fullPath: '/artikel'
+      preLoaderRoute: typeof ArtikelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cara-daftar-cpns': {
+      id: '/cara-daftar-cpns'
+      path: '/cara-daftar-cpns'
+      fullPath: '/cara-daftar-cpns'
+      preLoaderRoute: typeof CaraDaftarCpnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/formasi-cpns': {
+      id: '/formasi-cpns'
+      path: '/formasi-cpns'
+      fullPath: '/formasi-cpns'
+      preLoaderRoute: typeof FormasiCpnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jadwal-cpns': {
+      id: '/jadwal-cpns'
+      path: '/jadwal-cpns'
+      fullPath: '/jadwal-cpns'
+      preLoaderRoute: typeof JadwalCpnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kebijakan-privasi': {
+      id: '/kebijakan-privasi'
+      path: '/kebijakan-privasi'
+      fullPath: '/kebijakan-privasi'
+      preLoaderRoute: typeof KebijakanPrivasiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kontak': {
+      id: '/kontak'
+      path: '/kontak'
+      fullPath: '/kontak'
+      preLoaderRoute: typeof KontakRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/latihan-soal-cpns': {
+      id: '/latihan-soal-cpns'
+      path: '/latihan-soal-cpns'
+      fullPath: '/latihan-soal-cpns'
+      preLoaderRoute: typeof LatihanSoalCpnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/panduan': {
+      id: '/panduan'
+      path: '/panduan'
+      fullPath: '/panduan'
+      preLoaderRoute: typeof PanduanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/passing-grade-cpns': {
+      id: '/passing-grade-cpns'
+      path: '/passing-grade-cpns'
+      fullPath: '/passing-grade-cpns'
+      preLoaderRoute: typeof PassingGradeCpnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pppk': {
+      id: '/pppk'
+      path: '/pppk'
+      fullPath: '/pppk'
+      preLoaderRoute: typeof PppkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sekolah-kedinasan': {
+      id: '/sekolah-kedinasan'
+      path: '/sekolah-kedinasan'
+      fullPath: '/sekolah-kedinasan'
+      preLoaderRoute: typeof SekolahKedinasanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/simulasi-cat-cpns': {
+      id: '/simulasi-cat-cpns'
+      path: '/simulasi-cat-cpns'
+      fullPath: '/simulasi-cat-cpns'
+      preLoaderRoute: typeof SimulasiCatCpnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/soal-tiu': {
+      id: '/soal-tiu'
+      path: '/soal-tiu'
+      fullPath: '/soal-tiu'
+      preLoaderRoute: typeof SoalTiuRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/soal-tkp': {
+      id: '/soal-tkp'
+      path: '/soal-tkp'
+      fullPath: '/soal-tkp'
+      preLoaderRoute: typeof SoalTkpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/soal-twk': {
+      id: '/soal-twk'
+      path: '/soal-twk'
+      fullPath: '/soal-twk'
+      preLoaderRoute: typeof SoalTwkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/syarat-cpns': {
+      id: '/syarat-cpns'
+      path: '/syarat-cpns'
+      fullPath: '/syarat-cpns'
+      preLoaderRoute: typeof SyaratCpnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/syarat-ketentuan': {
+      id: '/syarat-ketentuan'
+      path: '/syarat-ketentuan'
+      fullPath: '/syarat-ketentuan'
+      preLoaderRoute: typeof SyaratKetentuanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tentang-kami': {
+      id: '/tentang-kami'
+      path: '/tentang-kami'
+      fullPath: '/tentang-kami'
+      preLoaderRoute: typeof TentangKamiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tryout-cpns-gratis': {
+      id: '/tryout-cpns-gratis'
+      path: '/tryout-cpns-gratis'
+      fullPath: '/tryout-cpns-gratis'
+      preLoaderRoute: typeof TryoutCpnsGratisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SlugRoute: SlugRoute,
+  ArtikelRoute: ArtikelRoute,
+  CaraDaftarCpnsRoute: CaraDaftarCpnsRoute,
+  DashboardRoute: DashboardRoute,
+  DisclaimerRoute: DisclaimerRoute,
+  FormasiCpnsRoute: FormasiCpnsRoute,
+  JadwalCpnsRoute: JadwalCpnsRoute,
+  KebijakanPrivasiRoute: KebijakanPrivasiRoute,
+  KontakRoute: KontakRoute,
+  LatihanSoalCpnsRoute: LatihanSoalCpnsRoute,
+  PanduanRoute: PanduanRoute,
+  PassingGradeCpnsRoute: PassingGradeCpnsRoute,
+  PppkRoute: PppkRoute,
+  SekolahKedinasanRoute: SekolahKedinasanRoute,
+  SimulasiCatCpnsRoute: SimulasiCatCpnsRoute,
+  SoalTiuRoute: SoalTiuRoute,
+  SoalTkpRoute: SoalTkpRoute,
+  SoalTwkRoute: SoalTwkRoute,
+  SyaratCpnsRoute: SyaratCpnsRoute,
+  SyaratKetentuanRoute: SyaratKetentuanRoute,
+  TentangKamiRoute: TentangKamiRoute,
+  TryoutCpnsGratisRoute: TryoutCpnsGratisRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,0 +1,19 @@
+{
+  "name": "Daftar CPNS",
+  "short_name": "Daftar CPNS",
+  "description": "Platform edukasi dan simulasi CAT CPNS independen.",
+  "lang": "id",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#FFFFFF",
+  "theme_color": "#17365D",
+  "icons": [
+    {
+      "src": "/brand/daftar-cpns-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

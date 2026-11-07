@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <title>Monogram DC Daftar CPNS</title>
+  <rect width="128" height="128" rx="30" fill="#17365D"/>
+  <path d="M20 26h22c19 0 30 14 30 38s-11 38-30 38H20V26Zm17 17v42h4c9 0 14-7 14-21s-5-21-14-21h-4Z" fill="#fff" fill-rule="evenodd"/>
+  <path d="M111 41c-5-5-11-8-19-8-14 0-23 11-23 31s9 31 23 31c8 0 14-3 19-8" stroke="#65D6A0" stroke-width="13" stroke-linecap="round"/>
+</svg>
