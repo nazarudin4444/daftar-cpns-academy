@@ -1,0 +1,6 @@
+- [ ] Inspect and safely install the upstream Antislop rules.
+- [ ] Replace the homepage with the responsive, independent Daftar CPNS learning portal.
+- [ ] Add requested public content and legal pages with unique metadata and verified-source links.
+- [ ] Build the local-first CAT demo, explanations, restore flow, and results.
+- [ ] Add focused CAT logic tests and verify the preview flow.
+- [ ] Check remaining domain-dependent SEO and operator-information blockers.
