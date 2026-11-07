@@ -17,6 +17,7 @@ export type ExamResult = {
   questionTimes: Record<string, number>;
   elapsedSeconds: number;
   endedAt: number;
+  startedAt?: number;
 };
 
 export const EXAM_SESSION_KEY = "daftar-cpns:exam-session:v1";
@@ -109,7 +110,8 @@ export function loadExamResult(storage: BrowserStorage): ExamResult | null {
     typeof value.questionTimes !== "object" ||
     value.questionTimes === null ||
     !Number.isFinite(value.elapsedSeconds) ||
-    !Number.isFinite(value.endedAt)
+    !Number.isFinite(value.endedAt) ||
+    (value.startedAt !== undefined && !Number.isFinite(value.startedAt))
   )
     return null;
   return value as ExamResult;

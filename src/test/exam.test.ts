@@ -8,6 +8,11 @@ import {
 } from "@/lib/exam-storage";
 
 describe("Bank soal dan penilaian", () => {
+  it("memuat 15 soal orisinal di setiap kategori SKD", () => {
+    expect(QUESTION_BANK.filter((question) => question.subject === "TWK")).toHaveLength(15);
+    expect(QUESTION_BANK.filter((question) => question.subject === "TIU")).toHaveLength(15);
+    expect(QUESTION_BANK.filter((question) => question.subject === "TKP")).toHaveLength(15);
+  });
   it("memiliki ID unik dan kunci yang tersedia pada opsi", () => {
     expect(new Set(QUESTION_BANK.map((q) => q.id)).size).toBe(QUESTION_BANK.length);
     for (const question of QUESTION_BANK) {
@@ -16,6 +21,23 @@ describe("Bank soal dan penilaian", () => {
       expect(question.options.some((o) => o.label === question.answer)).toBe(true);
       expect(question.explanation.length).toBeGreaterThan(30);
     }
+  });
+  it("memilih soal yang konsisten dalam satu sesi dan bervariasi antar sesi", () => {
+    const firstAttempt = questionsForTrack("cpns", 1710000000000);
+    const resumedAttempt = questionsForTrack("cpns", 1710000000000);
+    const nextAttempt = questionsForTrack("cpns", 1710000000001);
+    expect(resumedAttempt.map((question) => question.id)).toEqual(
+      firstAttempt.map((question) => question.id),
+    );
+    expect(nextAttempt.map((question) => question.id)).not.toEqual(
+      firstAttempt.map((question) => question.id),
+    );
+    const answers = Object.fromEntries(
+      firstAttempt.map((question) => [question.id, question.answer]),
+    );
+    expect(scoreExam("cpns", answers, 1710000000000).correct).toBe(15);
+    for (const subject of ["TWK", "TIU", "TKP"] as const)
+      expect(firstAttempt.filter((question) => question.subject === subject)).toHaveLength(5);
   });
   for (const track of TRACKS) {
     it(`${track.id}: membagi materi dan menilai jawaban dengan benar`, () => {

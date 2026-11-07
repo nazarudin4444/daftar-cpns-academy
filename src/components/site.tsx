@@ -44,7 +44,7 @@ export function SiteHeader() {
           <span className="leading-tight">
             <span className="block font-extrabold text-foreground">Daftar CPNS</span>
             <span className="hidden text-xs text-muted-foreground sm:block">
-              Belajar, berlatih, persiapkan ASN
+              Belajar dan Latihan CAT CPNS
             </span>
           </span>
         </Link>
@@ -422,7 +422,9 @@ function CATSimulator() {
 
   function finishExam(finalSession: ExamSession) {
     const endedAt = Math.min(Date.now(), finalSession.deadline);
-    const currentQuestion = questionsForTrack(finalSession.track)[finalSession.currentIndex];
+    const currentQuestion = questionsForTrack(finalSession.track, finalSession.startedAt)[
+      finalSession.currentIndex
+    ];
     const questionTimes = { ...finalSession.questionTimes };
     if (currentQuestion) {
       questionTimes[currentQuestion.id] =
@@ -438,6 +440,7 @@ function CATSimulator() {
         Math.floor((endedAt - finalSession.startedAt) / 1000),
       ),
       endedAt,
+      startedAt: finalSession.startedAt,
     };
     setResult(completed);
     setSession(null);
@@ -468,7 +471,7 @@ function CATSimulator() {
 
   function moveToQuestion(nextIndex: number) {
     if (!session) return;
-    const questions = questionsForTrack(session.track);
+    const questions = questionsForTrack(session.track, session.startedAt);
     if (nextIndex < 0 || nextIndex >= questions.length) return;
     const currentQuestion = questions[session.currentIndex];
     if (!currentQuestion) return;
@@ -494,8 +497,8 @@ function CATSimulator() {
 
   function downloadResult() {
     if (!result) return;
-    const questions = questionsForTrack(result.track);
-    const score = scoreExam(result.track, result.answers);
+    const questions = questionsForTrack(result.track, result.startedAt);
+    const score = scoreExam(result.track, result.answers, result.startedAt);
     const lines = [
       `Hasil latihan demo: ${TRACKS.find((track) => track.id === result.track)?.name ?? result.track}`,
       `Skor latihan: ${score.correct} dari ${score.total} jawaban benar`,
@@ -537,7 +540,7 @@ function CATSimulator() {
   ) : null;
 
   if (session) {
-    const questions = questionsForTrack(session.track);
+    const questions = questionsForTrack(session.track, session.startedAt);
     const question = questions[session.currentIndex];
     if (!question)
       return (
@@ -674,8 +677,8 @@ function CATSimulator() {
   }
 
   if (result) {
-    const questions = questionsForTrack(result.track);
-    const score = scoreExam(result.track, result.answers);
+    const questions = questionsForTrack(result.track, result.startedAt);
+    const score = scoreExam(result.track, result.answers, result.startedAt);
     const average = score.total ? Math.round(result.elapsedSeconds / score.total) : 0;
     return (
       <section
@@ -851,7 +854,10 @@ export function contentHead(page: ContentPageData, canonical: string) {
       { property: "og:description", content: page.description },
       { property: "og:type", content: "website" },
       { property: "og:image", content: canonicalUrl("/brand/daftar-cpns-mark.svg") },
-      { property: "og:image:alt", content: "Monogram DC Daftar CPNS yang menyatukan huruf putih dan hijau" },
+      {
+        property: "og:image:alt",
+        content: "Monogram DC Daftar CPNS yang menyatukan huruf putih dan hijau",
+      },
       { name: "twitter:image", content: canonicalUrl("/brand/daftar-cpns-mark.svg") },
       { property: "og:url", content: canonicalUrl(canonical) },
       { property: "og:locale", content: "id_ID" },

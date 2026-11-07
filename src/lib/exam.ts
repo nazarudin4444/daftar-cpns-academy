@@ -834,13 +834,300 @@ export const QUESTION_BANK: Question[] = [
     explanation:
       "Rumus dapat tetap menunjuk rentang lama setelah baris baru ditambahkan. Memeriksa cakupan sel memastikan perhitungan mencakup data terbaru tanpa mengganti hasil dengan perkiraan.",
   },
+  {
+    id: "twk-11",
+    subject: "TWK",
+    prompt:
+      "Warga menyampaikan kritik terhadap rancangan aturan lingkungan dalam forum terbuka. Sikap yang paling mencerminkan kehidupan demokratis adalah ...",
+    options: [
+      { label: "A", text: "Menghentikan kritik karena rancangan sudah dibuat pengurus." },
+      {
+        label: "B",
+        text: "Mendengar alasan, membahas dampaknya, lalu mencatat masukan untuk keputusan.",
+      },
+      {
+        label: "C",
+        text: "Mengikuti pendapat peserta yang paling banyak pendukungnya tanpa diskusi.",
+      },
+      { label: "D", text: "Menyebarkan kritik itu tanpa memeriksa isi dan konteksnya." },
+      { label: "E", text: "Membatalkan forum agar perbedaan pendapat tidak muncul." },
+    ],
+    answer: "B",
+    explanation:
+      "Demokrasi memberi ruang untuk menyampaikan pendapat dan menilainya secara terbuka. Mendengar alasan, membahas akibat, serta mencatat masukan membuat keputusan lebih dapat dipertanggungjawabkan daripada membungkam kritik atau sekadar mengikuti suara terbanyak tanpa proses.",
+  },
+  {
+    id: "twk-12",
+    subject: "TWK",
+    prompt:
+      "Sebuah layanan bersama hanya mudah diakses oleh sebagian warga. Perbaikan yang paling sesuai dengan prinsip keadilan adalah ...",
+    options: [
+      { label: "A", text: "Mempertahankan layanan karena prosedurnya sama untuk semua orang." },
+      { label: "B", text: "Menutup layanan sementara tanpa memberi informasi." },
+      {
+        label: "C",
+        text: "Mengidentifikasi hambatan dan menyediakan akses yang layak tanpa mengurangi ketentuan.",
+      },
+      { label: "D", text: "Meminta warga yang mengalami hambatan mencari bantuan sendiri." },
+      { label: "E", text: "Memberi akses hanya kepada warga yang mengajukan keluhan tertulis." },
+    ],
+    answer: "C",
+    explanation:
+      "Perlakuan adil memperhatikan hambatan nyata yang membuat orang sulit mengakses layanan. Menyesuaikan cara akses sambil menjaga ketentuan membantu lebih banyak warga memperoleh kesempatan yang setara.",
+  },
+  {
+    id: "twk-13",
+    subject: "TWK",
+    prompt:
+      "Dalam percakapan grup beredar kabar yang menuduh kelompok tertentu merugikan warga. Sebelum menanggapi, tindakan paling bertanggung jawab adalah ...",
+    options: [
+      { label: "A", text: "Meneruskan kabar agar warga lain ikut waspada." },
+      {
+        label: "B",
+        text: "Memeriksa sumber tepercaya dan tidak menyebarkan tuduhan yang belum terverifikasi.",
+      },
+      { label: "C", text: "Membalas dengan tuduhan terhadap kelompok lain." },
+      { label: "D", text: "Mengubah isi kabar agar terdengar lebih meyakinkan." },
+      { label: "E", text: "Menganggap kabar benar karena banyak orang membagikannya." },
+    ],
+    answer: "B",
+    explanation:
+      "Jumlah orang yang membagikan pesan bukan bukti kebenaran. Memeriksa sumber dan menahan penyebaran tuduhan membantu mencegah prasangka serta konflik antarkelompok.",
+  },
+  {
+    id: "twk-14",
+    subject: "TWK",
+    prompt:
+      "Panitia kegiatan meminta semua peserta mengikuti satu kebiasaan tanpa mempertimbangkan perbedaan yang relevan. Langkah yang paling menjaga persatuan adalah ...",
+    options: [
+      { label: "A", text: "Menghapus semua aturan agar setiap kelompok berjalan sendiri." },
+      { label: "B", text: "Mengikuti kebiasaan kelompok terbesar sebagai standar." },
+      {
+        label: "C",
+        text: "Menyepakati tujuan dan aturan bersama sambil mengakomodasi perbedaan secara wajar.",
+      },
+      { label: "D", text: "Memisahkan peserta berdasarkan latar belakangnya." },
+      { label: "E", text: "Membatalkan kegiatan tanpa membahas pilihan lain." },
+    ],
+    answer: "C",
+    explanation:
+      "Persatuan dibangun melalui tujuan bersama dan sikap saling menghormati, bukan dengan menghapus semua perbedaan. Aturan yang disepakati dapat tetap memberi ruang bagi kebutuhan yang beragam.",
+  },
+  {
+    id: "twk-15",
+    subject: "TWK",
+    prompt:
+      "Anda mengetahui kerabat panitia meminta didahulukan dalam pembagian bantuan yang terbatas. Sikap yang paling berintegritas adalah ...",
+    options: [
+      { label: "A", text: "Mendahulukannya karena hubungan keluarga dapat dipercaya." },
+      {
+        label: "B",
+        text: "Menerapkan kriteria yang telah diumumkan dan mencatat proses pembagian secara terbuka.",
+      },
+      { label: "C", text: "Memberi bantuan diam-diam agar tidak terjadi perdebatan." },
+      { label: "D", text: "Mengubah kriteria setelah mengetahui siapa yang meminta." },
+      { label: "E", text: "Menunda seluruh bantuan sampai tidak ada yang keberatan." },
+    ],
+    answer: "B",
+    explanation:
+      "Kriteria yang konsisten dan proses yang dapat ditelusuri mencegah kepentingan pribadi memengaruhi layanan. Kedekatan dengan panitia bukan alasan untuk mendapat perlakuan khusus.",
+  },
+  {
+    id: "tiu-11",
+    subject: "TIU",
+    prompt:
+      "Perhatikan pola bilangan berikut: 4, 9, 19, 39, 79, ... Bilangan berikutnya adalah ...",
+    options: [
+      { label: "A", text: "119" },
+      { label: "B", text: "149" },
+      { label: "C", text: "158" },
+      { label: "D", text: "159" },
+      { label: "E", text: "160" },
+    ],
+    answer: "D",
+    explanation:
+      "Setiap suku dikalikan dua lalu ditambah satu: 4 × 2 + 1 = 9, 9 × 2 + 1 = 19, dan seterusnya. Maka 79 × 2 + 1 = 159.",
+  },
+  {
+    id: "tiu-12",
+    subject: "TIU",
+    prompt:
+      "Sebuah tim menyelesaikan 84 berkas dalam 7 jam dengan kecepatan tetap. Jika kecepatan tetap sama, berapa berkas yang selesai dalam 10 jam?",
+    options: [
+      { label: "A", text: "100 berkas" },
+      { label: "B", text: "110 berkas" },
+      { label: "C", text: "120 berkas" },
+      { label: "D", text: "126 berkas" },
+      { label: "E", text: "140 berkas" },
+    ],
+    answer: "C",
+    explanation:
+      "Kecepatan tim adalah 84 ÷ 7 = 12 berkas per jam. Dalam 10 jam, tim menyelesaikan 12 × 10 = 120 berkas dengan asumsi kecepatannya tetap.",
+  },
+  {
+    id: "tiu-13",
+    subject: "TIU",
+    prompt:
+      "Perbandingan jumlah berkas di meja A dan meja B adalah 3 : 5. Jika seluruhnya ada 64 berkas, jumlah berkas di meja A adalah ...",
+    options: [
+      { label: "A", text: "18 berkas" },
+      { label: "B", text: "21 berkas" },
+      { label: "C", text: "24 berkas" },
+      { label: "D", text: "32 berkas" },
+      { label: "E", text: "40 berkas" },
+    ],
+    answer: "C",
+    explanation:
+      "Jumlah bagian rasio adalah 3 + 5 = 8. Setiap bagian bernilai 64 ÷ 8 = 8 berkas. Meja A memiliki 3 bagian, yaitu 3 × 8 = 24 berkas.",
+  },
+  {
+    id: "tiu-14",
+    subject: "TIU",
+    prompt:
+      "Semua laporan yang disetujui telah diperiksa. Sebagian berkas di map hijau adalah laporan yang disetujui. Kesimpulan yang pasti benar adalah ...",
+    options: [
+      { label: "A", text: "Semua berkas di map hijau telah diperiksa." },
+      { label: "B", text: "Sebagian berkas di map hijau telah diperiksa." },
+      { label: "C", text: "Tidak ada laporan yang belum diperiksa." },
+      { label: "D", text: "Semua berkas yang diperiksa berada di map hijau." },
+      { label: "E", text: "Sebagian berkas yang diperiksa bukan laporan." },
+    ],
+    answer: "B",
+    explanation:
+      "Berkas yang disebut sebagai laporan disetujui termasuk kelompok laporan yang telah diperiksa. Karena sebagian berkas map hijau adalah laporan yang disetujui, sebagian berkas map hijau pasti telah diperiksa. Premis tidak menyatakan semua isi map hijau demikian.",
+  },
+  {
+    id: "tiu-15",
+    subject: "TIU",
+    prompt:
+      "Sebuah barang seharga Rp240.000 mendapat potongan 15%. Harga setelah potongan adalah ...",
+    options: [
+      { label: "A", text: "Rp196.000" },
+      { label: "B", text: "Rp200.000" },
+      { label: "C", text: "Rp204.000" },
+      { label: "D", text: "Rp210.000" },
+      { label: "E", text: "Rp216.000" },
+    ],
+    answer: "C",
+    explanation:
+      "Potongannya adalah 15% × Rp240.000 = Rp36.000. Harga akhirnya Rp240.000 − Rp36.000 = Rp204.000. Cara lain: harga akhir adalah 85% dari harga awal.",
+  },
+  {
+    id: "tkp-11",
+    subject: "TKP",
+    prompt:
+      "Seorang pemohon meminta Anda mendahulukan berkasnya karena ia mengenal salah satu petugas. Apa respons paling tepat?",
+    options: [
+      { label: "A", text: "Menyetujui agar hubungan kerja tetap baik." },
+      {
+        label: "B",
+        text: "Menjelaskan urutan dan kriteria layanan, lalu membantu sesuai prosedur yang berlaku.",
+      },
+      { label: "C", text: "Meminta pemohon kembali saat petugas yang dikenalnya bertugas." },
+      { label: "D", text: "Mengabaikan pemohon tanpa penjelasan." },
+      { label: "E", text: "Meminta imbalan sebagai ganti prioritas." },
+    ],
+    answer: "B",
+    explanation:
+      "Menjelaskan prosedur secara tenang menjaga perlakuan yang setara dan membantu pemohon memahami langkah berikutnya. Hubungan pribadi tidak menjadi dasar untuk mengubah antrean atau ketentuan layanan.",
+  },
+  {
+    id: "tkp-12",
+    subject: "TKP",
+    prompt:
+      "Anda tidak sengaja mengirim rekap yang berisi data lebih banyak dari yang diminta ke grup kerja. Tindakan pertama yang paling tepat adalah ...",
+    options: [
+      { label: "A", text: "Membiarkannya karena semua anggota grup adalah rekan kerja." },
+      {
+        label: "B",
+        text: "Menghapus pesan jika memungkinkan, segera memberi tahu penanggung jawab, dan mengikuti prosedur penanganan.",
+      },
+      {
+        label: "C",
+        text: "Meminta semua penerima merahasiakannya tanpa memberi tahu penanggung jawab.",
+      },
+      { label: "D", text: "Mengirim rekap yang lebih lengkap untuk menutupi kesalahan." },
+      { label: "E", text: "Menyalahkan aplikasi sebelum memeriksa apa yang terkirim." },
+    ],
+    answer: "B",
+    explanation:
+      "Respons cepat dapat membatasi paparan lebih lanjut, sementara pelaporan kepada penanggung jawab memungkinkan langkah penanganan yang sesuai. Jangan menutupi kejadian atau membuat klaim sebelum memeriksa fakta.",
+  },
+  {
+    id: "tkp-13",
+    subject: "TKP",
+    prompt:
+      "Pekerjaan tim berisiko terlambat karena seorang rekan belum menyelesaikan bagiannya. Langkah yang paling konstruktif adalah ...",
+    options: [
+      { label: "A", text: "Mengambil alih semua tugas tanpa menghubunginya." },
+      { label: "B", text: "Menegur rekan di depan pengguna layanan agar ia segera bekerja." },
+      {
+        label: "C",
+        text: "Menanyakan kendala dan progresnya, menawarkan koordinasi, lalu menyepakati tindak lanjut.",
+      },
+      { label: "D", text: "Membiarkan tenggat lewat agar tanggung jawab terlihat." },
+      { label: "E", text: "Mengirim laporan bahwa rekan sengaja menghambat tim." },
+    ],
+    answer: "C",
+    explanation:
+      "Memahami kendala lebih dulu membantu tim memilih bantuan atau penyesuaian yang tepat. Kesepakatan tindak lanjut menjaga akuntabilitas tanpa mempermalukan rekan atau membuat tuduhan yang belum terbukti.",
+  },
+  {
+    id: "tkp-14",
+    subject: "TKP",
+    prompt:
+      "Pemohon kesulitan mengisi formulir digital dan meminta Anda memakai akun pribadinya untuk menyelesaikan proses. Respons terbaik adalah ...",
+    options: [
+      { label: "A", text: "Meminta kata sandi lalu mengisi formulir tanpa menjelaskan prosesnya." },
+      { label: "B", text: "Menolak bantuan apa pun karena formulir harus dikerjakan sendiri." },
+      {
+        label: "C",
+        text: "Memandu pemohon melalui cara bantuan yang diizinkan tanpa meminta kredensial.",
+      },
+      { label: "D", text: "Menggunakan akun pribadi Anda untuk mewakili pemohon." },
+      { label: "E", text: "Meminta pemohon mengirim data lengkap ke grup layanan." },
+    ],
+    answer: "C",
+    explanation:
+      "Pendampingan yang aman membantu pemohon tetap memahami dan mengendalikan prosesnya sendiri. Kata sandi dan kredensial tidak perlu diminta; gunakan kanal bantuan resmi yang memang tersedia.",
+  },
+  {
+    id: "tkp-15",
+    subject: "TKP",
+    prompt:
+      "Instruksi lisan yang Anda terima tampak berbeda dari prosedur tertulis yang sedang berlaku. Sebaiknya Anda ...",
+    options: [
+      { label: "A", text: "Mengikuti instruksi lisan tanpa memeriksa perbedaannya." },
+      { label: "B", text: "Mengabaikan instruksi dan tidak memberi kabar kepada siapa pun." },
+      {
+        label: "C",
+        text: "Mengklarifikasi perbedaan kepada pemberi instruksi dan memastikan langkah yang sesuai sebelum bertindak.",
+      },
+      { label: "D", text: "Memilih bagian prosedur yang paling mudah dikerjakan." },
+      { label: "E", text: "Menyebarkan instruksi tersebut ke grup umum untuk diputuskan bersama." },
+    ],
+    answer: "C",
+    explanation:
+      "Klarifikasi mencegah kesalahan dan memberi kesempatan kepada pihak berwenang menjelaskan apakah ada pembaruan atau konteks khusus. Hindari bertindak berdasarkan asumsi atau menyebarkan informasi yang belum dipastikan.",
+  },
 ];
 
-export function questionsForTrack(track: Track): Question[] {
+function questionHash(value: string): number {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1)
+    hash = Math.imul(hash ^ value.charCodeAt(index), 16777619);
+  return hash >>> 0;
+}
+
+export function questionsForTrack(track: Track, seed = 0): Question[] {
   const config = TRACKS.find((item) => item.id === track);
   if (!config) return [];
   const bySubject = config.subjects.map((subject) =>
-    QUESTION_BANK.filter((question) => question.subject === subject),
+    QUESTION_BANK.filter((question) => question.subject === subject).sort(
+      (left, right) =>
+        questionHash(`${seed}:${left.id}`) - questionHash(`${seed}:${right.id}`) ||
+        left.id.localeCompare(right.id),
+    ),
   );
   return Array.from(
     { length: DEMO_RULES.questionsPerTrack },
@@ -848,8 +1135,8 @@ export function questionsForTrack(track: Track): Question[] {
   ).filter((question): question is Question => Boolean(question));
 }
 
-export function scoreExam(track: Track, answers: Record<string, string>) {
-  const questions = questionsForTrack(track);
+export function scoreExam(track: Track, answers: Record<string, string>, seed = 0) {
+  const questions = questionsForTrack(track, seed);
   const breakdown =
     TRACKS.find((item) => item.id === track)?.subjects.map((subject) => {
       const subjectQuestions = questions.filter((question) => question.subject === subject);

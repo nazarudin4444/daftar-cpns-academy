@@ -3,7 +3,7 @@ import { ArrowRight, BookOpenCheck, CircleHelp, Clock3, ShieldCheck } from "luci
 import { Button } from "@/components/ui/button";
 import { SiteShell } from "@/components/site";
 import studySheet from "@/assets/study-sheet-illustration.png";
-import { canonicalUrl } from "@/lib/site-config";
+import { canonicalUrl, CONTACT_EMAIL, OPERATOR_NAME, SITE_ORIGIN } from "@/lib/site-config";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -22,7 +22,10 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { property: "og:image", content: canonicalUrl("/brand/daftar-cpns-mark.svg") },
-      { property: "og:image:alt", content: "Monogram DC Daftar CPNS yang menyatukan huruf putih dan hijau" },
+      {
+        property: "og:image:alt",
+        content: "Monogram DC Daftar CPNS yang menyatukan huruf putih dan hijau",
+      },
       { name: "twitter:image", content: canonicalUrl("/brand/daftar-cpns-mark.svg") },
       { property: "og:url", content: canonicalUrl("/") },
       { property: "og:locale", content: "id_ID" },
@@ -73,9 +76,52 @@ const questions = [
 ];
 
 function HomePage() {
+  const homeUrl = canonicalUrl("/");
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_ORIGIN}/#website`,
+        name: "Daftar CPNS",
+        url: homeUrl,
+        inLanguage: "id",
+        publisher: { "@id": `${SITE_ORIGIN}/#operator` },
+      },
+      {
+        "@type": "Organization",
+        "@id": `${SITE_ORIGIN}/#operator`,
+        name: OPERATOR_NAME,
+        email: CONTACT_EMAIL,
+        url: homeUrl,
+      },
+      {
+        "@type": "WebPage",
+        "@id": `${homeUrl}#webpage`,
+        url: homeUrl,
+        name: "Simulasi CAT CPNS Gratis & Persiapan Seleksi ASN | Daftar CPNS",
+        description:
+          "Latihan TWK, TIU, dan TKP secara online dengan contoh soal dan pembahasan. Platform edukasi independen, bukan layanan pemerintah.",
+        inLanguage: "id",
+        publisher: { "@id": `${SITE_ORIGIN}/#operator` },
+        breadcrumb: { "@id": `${homeUrl}#breadcrumb` },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${homeUrl}#breadcrumb`,
+        itemListElement: [{ "@type": "ListItem", position: 1, name: "Beranda", item: homeUrl }],
+      },
+    ],
+  };
   return (
     <SiteShell>
       <main>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          }}
+        />
         <section className="mx-auto grid max-w-7xl items-center gap-7 px-4 pb-12 pt-8 sm:px-6 md:grid-cols-[1.05fr_0.95fr] md:gap-10 md:py-14 lg:px-8 lg:py-16">
           <div className="max-w-2xl">
             <p className="inline-flex items-center gap-2 border-l-2 border-positive pl-3 text-sm font-bold text-positive">
