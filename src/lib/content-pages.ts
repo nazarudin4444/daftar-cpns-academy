@@ -36,6 +36,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         ],
       },
       {
+        heading: "Baca hasil tanpa menyamakannya dengan seleksi",
+        paragraphs: [
+          "Setelah sesi selesai, lihat jumlah jawaban benar per kategori, waktu rata-rata, lalu buka pembahasan untuk meninjau alasan setiap kunci. Gunakan catatan itu untuk memilih topik latihan berikutnya; satu hasil demo tidak cukup untuk menyimpulkan kesiapan atau peluang lulus.",
+          "Variasi soal dapat berbeda pada sesi baru. Progres sesi aktif disimpan di browser perangkat agar sesi dapat dipulihkan, sedangkan halaman ini tidak membuat akun atau mengirim jawaban demo ke layanan pendaftaran.",
+        ],
+      },
+      {
         heading: "Bukan layanan pendaftaran resmi",
         paragraphs: [
           "Daftar CPNS merupakan platform edukasi independen. Pendaftaran seleksi ASN resmi hanya melalui kanal pemerintah yang diumumkan, termasuk SSCASN.",
@@ -63,6 +70,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         heading: "Mulai latihan",
         paragraphs: [
           "Pilih SKD CPNS pada halaman simulasi untuk memulai sesi. Progres sementara disimpan di perangkat dan dapat dipulihkan setelah halaman dimuat ulang.",
+        ],
+      },
+      {
+        heading: "Cara memakai hasil tryout",
+        paragraphs: [
+          "Kerjakan sesi tanpa membuka pembahasan lebih dulu. Tandai soal yang membuat ragu, selesaikan sesi, lalu bandingkan jawaban dengan penjelasan. Urutkan kesalahan berdasarkan kategori dan jenis kesulitan—misalnya salah memahami premis atau keliru menghitung—agar latihan ulang punya sasaran yang jelas.",
+          "Soal pada sesi berikutnya dapat berbeda. Bandingkan pola kesalahan dan waktu pengerjaan, bukan hanya angka total, karena skor demo bukan ukuran resmi seleksi.",
         ],
       },
     ],
@@ -93,6 +107,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
           "Perhatikan pembahasan dan kategori yang perlu diulang. Nilai latihan tidak dipakai untuk menyimpulkan kelulusan.",
         ],
       },
+      {
+        heading: "Ritme latihan yang bisa diulang",
+        paragraphs: [
+          "Mulai dengan satu sesi campuran untuk melihat jenis soal yang terasa sulit. Setelah membaca pembahasan, pilih satu kategori untuk latihan fokus, tulis alasan kesalahan dengan kata-kata sendiri, lalu coba sesi campuran lagi di waktu berbeda. Cara ini membantu membedakan kesalahan konsep, ketelitian, dan pengelolaan waktu.",
+          "Bank soal pada halaman TWK, TIU, dan TKP menampilkan kunci serta pembahasan setelah Anda membukanya. Semua pertanyaan merupakan contoh latihan mandiri, bukan salinan soal seleksi.",
+        ],
+      },
     ],
     sourceLinks: officialSources,
   },
@@ -109,6 +130,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         paragraphs: [
           "Pilih jawaban yang paling sesuai dengan situasi, lalu baca penjelasannya. Fokus pada alasan dan prinsip yang digunakan, bukan menghafal pilihan.",
           "Soal dibuat sebagai latihan mandiri. Materi seleksi yang berlaku harus merujuk pada pengumuman resmi.",
+        ],
+      },
+      {
+        heading: "Apa yang dilatih di kumpulan ini",
+        paragraphs: [
+          "Contoh yang tersedia menggunakan situasi seperti musyawarah, penerapan aturan yang adil, kerja bersama di tengah perbedaan, dan pemeriksaan kabar yang belum jelas sumbernya. Untuk tiap soal, jelaskan mengapa pilihan Anda sejalan atau tidak sejalan dengan prinsip yang ditanyakan. Jangan menghafal huruf kunci karena urutan pilihan tidak menunjukkan aturan umum.",
+          "Materi ini adalah latihan nilai dan penalaran yang ditulis untuk situs ini. Ia tidak menyatakan cakupan resmi, kisi-kisi, atau bobot penilaian untuk periode seleksi tertentu.",
         ],
       },
       {
@@ -136,6 +164,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         ],
       },
       {
+        heading: "Pilih cara kerja sesuai jenis soal",
+        paragraphs: [
+          "Untuk pola bilangan, tulis perubahan antarangka atau uji operasi yang berulang sebelum memilih kelanjutan. Untuk rasio dan persentase, tentukan dulu nilai keseluruhan atau nilai satu bagian. Untuk penalaran verbal, pisahkan apa yang dinyatakan dari hal yang hanya mungkin benar.",
+          "Contoh latihan pada bank ini mencakup rata-rata, pembagian beban, pola, perbandingan, persentase, analogi, dan kesimpulan logis. Jika jawaban salah, baca kembali langkahnya dan cari titik pertama ketika perhitungan atau kesimpulan menyimpang.",
+        ],
+      },
+      {
         heading: "Buka latihan",
         paragraphs: [
           "Simulasi SKD CPNS dan sekolah kedinasan menyediakan beberapa contoh TIU dalam satu sesi demo.",
@@ -157,6 +192,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         paragraphs: [
           "Pertimbangkan kebutuhan pihak terkait, risiko, aturan yang diketahui, dan cara menyampaikan keputusan. Baca penjelasan setelah menjawab untuk membandingkan alasan.",
           "Kunci jawaban pada demo adalah kunci untuk skenario contoh ini. Ini bukan klaim tentang bobot atau kunci penilaian resmi.",
+        ],
+      },
+      {
+        heading: "Bandingkan kualitas respons",
+        paragraphs: [
+          "Dalam skenario latihan, perhatikan kebutuhan pengguna layanan, batas kewenangan, risiko data, dan dampak bagi tim. Respons yang lebih kuat biasanya menjelaskan langkah yang dapat dilakukan, berkomunikasi dengan pihak terkait, dan tetap mengikuti prosedur yang diketahui. Jika informasi belum cukup, klarifikasi sebelum menjanjikan hasil.",
+          "Pembahasan menerangkan alasan kunci untuk skenario contoh. Latihan ini memakai satu jawaban terbaik untuk keperluan demo; jangan menganggapnya sebagai rumus skor atau bobot resmi TKP.",
         ],
       },
       {
@@ -184,6 +226,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         ],
       },
       {
+        heading: "Gunakan tiga kelompok latihan secara terarah",
+        paragraphs: [
+          "Contoh manajerial mengajak Anda menimbang koordinasi dan penyelesaian pekerjaan. Contoh sosial kultural menekankan komunikasi yang menghormati orang dengan latar atau kebutuhan berbeda. Contoh teknis melatih ketelitian pada tugas kerja sederhana. Ketiganya adalah kelompok latihan yang disediakan situs, bukan klaim bahwa seluruh jabatan atau seleksi PPPK memakai susunan yang sama.",
+          "Saat meninjau hasil, catat alasan memilih opsi dan informasi yang Anda lewatkan. Untuk materi teknis jabatan tertentu, gunakan persyaratan kompetensi dan referensi yang disebutkan oleh instansi pada pengumuman resminya.",
+        ],
+      },
+      {
         heading: "Periksa informasi seleksi",
         paragraphs: [
           "Baca pengumuman dari instansi dan portal pemerintah terkait untuk mengetahui persyaratan, jadwal, formasi, dan tahapan yang berlaku.",
@@ -207,6 +256,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         ],
       },
       {
+        heading: "Siapkan belajar tanpa menganggap semua seleksi sama",
+        paragraphs: [
+          "Mulai dari menentukan instansi dan program yang ingin dipelajari, kemudian cari pengumuman serta halaman penerimaan di situs resmi instansi tersebut. Catat tahapan yang benar-benar tercantum, kebutuhan dokumen, tenggat, dan kanal pertanyaan. Jangan menggunakan satu panduan umum untuk menyimpulkan syarat semua sekolah kedinasan.",
+          "Simulasi Daftar CPNS hanya menyediakan contoh latihan penalaran, wawasan, dan situasi kerja. Gunakan latihan untuk membiasakan diri membaca soal; untuk materi dan jadwal seleksi, ikuti pengumuman instansi tujuan.",
+        ],
+      },
+      {
         heading: "Rujuk pengumuman instansi",
         paragraphs: [
           "Persyaratan dan proses seleksi perlu dicocokkan dengan pengumuman resmi instansi tujuan. Gunakan tautan pemerintah berikut sebagai awal penelusuran.",
@@ -221,13 +277,20 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
     description:
       "Cara memeriksa jadwal CPNS melalui pengumuman resmi. Situs ini tidak menerbitkan tanggal seleksi yang belum terverifikasi.",
     intro:
-      "Belum ada jadwal seleksi yang terverifikasi pada halaman ini. Jangan menjadikan tanggal dari pesan berantai atau perkiraan sebagai jadwal resmi.",
+      "Halaman ini menjelaskan cara memeriksa jadwal, bukan menerbitkan tanggal yang belum dipastikan. Jadwal seleksi dapat berubah; cocokkan informasi dengan pengumuman resmi sebelum membuat rencana pendaftaran.",
     sections: [
       {
         heading: "Cara memeriksa jadwal",
         paragraphs: [
           "Periksa pengumuman pada SSCASN, BKN, Kementerian PANRB, dan laman instansi terkait. Cocokkan tanggal, periode pendaftaran, serta perubahan jadwal dengan dokumen sumbernya.",
           "Halaman ini tidak mengambil atau memperkirakan tanggal secara otomatis. Perbarui informasi hanya setelah sumber primer diperiksa.",
+        ],
+      },
+      {
+        heading: "Checklist saat membaca pengumuman",
+        paragraphs: [
+          "Pastikan dokumen berasal dari domain pemerintah atau instansi yang membuka seleksi. Periksa nama dokumen, instansi penerbit, tanggal pengumuman, periode yang dibahas, serta apakah ada ralat atau pengumuman lanjutan. Catat tanggal mulai dan akhir sesuai dokumen terbaru, bukan dari gambar ringkasan yang tidak memuat tautan sumber.",
+          "Jika dua halaman menyebut tanggal berbeda, utamakan dokumen primer terbaru dari pihak yang berwenang dan periksa apakah salah satunya merupakan perubahan jadwal. Jangan mengirim identitas atau kata sandi ke situs yang menawarkan bantuan pendaftaran.",
         ],
       },
       {
@@ -255,6 +318,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         ],
       },
       {
+        heading: "Bandingkan formasi dengan kualifikasi Anda",
+        paragraphs: [
+          "Buat daftar dari dokumen instansi: nama jabatan dan unit, kebutuhan lokasi, kualifikasi pendidikan yang tertulis, dokumen yang diminta, serta ketentuan tambahan yang berlaku untuk jabatan tersebut. Periksa catatan kaki dan lampiran karena keterangan penting bisa berada di bagian yang berbeda dari tabel formasi.",
+          "Sebelum memilih, pastikan informasi berasal dari periode yang benar dan cocokkan nama serta kode jabatan di pengumuman instansi dengan data yang ditampilkan di portal SSCASN. Situs ini tidak menampilkan daftar lowongan hasil perkiraan.",
+        ],
+      },
+      {
         heading: "Portal rujukan",
         paragraphs: [
           "Gunakan portal pemerintah yang tercantum berikut untuk mencari pengumuman terbaru.",
@@ -276,6 +346,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         paragraphs: [
           "Baca dokumen pengumuman dari awal sampai akhir. Cocokkan setiap persyaratan dengan jabatan dan instansi yang dituju, serta pastikan tidak ada perubahan atau penjelasan tambahan.",
           "Jangan mengirim NIK, Kartu Keluarga, dokumen identitas, atau kata sandi SSCASN ke situs latihan ini.",
+        ],
+      },
+      {
+        heading: "Buat daftar cek dari pengumuman instansi",
+        paragraphs: [
+          "Pisahkan persyaratan umum yang tertulis, kualifikasi jabatan, dokumen pendukung, format berkas, dan ketentuan khusus bila tercantum. Tandai butir yang membutuhkan bukti agar Anda dapat memeriksanya sebelum mengisi portal resmi. Jangan menganggap persyaratan dari seleksi sebelumnya masih berlaku untuk periode berikutnya.",
+          "Jika ada istilah atau ketentuan yang tidak jelas, cari penjelasan pada lampiran atau kanal tanya jawab resmi instansi. Jangan mengunggah dokumen identitas ke Daftar CPNS; latihan di situs ini tidak membutuhkan data pendaftaran.",
         ],
       },
       {
@@ -303,6 +380,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         ],
       },
       {
+        heading: "Alur umum sebelum mengisi portal resmi",
+        paragraphs: [
+          "Baca pengumuman beserta lampirannya, tentukan jabatan yang sesuai, lalu periksa kembali kualifikasi dan daftar dokumen. Akses SSCASN dengan mengetik alamat portal secara langsung atau mengikuti tautan dari pengumuman pemerintah. Setelah masuk ke portal, ikuti urutan dan petunjuk yang sedang ditampilkan di sana; nama menu dan langkah rinci dapat berubah.",
+          "Periksa ulang data dan berkas sebelum mengirim sesuai petunjuk portal. Simpan bukti atau nomor pendaftaran hanya pada perangkat pribadi Anda. Daftar CPNS tidak menerima berkas, tidak mengelola akun SSCASN, dan tidak dapat mengoreksi pendaftaran.",
+        ],
+      },
+      {
         heading: "Lindungi data akun",
         paragraphs: [
           "Jangan membagikan kata sandi akun, NIK, Kartu Keluarga, atau dokumen pribadi kepada pihak yang menawarkan simulasi. Situs ini tidak meminta data tersebut.",
@@ -324,6 +408,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         paragraphs: [
           "Angka pada simulasi demo hanyalah poin latihan yang dihitung dari jawaban benar. Nilai tersebut bukan passing grade dan tidak dapat dipakai untuk memprediksi kelulusan.",
           "Sebelum memakai informasi angka seleksi, periksa dokumen resmi pemerintah dan cocokkan konteks, periode, serta jenis seleksinya.",
+        ],
+      },
+      {
+        heading: "Cara mengecek angka dari sumber primer",
+        paragraphs: [
+          "Jika menemukan angka ambang batas di artikel atau unggahan, cari peraturan atau pengumuman pemerintah yang menjadi sumbernya. Cocokkan periode seleksi, jenis tes, kelompok atau jabatan yang disebut, dan tanggal dokumen. Pastikan tidak membaca nilai dari tahun atau jenis seleksi lain sebagai ketentuan saat ini.",
+          "Nilai pada simulator ini dihitung untuk latihan berdasarkan kunci contoh. Ia tidak membuktikan seseorang memenuhi syarat, melewati ambang resmi, atau akan memperoleh peringkat tertentu.",
         ],
       },
       {
@@ -354,6 +445,13 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         ],
       },
       {
+        heading: "Contoh siklus belajar yang fleksibel",
+        paragraphs: [
+          "Mulai dengan sesi singkat untuk mengetahui topik yang perlu dipelajari. Pada sesi berikutnya, fokus pada satu kategori dan baca pembahasan sampai paham alasannya. Sisihkan sesi lain untuk soal campuran dan evaluasi kembali kesalahan yang berulang. Sesuaikan lama serta frekuensi belajar dengan waktu dan kebutuhan Anda; pola ini adalah contoh pengaturan belajar, bukan jadwal resmi.",
+          "Simpan catatan berupa jenis kesalahan dan langkah koreksi, bukan sekadar angka skor. Misalnya: salah memahami kata pembatas pada premis, terburu-buru menghitung persentase, atau memilih respons sebelum mengklarifikasi situasi.",
+        ],
+      },
+      {
         heading: "Jelajahi pusat belajar",
         paragraphs: [
           "Buka latihan soal, soal TWK, TIU, TKP, PPPK, atau sekolah kedinasan melalui tautan terkait di halaman ini.",
@@ -363,28 +461,28 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
     sourceLinks: officialSources,
   },
   artikel: {
-    title: "Artikel Persiapan ASN",
-    metaTitle: "Artikel dan Catatan Belajar ASN | Daftar CPNS",
+    title: "Pusat Panduan Persiapan ASN",
+    metaTitle: "Panduan Belajar CPNS, PPPK, dan Sekolah Kedinasan | Daftar CPNS",
     description:
-      "Kumpulan catatan belajar CPNS, PPPK, dan sekolah kedinasan. Pengumuman seleksi hanya dirujuk dari sumber resmi.",
+      "Pilih panduan latihan CPNS, PPPK, dan sekolah kedinasan serta cara memeriksa informasi seleksi dari sumber resmi.",
     intro:
-      "Pusat artikel berisi panduan evergreen untuk membantu pembaca mencari sumber resmi dan menggunakan latihan demo dengan tepat.",
+      "Pusat materi ini mengelompokkan panduan belajar dan halaman latihan yang sudah tersedia. Informasi jadwal, formasi, dan ketentuan seleksi tetap harus dicocokkan dengan pengumuman pemerintah.",
     sections: [
       {
-        heading: "Catatan belajar yang tersedia",
+        heading: "Pilih materi sesuai kebutuhan",
         paragraphs: [
-          "Panduan di situs ini berfokus pada kebiasaan belajar, penjelasan soal contoh, dan cara memeriksa sumber pengumuman. Tanggal seleksi, formasi, serta ambang nilai tidak diperkirakan atau dibuat-buat.",
+          "Mulai dari simulasi jika ingin membiasakan diri dengan timer dan navigasi soal. Buka halaman TWK, TIU, atau TKP untuk melihat contoh dan pembahasan per kategori. Untuk informasi administrasi, gunakan panduan memeriksa syarat, jadwal, formasi, dan pendaftaran.",
         ],
         bullets: [
-          "Panduan persiapan belajar.",
-          "Contoh soal dan pembahasan.",
-          "Tautan ke portal resmi.",
+          "Latihan konsep dan penalaran pada TWK dan TIU.",
+          "Menilai alasan pilihan respons pada contoh situasi TKP.",
+          "Menemukan sumber resmi sebelum mengambil keputusan pendaftaran.",
         ],
       },
       {
-        heading: "Pembaruan informasi",
+        heading: "Batas informasi seleksi",
         paragraphs: [
-          "Informasi seleksi berubah mengikuti pengumuman pemerintah. Jika perubahan belum diverifikasi dari sumber primer, halaman terkait akan menyatakan bahwa datanya belum terverifikasi.",
+          "Halaman ini tidak memuat jadwal atau formasi hasil perkiraan. Informasi yang dapat berubah perlu diperiksa langsung pada pengumuman resmi yang berlaku. Soal, kunci, dan skor demo adalah materi belajar independen, bukan soal atau nilai resmi.",
         ],
       },
     ],

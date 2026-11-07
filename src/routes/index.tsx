@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpenCheck, CircleHelp, Clock3, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteShell } from "@/components/site";
-import studySheet from "@/assets/study-sheet-illustration.png";
+import studySheet from "@/assets/study-sheet-illustration.jpg";
 import { canonicalUrl, CONTACT_EMAIL, OPERATOR_NAME, SITE_ORIGIN } from "@/lib/site-config";
 
 export const Route = createFileRoute("/")({
@@ -21,12 +21,15 @@ export const Route = createFileRoute("/")({
         content: "Latihan TWK, TIU, dan TKP secara online dengan simulasi demo dan pembahasan.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: canonicalUrl("/brand/daftar-cpns-mark.svg") },
+      { property: "og:image", content: canonicalUrl("/brand/social-card.jpg") },
+      { property: "og:image:type", content: "image/jpeg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       {
         property: "og:image:alt",
-        content: "Monogram DC Daftar CPNS yang menyatukan huruf putih dan hijau",
+        content: "Daftar CPNS, latihan CAT CPNS dan soal TWK, TIU, serta TKP",
       },
-      { name: "twitter:image", content: canonicalUrl("/brand/daftar-cpns-mark.svg") },
+      { name: "twitter:image", content: canonicalUrl("/brand/social-card.jpg") },
       { property: "og:url", content: canonicalUrl("/") },
       { property: "og:locale", content: "id_ID" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -104,12 +107,6 @@ function HomePage() {
           "Latihan TWK, TIU, dan TKP secara online dengan contoh soal dan pembahasan. Platform edukasi independen, bukan layanan pemerintah.",
         inLanguage: "id",
         publisher: { "@id": `${SITE_ORIGIN}/#operator` },
-        breadcrumb: { "@id": `${homeUrl}#breadcrumb` },
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": `${homeUrl}#breadcrumb`,
-        itemListElement: [{ "@type": "ListItem", position: 1, name: "Beranda", item: homeUrl }],
       },
     ],
   };

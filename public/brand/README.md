@@ -6,7 +6,8 @@ D putih melalui ruang negatif di atas bidang navy; wordmark tetap ditulis sebaga
 teks HTML agar terbaca, responsif, dan dapat diakses.
 
 Palet: navy `#17365D`, hijau `#65D6A0`, dan putih `#FFFFFF`. SVG adalah master
-vektor dan dipakai pada header, favicon, ikon manifest, serta metadata berbagi.
+vektor monogram untuk header, favicon, dan ikon manifest. Metadata berbagi memakai
+`social-card.jpg` berukuran 1200 × 630; ilustrasi hero memakai versi JPEG terkompresi.
 Jangan mengubah proporsi atau menambahkan lambang, simbol, atau identitas instansi
 pemerintah. Uji keterbacaan pada ukuran kecil dan di atas latar terang.
 
