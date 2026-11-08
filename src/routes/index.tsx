@@ -9,16 +9,18 @@ export const Route = createFileRoute("/")({
   component: HomePage,
   head: () => ({
     meta: [
-      { title: "Simulasi CAT CPNS Gratis & Persiapan Seleksi ASN | Daftar CPNS" },
+      { title: "Belajar & Latihan CAT CPNS | Simulasi Gratis | Daftar CPNS" },
       {
         name: "description",
         content:
-          "Latihan TWK, TIU, dan TKP secara online, ikuti simulasi CAT, pelajari pembahasan, serta tingkatkan persiapan menghadapi seleksi ASN.",
+          "Belajar dan latihan CAT CPNS melalui simulasi gratis 110 soal, latihan TWK, TIU, TKP, dan pembahasan. Platform independen, bukan situs pemerintah.",
       },
-      { property: "og:title", content: "Simulasi CAT CPNS Gratis & Persiapan Seleksi ASN" },
+      { property: "og:site_name", content: "Daftar CPNS" },
+      { property: "og:title", content: "Belajar & Latihan CAT CPNS | Simulasi Gratis" },
       {
         property: "og:description",
-        content: "Latihan TWK, TIU, dan TKP secara online dengan simulasi demo dan pembahasan.",
+        content:
+          "Simulasi demo CAT CPNS 110 soal, latihan TWK, TIU, TKP, serta pembahasan dari platform edukasi independen.",
       },
       { property: "og:type", content: "website" },
       { property: "og:image", content: canonicalUrl("/brand/social-card.jpg") },
@@ -33,6 +35,12 @@ export const Route = createFileRoute("/")({
       { property: "og:url", content: canonicalUrl("/") },
       { property: "og:locale", content: "id_ID" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Belajar & Latihan CAT CPNS | Simulasi Gratis" },
+      {
+        name: "twitter:description",
+        content:
+          "Simulasi demo CAT CPNS 110 soal, latihan TWK, TIU, TKP, serta pembahasan dari platform edukasi independen.",
+      },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/") }],
   }),
@@ -97,14 +105,21 @@ function HomePage() {
         name: OPERATOR_NAME,
         email: CONTACT_EMAIL,
         url: homeUrl,
+        logo: canonicalUrl("/brand/daftar-cpns-mark.svg"),
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          email: CONTACT_EMAIL,
+          availableLanguage: "Indonesian",
+        },
       },
       {
         "@type": "WebPage",
         "@id": `${homeUrl}#webpage`,
         url: homeUrl,
-        name: "Simulasi CAT CPNS Gratis & Persiapan Seleksi ASN | Daftar CPNS",
+        name: "Belajar & Latihan CAT CPNS | Simulasi Gratis | Daftar CPNS",
         description:
-          "Latihan TWK, TIU, dan TKP secara online dengan contoh soal dan pembahasan. Platform edukasi independen, bukan layanan pemerintah.",
+          "Belajar dan latihan CAT CPNS melalui simulasi gratis 110 soal, latihan TWK, TIU, TKP, dan pembahasan. Platform independen, bukan situs pemerintah.",
         inLanguage: "id",
         publisher: { "@id": `${SITE_ORIGIN}/#operator` },
       },
@@ -125,11 +140,12 @@ function HomePage() {
               Platform Edukasi &amp; Simulasi CAT Independen
             </p>
             <h1 className="mt-5 text-4xl font-extrabold leading-[1.12] text-foreground sm:text-5xl">
-              Simulasi CAT CPNS Gratis &amp; Persiapan Seleksi ASN
+              Belajar &amp; Latihan CAT CPNS
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-muted-foreground">
-              Latihan TWK, TIU, dan TKP secara online, ikuti simulasi CAT, pelajari pembahasan,
-              serta tingkatkan persiapan menghadapi seleksi ASN.
+              Kerjakan simulasi demo SKD CPNS 110 soal, berlatih TWK, TIU, dan TKP, lalu pelajari
+              pembahasan setiap jawaban. Materi ini dibuat untuk belajar mandiri, bukan layanan
+              resmi pemerintah.
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Button asChild className="min-h-12">

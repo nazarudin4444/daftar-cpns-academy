@@ -7,7 +7,7 @@ import {
   type Subject,
 } from "@/lib/exam";
 
-export type PackageTrack = "cpns" | "pppk";
+export type PackageTrack = "cpns" | "pppk" | "twk" | "tiu" | "tkp";
 export type ExamPackage = {
   id: string;
   track: PackageTrack;
@@ -18,19 +18,31 @@ export type ExamPackage = {
 };
 
 // These are practice configurations, not official selection rules.
-export const EXAM_PACKAGES: ExamPackage[] = (["cpns", "pppk"] as const).flatMap((track) =>
-  Array.from({ length: 20 }, (_, index) => ({
-    id: `${track}-paket-${index + 1}`,
-    track,
-    number: index + 1,
-    title: `Paket ${String(index + 1).padStart(2, "0")}`,
-    durationSeconds: 100 * 60,
-    composition:
-      track === "cpns"
-        ? { TWK: 30, TIU: 35, TKP: 45 }
-        : { Manajerial: 35, "Sosial Kultural": 35, Teknis: 40 },
-  })),
-);
+export const EXAM_PACKAGES: ExamPackage[] = [
+  ...(["cpns", "pppk"] as const).flatMap((track) =>
+    Array.from({ length: 20 }, (_, index) => ({
+      id: `${track}-paket-${index + 1}`,
+      track,
+      number: index + 1,
+      title: `Paket ${String(index + 1).padStart(2, "0")}`,
+      durationSeconds: 100 * 60,
+      composition:
+        track === "cpns"
+          ? { TWK: 30, TIU: 35, TKP: 45 }
+          : { Manajerial: 35, "Sosial Kultural": 35, Teknis: 40 },
+    })),
+  ),
+  ...(["twk", "tiu", "tkp"] as const).flatMap((track) =>
+    Array.from({ length: 10 }, (_, index) => ({
+      id: `${track}-paket-${index + 1}`,
+      track,
+      number: index + 1,
+      title: `Paket ${String(index + 1).padStart(2, "0")}`,
+      durationSeconds: 50 * 60,
+      composition: { [track.toUpperCase() as "TWK" | "TIU" | "TKP"]: 50 },
+    })),
+  ),
+];
 
 export function getExamPackage(id: string): ExamPackage {
   const item = EXAM_PACKAGES.find((candidate) => candidate.id === id);
@@ -50,7 +62,11 @@ export function questionsForPackage(
 ): Question[] {
   const examPackage = getExamPackage(id);
   const questions = Object.entries(examPackage.composition).flatMap(([subject, count]) => {
-    const candidates = bank.filter((question) => question.subject === subject);
+    const focusedTrack = ["twk", "tiu", "tkp"].includes(examPackage.track);
+    const candidates = bank.filter(
+      (question) =>
+        question.subject === subject && (!focusedTrack || question.difficulty === "HOTS"),
+    );
     if (candidates.length < count) {
       throw new Error(
         `${id}: ${subject} membutuhkan ${count} soal, tersedia ${candidates.length}.`,
@@ -63,8 +79,15 @@ export function questionsForPackage(
       )
       .slice(0, count);
   });
-  if (questions.length !== 110 || new Set(questions.map((question) => question.id)).size !== 110) {
-    throw new Error(`${id}: paket harus berisi 110 soal berbeda.`);
+  const expectedCount = Object.values(examPackage.composition).reduce(
+    (sum, count) => sum + count,
+    0,
+  );
+  if (
+    questions.length !== expectedCount ||
+    new Set(questions.map((question) => question.id)).size !== expectedCount
+  ) {
+    throw new Error(`${id}: paket harus berisi ${expectedCount} soal berbeda.`);
   }
   return questions;
 }

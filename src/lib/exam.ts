@@ -5,7 +5,7 @@ import { PPPK_HOTS_QUESTIONS } from "@/lib/exam-pppk-hots";
 import { PPPK_SOCIAL_QUESTIONS } from "@/lib/exam-pppk-social";
 import { PPPK_TECHNICAL_QUESTIONS } from "@/lib/exam-pppk-technical";
 
-export type Track = "cpns" | "pppk" | "kedinasan";
+export type Track = "cpns" | "pppk" | "kedinasan" | "twk" | "tiu" | "tkp";
 export type Subject = "TWK" | "TIU" | "TKP" | "Manajerial" | "Sosial Kultural" | "Teknis";
 
 export type Question = {
@@ -29,7 +29,9 @@ export const DEMO_RULES = {
 export function rulesForTrack(track: Track) {
   return track === "cpns"
     ? { ...DEMO_RULES, durationSeconds: 100 * 60, questionsPerTrack: 110 }
-    : DEMO_RULES;
+    : ["twk", "tiu", "tkp"].includes(track)
+      ? { ...DEMO_RULES, durationSeconds: 30 * 60, questionsPerTrack: 30 }
+      : DEMO_RULES;
 }
 
 export const TRACKS: { id: Track; name: string; description: string; subjects: Subject[] }[] = [
@@ -50,6 +52,24 @@ export const TRACKS: { id: Track; name: string; description: string; subjects: S
     name: "Sekolah kedinasan",
     description: "Latihan dasar penalaran, wawasan, dan situasi kerja.",
     subjects: ["TWK", "TIU", "TKP"],
+  },
+  {
+    id: "twk",
+    name: "Latihan Fokus TWK",
+    description: "Paket khusus wawasan kebangsaan dan penalaran kewargaan.",
+    subjects: ["TWK"],
+  },
+  {
+    id: "tiu",
+    name: "Latihan Fokus TIU",
+    description: "Paket khusus verbal, numerik, dan penalaran logis.",
+    subjects: ["TIU"],
+  },
+  {
+    id: "tkp",
+    name: "Latihan Fokus TKP",
+    description: "Paket khusus situasi kerja dan pelayanan publik.",
+    subjects: ["TKP"],
   },
 ];
 
@@ -1801,7 +1821,7 @@ export function questionsForTrack(track: Track, seed = 0): Question[] {
   if (track === "cpns")
     return bySubject.flatMap((questions, index) => questions.slice(0, [30, 35, 45][index]));
   return Array.from(
-    { length: DEMO_RULES.questionsPerTrack },
+    { length: rulesForTrack(track).questionsPerTrack },
     (_, index) => bySubject[index % bySubject.length]?.[Math.floor(index / bySubject.length)],
   ).filter((question): question is Question => Boolean(question));
 }

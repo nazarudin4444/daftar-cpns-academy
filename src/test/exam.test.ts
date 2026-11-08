@@ -56,7 +56,9 @@ describe("Bank soal dan penilaian", () => {
         expect(questions.filter((q) => q.subject === subject)).toHaveLength(
           track.id === "cpns"
             ? ({ TWK: 30, TIU: 35, TKP: 45 } as Record<string, number>)[subject]!
-            : 5,
+            : ["twk", "tiu", "tkp"].includes(track.id)
+              ? 30
+              : 5,
         );
       expect(scoreExam(track.id, {}).correct).toBe(0);
       const answers = Object.fromEntries(questions.map((q) => [q.id, q.answer]));

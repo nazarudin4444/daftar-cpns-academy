@@ -17,17 +17,17 @@ const officialSources = [
 export const CONTENT_PAGES: Record<string, ContentPageData> = {
   "simulasi-cat-cpns": {
     title: "Simulasi CAT CPNS",
-    metaTitle: "Simulasi CAT CPNS Gratis, Latihan Demo | Daftar CPNS",
+    metaTitle: "Simulasi CAT CPNS Gratis 110 Soal | Daftar CPNS",
     description:
-      "Coba latihan demo CAT CPNS tanpa akun. Jawab soal orisinal, tandai soal ragu, pulihkan progres, lalu baca hasil dan pembahasan.",
+      "Kerjakan simulasi CAT CPNS gratis berisi 110 soal dalam 100 menit. Tandai soal ragu, simpan progres di browser, lalu tinjau hasil dan pembahasan.",
     intro:
-      "Coba latihan pilihan ganda yang berjalan langsung di perangkat Anda. Semua pertanyaan dan penilaian pada halaman ini adalah contoh latihan, bukan soal resmi atau prediksi hasil seleksi.",
+      "Pilih satu dari 20 paket demo SKD CPNS. Setiap paket memuat 110 soal TWK, TIU, dan TKP dengan batas waktu 100 menit. Soal dan skor merupakan materi latihan independen, bukan soal resmi atau prediksi hasil seleksi.",
     sections: [
       {
         heading: "Cara menggunakan latihan",
         paragraphs: [
-          "Pilih jenis latihan, mulai sesi, lalu jawab soal satu per satu. Gunakan daftar nomor untuk berpindah, dan tandai soal yang ingin diperiksa kembali.",
-          "Waktu, jumlah soal, dan penilaian demo dapat diubah pada konfigurasi latihan. Pada sesi ini, nilai dihitung satu poin untuk setiap jawaban benar, tanpa ambang lulus.",
+          "Pilih paket, baca panduan singkat, lalu mulai sesi. Gunakan daftar nomor untuk berpindah dan tandai soal yang ingin diperiksa kembali. Setiap paket demo SKD CPNS berisi 110 soal dengan batas waktu 100 menit.",
+          "Nilai demo dihitung satu poin untuk setiap jawaban benar. Simulasi ini tidak menetapkan ambang lulus atau passing grade seleksi.",
         ],
         bullets: [
           "Tidak perlu masuk akun.",
@@ -38,7 +38,7 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
       {
         heading: "Baca hasil tanpa menyamakannya dengan seleksi",
         paragraphs: [
-          "Setelah sesi selesai, lihat jumlah jawaban benar per kategori, waktu rata-rata, lalu buka pembahasan untuk meninjau alasan setiap kunci. Gunakan catatan itu untuk memilih topik latihan berikutnya; satu hasil demo tidak cukup untuk menyimpulkan kesiapan atau peluang lulus.",
+          "Setelah sesi selesai, lihat jumlah jawaban benar per kategori dan waktu pengerjaan, lalu buka pembahasan untuk meninjau alasan setiap kunci. Gunakan catatan itu untuk memilih topik latihan berikutnya; satu hasil demo tidak cukup untuk menyimpulkan kesiapan atau peluang lulus.",
           "Variasi soal dapat berbeda pada sesi baru. Progres sesi aktif disimpan di browser perangkat agar sesi dapat dipulihkan, sedangkan halaman ini tidak membuat akun atau mengirim jawaban demo ke layanan pendaftaran.",
         ],
       },
@@ -53,16 +53,16 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
   },
   "tryout-cpns-gratis": {
     title: "Tryout CPNS Gratis",
-    metaTitle: "Tryout CPNS Gratis dengan Pembahasan Demo | Daftar CPNS",
+    metaTitle: "Tryout CPNS Gratis 110 Soal dan Pembahasan | Daftar CPNS",
     description:
-      "Ikuti tryout CPNS gratis dalam format latihan demo, lihat nilai per kategori, dan telaah penjelasan setiap jawaban.",
+      "Ikuti tryout CPNS gratis berisi 110 soal dalam 100 menit. Lihat hasil per kategori dan baca pembahasan setiap jawaban setelah sesi.",
     intro:
       "Tryout demo membantu Anda membiasakan diri membaca soal pilihan ganda, mengatur waktu, dan meninjau alasan di balik jawaban.",
     sections: [
       {
         heading: "Apa yang tersedia",
         paragraphs: [
-          "Sesi demo memuat contoh soal orisinal, penghitung waktu, penanda ragu, navigasi nomor, hasil per kategori, dan pembahasan.",
+          "Paket demo SKD CPNS memuat 110 soal TWK, TIU, dan TKP, penghitung waktu 100 menit, penanda ragu, navigasi nomor, hasil per kategori, dan pembahasan.",
           "Skor demo bukan nilai resmi, bukan passing grade, dan tidak menjamin hasil seleksi.",
         ],
       },
@@ -212,24 +212,24 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
   },
   pppk: {
     title: "Panduan Belajar PPPK",
-    metaTitle: "Panduan Belajar dan Simulasi PPPK | Daftar CPNS",
+    metaTitle: "Panduan Belajar PPPK dan Sumber Seleksi Resmi | Daftar CPNS",
     description:
-      "Pengenalan latihan PPPK demo dengan contoh manajerial, sosial kultural, dan teknis. Periksa persyaratan pada pengumuman resmi.",
+      "Pelajari kelompok kompetensi PPPK dan cara memeriksa pengumuman resmi. Paket simulasi PPPK 110 soal di Daftar CPNS masih dilengkapi.",
     intro:
-      "Halaman ini mengarahkan Anda ke latihan PPPK demo dan sumber pengumuman pemerintah. Ketentuan seleksi, jabatan, dan materi mengikuti pengumuman resmi yang berlaku.",
+      "Halaman ini mengenalkan kelompok kompetensi PPPK dan sumber pengumuman pemerintah. Paket simulasi 110 soal belum tersedia karena bank demo masih dilengkapi. Ketentuan seleksi, jabatan, dan materi mengikuti pengumuman resmi yang berlaku.",
     sections: [
       {
-        heading: "Latihan demo PPPK",
+        heading: "Status simulasi PPPK",
         paragraphs: [
-          "Sesi latihan memuat contoh orisinal kategori manajerial, sosial kultural, dan teknis. Kategori pada latihan ini hanya untuk demonstrasi belajar, bukan kisi-kisi resmi.",
-          "Nilai dihitung dari jawaban yang benar menurut kunci contoh. Jangan membandingkannya dengan ambang nilai seleksi.",
+          "Paket simulasi PPPK 110 soal belum dapat dikerjakan. Halaman ini tidak menyajikan sesi ujian PPPK aktif atau skor latihan PPPK.",
+          "Sebelum menggunakan materi seleksi, cocokkan persyaratan, jabatan, jadwal, dan kompetensi dengan pengumuman resmi instansi. Kategori pengenalan pada panduan ini bukan kisi-kisi resmi.",
         ],
       },
       {
-        heading: "Gunakan tiga kelompok latihan secara terarah",
+        heading: "Kenali kelompok kompetensi",
         paragraphs: [
-          "Contoh manajerial mengajak Anda menimbang koordinasi dan penyelesaian pekerjaan. Contoh sosial kultural menekankan komunikasi yang menghormati orang dengan latar atau kebutuhan berbeda. Contoh teknis melatih ketelitian pada tugas kerja sederhana. Ketiganya adalah kelompok latihan yang disediakan situs, bukan klaim bahwa seluruh jabatan atau seleksi PPPK memakai susunan yang sama.",
-          "Saat meninjau hasil, catat alasan memilih opsi dan informasi yang Anda lewatkan. Untuk materi teknis jabatan tertentu, gunakan persyaratan kompetensi dan referensi yang disebutkan oleh instansi pada pengumuman resminya.",
+          "Kompetensi manajerial berkaitan dengan koordinasi dan penyelesaian pekerjaan. Kompetensi sosial kultural menekankan komunikasi yang menghormati latar serta kebutuhan yang berbeda. Kompetensi teknis bergantung pada tugas jabatan. Halaman ini memberi pengenalan umum, bukan daftar kompetensi lengkap atau kisi-kisi resmi.",
+          "Untuk kompetensi teknis jabatan tertentu, gunakan persyaratan dan referensi yang disebutkan instansi pada pengumuman resmi. Jangan menyimpulkan seluruh materi seleksi PPPK dari panduan umum ini.",
         ],
       },
       {

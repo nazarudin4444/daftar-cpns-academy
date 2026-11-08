@@ -75,7 +75,10 @@ function storedRules(track: Track, packageId?: string) {
     (candidate) => candidate.id === packageId && candidate.track === track,
   );
   return item
-    ? { questionsPerTrack: 110, durationSeconds: item.durationSeconds }
+    ? {
+        questionsPerTrack: Object.values(item.composition).reduce((sum, count) => sum + count, 0),
+        durationSeconds: item.durationSeconds,
+      }
     : rulesForTrack(track);
 }
 

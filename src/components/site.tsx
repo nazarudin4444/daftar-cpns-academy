@@ -583,12 +583,11 @@ function CPNSQuestionBank() {
   );
 }
 
-export function ContentPage({ page }: { page: ContentPageData }) {
+export function contentStructuredData(page: ContentPageData) {
   const isSimulator = page === CONTENT_PAGES["simulasi-cat-cpns"];
   const slug = Object.keys(CONTENT_PAGES).find((key) => CONTENT_PAGES[key] === page) ?? "";
-  const isQuestionBank = slug === "latihan-soal-cpns";
   const canonicalPath = canonicalUrl(`/${slug}`);
-  const structuredData = {
+  return {
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -604,6 +603,14 @@ export function ContentPage({ page }: { page: ContentPageData }) {
         "@id": `${SITE_ORIGIN}/#operator`,
         name: OPERATOR_NAME,
         email: CONTACT_EMAIL,
+        url: canonicalUrl("/tentang-kami"),
+        logo: canonicalUrl("/brand/daftar-cpns-mark.svg"),
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          email: CONTACT_EMAIL,
+          availableLanguage: "Indonesian",
+        },
       },
       {
         "@type": "WebPage",
@@ -614,6 +621,7 @@ export function ContentPage({ page }: { page: ContentPageData }) {
         inLanguage: "id",
         publisher: { "@id": `${SITE_ORIGIN}/#operator` },
         breadcrumb: { "@id": `${canonicalPath}#breadcrumb` },
+        ...(isSimulator ? { mainEntity: { "@id": `${canonicalPath}#application` } } : {}),
       },
       {
         "@type": "BreadcrumbList",
@@ -623,8 +631,42 @@ export function ContentPage({ page }: { page: ContentPageData }) {
           { "@type": "ListItem", position: 2, name: page.title, item: canonicalPath },
         ],
       },
+      ...(isSimulator
+        ? [
+            {
+              "@type": "WebApplication",
+              "@id": `${canonicalPath}#application`,
+              name: "Simulasi CAT CPNS Daftar CPNS",
+              url: canonicalPath,
+              description: page.description,
+              applicationCategory: "EducationalApplication",
+              operatingSystem: "Any",
+              inLanguage: "id",
+              isAccessibleForFree: true,
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "IDR",
+              },
+              featureList: [
+                "20 paket demo SKD CPNS, masing-masing 110 soal",
+                "Timer 100 menit dan navigasi nomor soal",
+                "Penanda soal ragu dan pemulihan progres di browser",
+                "Hasil per kategori dan pembahasan jawaban",
+              ],
+              publisher: { "@id": `${SITE_ORIGIN}/#operator` },
+            },
+          ]
+        : []),
     ],
   };
+}
+
+export function ContentPage({ page }: { page: ContentPageData }) {
+  const slug = Object.keys(CONTENT_PAGES).find((key) => CONTENT_PAGES[key] === page) ?? "";
+  const isSimulator = page === CONTENT_PAGES["simulasi-cat-cpns"];
+  const isQuestionBank = slug === "latihan-soal-cpns";
+  const structuredData = contentStructuredData(page);
   return (
     <SiteShell>
       <main className="min-h-[65vh]">
@@ -1444,7 +1486,12 @@ function CATSimulator() {
     !activePackage ||
     Object.entries(activePackage.composition).every(
       ([subject, count]) =>
-        QUESTION_BANK.filter((question) => question.subject === subject).length >= count,
+        QUESTION_BANK.filter(
+          (question) =>
+            question.subject === subject &&
+            (!["twk", "tiu", "tkp"].includes(activePackage.track) ||
+              question.difficulty === "HOTS"),
+        ).length >= count,
     );
   const activeQuestions =
     selectedTrack && packageReady
@@ -1453,7 +1500,9 @@ function CATSimulator() {
           ...(activePackage ? { packageId: activePackage.id } : {}),
         })
       : [];
-  const questionCount = activePackage ? 110 : activeQuestions.length;
+  const questionCount = activePackage
+    ? Object.values(activePackage.composition).reduce((sum, count) => sum + count, 0)
+    : activeQuestions.length;
   const subjectBreakdown =
     activeTrack?.subjects.map((subject) => ({
       subject,
@@ -1488,10 +1537,12 @@ function CATSimulator() {
               <p className="mt-2 text-xs font-semibold text-foreground">
                 {track.id === "kedinasan"
                   ? `${rulesForTrack(track.id).questionsPerTrack} soal latihan`
-                  : `${EXAM_PACKAGES.filter((item) => item.track === track.id).length} pilihan paket · 110 soal per paket`}{" "}
+                  : `${EXAM_PACKAGES.filter((item) => item.track === track.id).length} pilihan paket · ${rulesForTrack(track.id).questionsPerTrack} soal per paket`}{" "}
                 ·{" "}
                 {formatDuration(
-                  track.id === "kedinasan" ? rulesForTrack(track.id).durationSeconds : 100 * 60,
+                  track.id === "kedinasan"
+                    ? rulesForTrack(track.id).durationSeconds
+                    : (activePackage?.durationSeconds ?? rulesForTrack(track.id).durationSeconds),
                 )}
               </p>
             </div>
@@ -1514,8 +1565,10 @@ function CATSimulator() {
         <fieldset className="mt-6">
           <legend className="font-bold">Pilih paket latihan</legend>
           <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            Setiap paket berisi 110 soal tanpa pengulangan dalam satu sesi. Beberapa soal dapat
-            muncul di paket lain.
+            {(["twk", "tiu", "tkp"] as string[]).includes(selectedTrack)
+              ? "Setiap paket fokus berisi 50 soal HOTS."
+              : "Setiap paket berisi 110 soal."}{" "}
+            Tanpa pengulangan dalam satu sesi. Beberapa soal dapat muncul di paket lain.
           </p>
           <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {EXAM_PACKAGES.filter((item) => item.track === selectedTrack).map((item) => (
@@ -1537,7 +1590,9 @@ function CATSimulator() {
                 <span className="min-w-0">
                   <span className="block text-base font-bold">{item.title}</span>
                   <span className="mt-1 block text-xs text-muted-foreground">
-                    110 soal · 100 menit latihan
+                    {Object.values(item.composition).reduce((sum, count) => sum + count, 0)} soal
+                    {(["twk", "tiu", "tkp"] as string[]).includes(item.track) ? " HOTS" : ""} ·{" "}
+                    {formatDuration(item.durationSeconds)}
                   </span>
                   <span className="mt-2 block text-xs text-muted-foreground">
                     {Object.entries(item.composition)
@@ -1725,6 +1780,8 @@ export function contentHead(page: ContentPageData, canonical: string) {
     meta: [
       { title: page.metaTitle },
       { name: "description", content: page.description },
+      { name: "author", content: OPERATOR_NAME },
+      { property: "og:site_name", content: "Daftar CPNS" },
       { property: "og:title", content: page.metaTitle },
       { property: "og:description", content: page.description },
       { property: "og:type", content: "website" },
@@ -1740,6 +1797,8 @@ export function contentHead(page: ContentPageData, canonical: string) {
       { property: "og:url", content: canonicalUrl(canonical) },
       { property: "og:locale", content: "id_ID" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: page.metaTitle },
+      { name: "twitter:description", content: page.description },
       ...(page.noIndex ? [{ name: "robots", content: "noindex, nofollow" }] : []),
     ],
     links: [{ rel: "canonical", href: canonicalUrl(canonical) }],

@@ -5,6 +5,7 @@ import {
   questionsForPackage,
   scoreAttempt,
 } from "@/lib/exam-packages";
+import { QUESTION_BANK } from "@/lib/exam";
 
 describe("Identitas paket CAT", () => {
   it("menyediakan dua puluh identitas paket pada masing-masing jalur", () => {
@@ -49,5 +50,31 @@ describe("Identitas paket CAT", () => {
     expect(() => questionsForAttempt({ track: "pppk", packageId: "cpns-paket-1" })).toThrow();
     expect(() => questionsForPackage("cpns-paket-1", [])).toThrow();
     expect(() => questionsForPackage("paket-tidak-ada")).toThrow();
+  });
+
+  it("menyediakan sepuluh konfigurasi paket fokus 50 HOTS untuk TWK, TIU, dan TKP", () => {
+    for (const subject of ["twk", "tiu", "tkp"] as const) {
+      const packages = EXAM_PACKAGES.filter((item) => item.track === subject);
+      expect(packages).toHaveLength(10);
+      for (const item of packages) {
+        const available = QUESTION_BANK.filter(
+          (question) =>
+            question.subject === subject.toUpperCase() && question.difficulty === "HOTS",
+        ).length;
+        if (available < 50) {
+          expect(() => questionsForPackage(item.id)).toThrow();
+          continue;
+        }
+        const questions = questionsForPackage(item.id);
+        expect(questions).toHaveLength(50);
+        expect(new Set(questions.map((question) => question.id)).size).toBe(50);
+        expect(
+          questions.every(
+            (question) =>
+              question.subject === subject.toUpperCase() && question.difficulty === "HOTS",
+          ),
+        ).toBe(true);
+      }
+    }
   });
 });
