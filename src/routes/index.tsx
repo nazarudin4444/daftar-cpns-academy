@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, BookOpenCheck, CircleHelp, Clock3, ShieldCheck } from "lucide-react";
+import { ArrowRight, BookOpenCheck, Briefcase, GraduationCap, Landmark, CircleHelp, Clock3, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HomeCatPreview } from "@/components/home-cat-preview";
 import { SiteShell } from "@/components/site";
@@ -52,18 +52,27 @@ const category = [
     copy: "Latihan demo SKD: TWK, TIU, dan TKP.",
     href: "/simulasi-cat-cpns",
     label: "Coba latihan",
+    icon: GraduationCap,
+    tags: ["TWK", "TIU", "TKP"],
+    tone: "primary",
   },
   {
     title: "PPPK",
     copy: "Panduan kelompok kompetensi dan rujukan informasi seleksi resmi.",
     href: "/pppk",
     label: "Lihat latihan",
+    icon: Briefcase,
+    tags: ["Teknis", "Manajerial", "Sosial kultural"],
+    tone: "positive",
   },
   {
     title: "Sekolah kedinasan",
     copy: "Latihan dasar dan rujukan pengumuman instansi.",
     href: "/sekolah-kedinasan",
     label: "Pelajari",
+    icon: Landmark,
+    tags: ["Tes dasar", "Rujukan instansi"],
+    tone: "brand",
   },
 ];
 
@@ -256,21 +265,44 @@ function HomePage() {
           </div>
           <div className="mt-7 grid gap-4 md:grid-cols-3">
             {category.map((item, index) => (
-              <article
+              <Link
                 key={item.title}
-                className={`flex min-h-56 flex-col border-t-2 ${index === 0 ? "border-primary" : index === 1 ? "border-positive" : "border-border"} bg-card p-5`}
+                to={item.href}
+                className="group relative flex min-h-60 flex-col overflow-hidden rounded-2xl border border-border bg-card p-6 transition duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg focus-visible:-translate-y-1"
               >
-                <span className="text-sm font-bold text-muted-foreground">0{index + 1}</span>
-                <h3 className="mt-4 text-xl font-bold">{item.title}</h3>
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-x-0 top-0 h-1 ${item.tone === "primary" ? "bg-primary" : item.tone === "positive" ? "bg-positive" : "bg-accent"}`}
+                />
+                <div className="flex items-start justify-between">
+                  <span
+                    className={`grid size-12 place-items-center rounded-xl ${item.tone === "primary" ? "bg-primary/10 text-primary" : item.tone === "positive" ? "bg-positive/10 text-positive" : "bg-accent/15 text-accent-foreground"}`}
+                  >
+                    <item.icon size={24} aria-hidden="true" />
+                  </span>
+                  <span className="rounded-full bg-secondary px-3 py-1 text-xs font-bold tabular-nums text-muted-foreground">
+                    Jalur 0{index + 1}
+                  </span>
+                </div>
+                <h3 className="mt-5 text-xl font-extrabold">{item.title}</h3>
                 <p className="mt-2 leading-6 text-muted-foreground">{item.copy}</p>
-                <Link
-                  to={item.href}
-                  className="mt-auto flex min-h-11 items-end gap-2 pt-4 font-bold text-primary"
-                >
+                <ul className="mt-4 flex flex-wrap gap-2" aria-label="Materi">
+                  {item.tags.map((tag) => (
+                    <li
+                      key={tag}
+                      className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-semibold"
+                    >
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+                <span className="mt-auto flex min-h-11 items-center justify-between gap-2 border-t border-border pt-4 font-bold text-primary">
                   {item.label}
-                  <ArrowRight size={16} />
-                </Link>
-              </article>
+                  <span className="grid size-9 place-items-center rounded-full bg-primary/10 transition group-hover:bg-primary group-hover:text-primary-foreground">
+                    <ArrowRight size={16} aria-hidden="true" />
+                  </span>
+                </span>
+              </Link>
             ))}
           </div>
         </section>
