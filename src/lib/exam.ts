@@ -4,6 +4,9 @@ import { CHAPTER_QUESTIONS } from "@/lib/exam-chapter-extension";
 import { PPPK_HOTS_QUESTIONS } from "@/lib/exam-pppk-hots";
 import { PPPK_SOCIAL_QUESTIONS } from "@/lib/exam-pppk-social";
 import { PPPK_TECHNICAL_QUESTIONS } from "@/lib/exam-pppk-technical";
+import { PPPK_MANAGERIAL_EXTENSION_QUESTIONS } from "@/lib/exam-pppk-managerial-extension";
+import { PPPK_SOCIAL_EXTENSION_QUESTIONS } from "@/lib/exam-pppk-social-extension";
+import { PPPK_TECHNICAL_EXTENSION_QUESTIONS } from "@/lib/exam-pppk-technical-extension";
 
 export type Track = "cpns" | "pppk" | "kedinasan" | "twk" | "tiu" | "tkp";
 export type Subject = "TWK" | "TIU" | "TKP" | "Manajerial" | "Sosial Kultural" | "Teknis";
@@ -1799,6 +1802,9 @@ export const QUESTION_BANK: Question[] = [
   ...PPPK_HOTS_QUESTIONS,
   ...PPPK_SOCIAL_QUESTIONS,
   ...PPPK_TECHNICAL_QUESTIONS,
+  ...PPPK_MANAGERIAL_EXTENSION_QUESTIONS,
+  ...PPPK_SOCIAL_EXTENSION_QUESTIONS,
+  ...PPPK_TECHNICAL_EXTENSION_QUESTIONS,
 ];
 
 function questionHash(value: string): number {

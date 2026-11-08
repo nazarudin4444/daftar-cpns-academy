@@ -1,5 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, BookOpenCheck, Briefcase, GraduationCap, Landmark, CircleHelp, Clock3, ShieldCheck } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpenCheck,
+  Briefcase,
+  CalendarDays,
+  CircleHelp,
+  Clock3,
+  FileSearch,
+  GraduationCap,
+  Landmark,
+  ListChecks,
+  ShieldCheck,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HomeCatPreview } from "@/components/home-cat-preview";
 import { SiteShell } from "@/components/site";
@@ -95,6 +107,33 @@ const questions = [
   ],
 ];
 
+const cpnsInfoLinks = [
+  {
+    label: "Jadwal CPNS",
+    copy: "Lihat pengumuman dan tanggal seleksi yang aktif.",
+    href: "/jadwal-cpns",
+    icon: CalendarDays,
+  },
+  {
+    label: "Formasi CPNS",
+    copy: "Cari jabatan, instansi, dan kualifikasi.",
+    href: "/formasi-cpns",
+    icon: Briefcase,
+  },
+  {
+    label: "Persyaratan CPNS",
+    copy: "Periksa syarat jabatan dan dokumen.",
+    href: "/syarat-cpns",
+    icon: ListChecks,
+  },
+  {
+    label: "Cara daftar CPNS",
+    copy: "Ikuti proses melalui portal SSCASN resmi.",
+    href: "/cara-daftar-cpns",
+    icon: FileSearch,
+  },
+];
+
 function HomePage() {
   const homeUrl = canonicalUrl("/");
   const structuredData = {
@@ -184,42 +223,62 @@ function HomePage() {
               </p>
             </div>
           </div>
-          <div className="mx-auto w-full max-w-[500px] border border-border bg-card p-5 sm:p-6">
-            <p className="text-sm font-bold text-primary">Pusat informasi CPNS</p>
-            <h2 className="mt-2 text-xl font-extrabold text-foreground">
-              Apa yang sedang Anda cari?
-            </h2>
-            <nav
-              aria-label="Informasi CPNS yang sering dicari"
-              className="mt-4 divide-y divide-border"
-            >
-              {(
-                [
-                  ["Jadwal CPNS", "/jadwal-cpns"],
-                  ["Formasi CPNS", "/formasi-cpns"],
-                  ["Persyaratan CPNS", "/syarat-cpns"],
-                  ["Cara daftar CPNS", "/cara-daftar-cpns"],
-                ] as const
-              ).map(([label, href]) => (
+          <div className="mx-auto w-full max-w-[500px] rounded-xl border border-border bg-card p-5 shadow-sm sm:p-6">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-bold text-primary">Pusat informasi CPNS</p>
+                <h2 className="mt-2 text-xl font-extrabold text-foreground">
+                  Apa yang sedang Anda cari?
+                </h2>
+              </div>
+              <span className="shrink-0 rounded-md bg-secondary px-2.5 py-1.5 text-xs font-semibold text-secondary-foreground">
+                Diperiksa 9 Nov 2026
+              </span>
+            </div>
+            <div className="mt-4 rounded-lg border border-border bg-secondary/60 p-3.5">
+              <div className="flex items-start gap-3">
+                <ShieldCheck
+                  className="mt-0.5 shrink-0 text-primary"
+                  size={18}
+                  aria-hidden="true"
+                />
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Belum ada jadwal CPNS umum yang tampil di SSCASN saat diperiksa. Cek pengumuman
+                  resmi sebelum merencanakan pendaftaran.
+                </p>
+              </div>
+            </div>
+            <nav aria-label="Informasi CPNS yang sering dicari" className="mt-4 grid gap-2">
+              {cpnsInfoLinks.map(({ label, copy, href, icon: Icon }) => (
                 <Link
                   key={href}
                   to={href}
-                  className="flex min-h-12 items-center justify-between gap-3 py-2 font-semibold text-foreground hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  className="group flex min-h-[60px] items-center gap-3 rounded-lg border border-border bg-background px-3 py-2.5 transition-colors hover:border-primary/50 hover:bg-secondary/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 >
-                  {label}
-                  <ArrowRight size={17} aria-hidden="true" />
+                  <span className="grid size-10 shrink-0 place-items-center rounded-md bg-secondary text-primary">
+                    <Icon size={19} aria-hidden="true" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-bold text-foreground">{label}</span>
+                    <span className="mt-0.5 block text-sm leading-5 text-muted-foreground">
+                      {copy}
+                    </span>
+                  </span>
+                  <ArrowRight
+                    className="shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
+                    size={17}
+                    aria-hidden="true"
+                  />
                 </Link>
               ))}
             </nav>
-            <p className="mt-4 border-t border-border pt-4 text-sm leading-6 text-muted-foreground">
-              Jadwal dan formasi pada situs ini belum terverifikasi. Periksa pengumuman pemerintah
-              sebelum mengambil keputusan.
-            </p>
             <a
-              href="#sumber-resmi"
-              className="mt-3 inline-flex min-h-11 items-center gap-2 font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              href="https://sscasn.bkn.go.id/"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-4 inline-flex min-h-11 items-center gap-2 font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
-              Lihat sumber resmi
+              Buka portal resmi SSCASN
               <ArrowRight size={17} aria-hidden="true" />
             </a>
           </div>

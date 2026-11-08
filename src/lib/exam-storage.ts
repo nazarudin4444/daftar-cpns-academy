@@ -21,10 +21,12 @@ export type ExamResult = {
   elapsedSeconds: number;
   endedAt: number;
   startedAt?: number;
+  flagged?: string[];
 };
 
 export const EXAM_SESSION_KEY = "daftar-cpns:exam-session:v2";
 export const EXAM_RESULT_KEY = "daftar-cpns:exam-result:v2";
+export const EXAM_HISTORY_KEY = "daftar-cpns:exam-history:v1";
 
 type BrowserStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
@@ -122,12 +124,18 @@ export function saveExamSession(storage: BrowserStorage, session: ExamSession | 
 export function loadExamResult(storage: BrowserStorage): ExamResult | null {
   const raw = storage.getItem(EXAM_RESULT_KEY);
   if (!raw) return null;
-  const value = readObject(raw) as Partial<ExamResult>;
+  return parseExamResult(readObject(raw));
+}
+
+function parseExamResult(input: Record<string, unknown>): ExamResult | null {
+  const value = input as Partial<ExamResult>;
   if (
     !isTrack(value.track) ||
     !validPackage(value.track, value.packageId) ||
     !validAnswers(value.answers) ||
     !validTimes(value.questionTimes) ||
+    (value.flagged !== undefined &&
+      (!Array.isArray(value.flagged) || !value.flagged.every((id) => typeof id === "string"))) ||
     (value.elapsedSeconds ?? -1) < 0 ||
     (value.elapsedSeconds ?? Infinity) >
       storedRules(value.track, value.packageId).durationSeconds ||
@@ -140,12 +148,58 @@ export function loadExamResult(storage: BrowserStorage): ExamResult | null {
     (value.startedAt !== undefined && !Number.isFinite(value.startedAt))
   )
     return null;
-  return value as ExamResult;
+  return { ...value, flagged: value.flagged ?? [] } as ExamResult;
 }
 
 export function saveExamResult(storage: BrowserStorage, result: ExamResult): boolean {
   try {
     storage.setItem(EXAM_RESULT_KEY, JSON.stringify(result));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function loadExamHistory(storage: BrowserStorage): ExamResult[] {
+  const raw = storage.getItem(EXAM_HISTORY_KEY);
+  let saved: unknown = [];
+  try {
+    saved = raw ? JSON.parse(raw) : [];
+  } catch {
+    saved = [];
+  }
+  const history = Array.isArray(saved)
+    ? saved.flatMap((item) => {
+        if (item === null || typeof item !== "object" || Array.isArray(item)) return [];
+        const result = parseExamResult(item as Record<string, unknown>);
+        return result ? [result] : [];
+      })
+    : [];
+  const latest = loadExamResult(storage);
+  if (
+    latest &&
+    !history.some(
+      (item) =>
+        item.endedAt === latest.endedAt &&
+        item.track === latest.track &&
+        item.packageId === latest.packageId,
+    )
+  )
+    history.push(latest);
+  return history.sort((left, right) => left.endedAt - right.endedAt).slice(-50);
+}
+
+export function saveExamHistory(storage: BrowserStorage, result: ExamResult): boolean {
+  try {
+    const history = loadExamHistory(storage).filter(
+      (item) =>
+        item.endedAt !== result.endedAt ||
+        item.track !== result.track ||
+        item.packageId !== result.packageId,
+    );
+    history.push(result);
+    history.sort((left, right) => left.endedAt - right.endedAt);
+    storage.setItem(EXAM_HISTORY_KEY, JSON.stringify(history.slice(-50)));
     return true;
   } catch {
     return false;

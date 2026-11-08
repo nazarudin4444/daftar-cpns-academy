@@ -5,6 +5,8 @@ export type ContentPageData = {
   intro: string;
   sections: { heading: string; paragraphs: string[]; bullets?: string[] }[];
   sourceLinks?: { label: string; href: string }[];
+  verifiedAt?: string;
+  sourceNote?: { title: string; body: string };
   noIndex?: boolean;
 };
 
@@ -12,6 +14,49 @@ const officialSources = [
   { label: "Portal SSCASN BKN", href: "https://sscasn.bkn.go.id/" },
   { label: "Badan Kepegawaian Negara", href: "https://www.bkn.go.id/" },
   { label: "Kementerian PANRB", href: "https://www.menpan.go.id/" },
+];
+
+const scheduleSources = [
+  { label: "Beranda SSCASN BKN", href: "https://sscasn.bkn.go.id/" },
+  {
+    label: "Klarifikasi BKN tentang informasi CPNS 2026",
+    href: "https://www.bkn.go.id/karo-komlik-bkn-wisudo-putro-nugroho-poster-pembukaan-cpns-2026-yang-beredar-dipastikan-hoaks/",
+  },
+  { label: "Berita Kementerian PANRB", href: "https://www.menpan.go.id/site/berita-terkini" },
+];
+
+const formationSources = [
+  { label: "Daftar formasi di SSCASN BKN", href: "https://sscasn.bkn.go.id/daftar-formasi/" },
+  {
+    label: "PermenPANRB Nomor 6 Tahun 2024 tentang Pengadaan ASN",
+    href: "https://jdih.menpan.go.id/dokumen-hukum/peraturan-menteri-pendayagunaan-aparatur-negara-dan-reformasi-birokrasi-nomor-6-tahun-2024-tentang-p-1849",
+  },
+];
+
+const requirementSources = [
+  {
+    label: "PermenPANRB Nomor 6 Tahun 2024 tentang Pengadaan ASN",
+    href: "https://jdih.menpan.go.id/dokumen-hukum/peraturan-menteri-pendayagunaan-aparatur-negara-dan-reformasi-birokrasi-nomor-6-tahun-2024-tentang-p-1849",
+  },
+  { label: "Daftar formasi di SSCASN BKN", href: "https://sscasn.bkn.go.id/daftar-formasi/" },
+];
+
+const registrationSources = [
+  { label: "Portal SSCASN BKN", href: "https://sscasn.bkn.go.id/" },
+  { label: "Buku petunjuk pendaftaran SSCASN", href: "https://sscasn.bkn.go.id/buku-petunjuk/" },
+  { label: "Helpdesk SSCASN BKN", href: "https://helpdesk-sscasn.bkn.go.id/" },
+];
+
+const passingGradeSources = [
+  ...officialSources,
+  {
+    label: "KepmenPANRB 321/2024 tentang ambang SKD",
+    href: "https://jdih.menpan.go.id/dokumen-hukum/keputusan-menteri-pendayagunaan-aparatur-negara-dan-reformasi-birokrasi-nomor-321-tahun-2024-tentang-1851",
+  },
+  {
+    label: "KepmenPANRB 1023/2021 tentang ambang SKD",
+    href: "https://www.bkn.go.id/wp-content/uploads/2021/11/KEPUTUSAN-MENTERI-PANRB-NOMOR-1023-TENTANG-NILAI-AMBANG-BATAS-SKD-CPNS-2021.pdf",
+  },
 ];
 
 export const CONTENT_PAGES: Record<string, ContentPageData> = {
@@ -277,20 +322,25 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
     description:
       "Cara memeriksa jadwal CPNS melalui pengumuman resmi. Situs ini tidak menerbitkan tanggal seleksi yang belum terverifikasi.",
     intro:
-      "Halaman ini menjelaskan cara memeriksa jadwal, bukan menerbitkan tanggal yang belum dipastikan. Jadwal seleksi dapat berubah; cocokkan informasi dengan pengumuman resmi sebelum membuat rencana pendaftaran.",
+      "Jadwal hanya kami tampilkan jika terbit di kanal pemerintah. Saat diperiksa pada 9 November 2026, beranda SSCASN menampilkan seleksi Sekolah Kedinasan 2026 dan belum memuat jadwal CPNS umum.",
+    verifiedAt: "9 November 2026",
+    sourceNote: {
+      title: "Belum ada jadwal CPNS umum yang tampil di SSCASN",
+      body: "BKN juga mengklarifikasi bahwa poster yang mengklaim pendaftaran CPNS 2026 sudah dibuka adalah hoaks. Periksa kembali SSCASN dan pengumuman instansi untuk pembaruan berikutnya.",
+    },
     sections: [
       {
-        heading: "Cara memeriksa jadwal",
+        heading: "Tempat memeriksa jadwal",
         paragraphs: [
-          "Periksa pengumuman pada SSCASN, BKN, Kementerian PANRB, dan laman instansi terkait. Cocokkan tanggal, periode pendaftaran, serta perubahan jadwal dengan dokumen sumbernya.",
-          "Halaman ini tidak mengambil atau memperkirakan tanggal secara otomatis. Perbarui informasi hanya setelah sumber primer diperiksa.",
+          "Buka beranda SSCASN untuk melihat seleksi yang sedang aktif. Periksa juga pengumuman BKN, Kementerian PANRB, dan instansi yang Anda tuju. Jika ada perubahan, ikuti pengumuman terbaru dari instansi penyelenggara.",
+          "Jangan memakai jadwal dari seleksi tahun sebelumnya sebagai tanggal untuk periode baru. Tanggal dan tahap seleksi dapat berubah melalui pengumuman atau ralat resmi.",
         ],
       },
       {
-        heading: "Checklist saat membaca pengumuman",
+        heading: "Catat tanggal dari dokumen sumber",
         paragraphs: [
-          "Pastikan dokumen berasal dari domain pemerintah atau instansi yang membuka seleksi. Periksa nama dokumen, instansi penerbit, tanggal pengumuman, periode yang dibahas, serta apakah ada ralat atau pengumuman lanjutan. Catat tanggal mulai dan akhir sesuai dokumen terbaru, bukan dari gambar ringkasan yang tidak memuat tautan sumber.",
-          "Jika dua halaman menyebut tanggal berbeda, utamakan dokumen primer terbaru dari pihak yang berwenang dan periksa apakah salah satunya merupakan perubahan jadwal. Jangan mengirim identitas atau kata sandi ke situs yang menawarkan bantuan pendaftaran.",
+          "Pastikan nama instansi, periode seleksi, tanggal pengumuman, masa pendaftaran, dan tahapan berikutnya tercantum di sumber pemerintah. Periksa apakah ada ralat atau pengumuman lanjutan sebelum membuat rencana.",
+          "Jika tanggal pada unggahan media sosial berbeda dengan dokumen instansi, utamakan dokumen resmi terbaru. Hindari tautan pendaftaran dari poster atau pesan yang tidak mengarah ke domain pemerintah.",
         ],
       },
       {
@@ -300,7 +350,7 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         ],
       },
     ],
-    sourceLinks: officialSources,
+    sourceLinks: scheduleSources,
   },
   "formasi-cpns": {
     title: "Informasi Formasi CPNS",
@@ -308,30 +358,35 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
     description:
       "Panduan mencari informasi formasi CPNS dengan memeriksa portal dan pengumuman resmi instansi, tanpa data formasi rekaan.",
     intro:
-      "Belum ada daftar formasi terverifikasi yang diterbitkan di halaman ini. Formasi bergantung pada pengumuman resmi instansi dan periode seleksi.",
+      "Instansi menetapkan kebutuhan jabatan dan kualifikasi untuk setiap periode. Cari daftar yang sedang aktif melalui menu Formasi SSCASN, lalu cocokkan dengan pengumuman instansi.",
+    verifiedAt: "9 November 2026",
+    sourceNote: {
+      title: "Daftar formasi mengikuti seleksi yang sedang dibuka",
+      body: "Halaman Formasi SSCASN adalah rujukan untuk melihat lowongan yang tersedia. Saat diperiksa, beranda SSCASN menampilkan seleksi Sekolah Kedinasan 2026, bukan jadwal CPNS umum.",
+    },
     sections: [
       {
-        heading: "Periksa detail pada dokumen sumber",
+        heading: "Cara mencari formasi",
         paragraphs: [
-          "Cocokkan nama jabatan, kualifikasi, lokasi, dan ketentuan lain dengan pengumuman instansi serta informasi pada portal SSCASN.",
-          "Jangan mengandalkan salinan yang tidak mencantumkan sumber atau tanggal dokumen. Situs ini tidak menebak formasi atau ketersediaannya.",
+          "Buka menu Formasi di SSCASN ketika pengadaan sudah aktif. Gunakan pilihan instansi, jenjang pendidikan, dan jabatan yang tersedia untuk menyaring daftar.",
+          "Untuk rincian lengkap, baca pengumuman dan lampiran dari instansi. Kebutuhan, kualifikasi, lokasi penempatan, dan ketentuan jabatan dapat berbeda antarinstansi.",
         ],
       },
       {
-        heading: "Bandingkan formasi dengan kualifikasi Anda",
+        heading: "Periksa kecocokan sebelum memilih",
         paragraphs: [
-          "Buat daftar dari dokumen instansi: nama jabatan dan unit, kebutuhan lokasi, kualifikasi pendidikan yang tertulis, dokumen yang diminta, serta ketentuan tambahan yang berlaku untuk jabatan tersebut. Periksa catatan kaki dan lampiran karena keterangan penting bisa berada di bagian yang berbeda dari tabel formasi.",
-          "Sebelum memilih, pastikan informasi berasal dari periode yang benar dan cocokkan nama serta kode jabatan di pengumuman instansi dengan data yang ditampilkan di portal SSCASN. Situs ini tidak menampilkan daftar lowongan hasil perkiraan.",
+          "Cocokkan nama jabatan, unit kerja, lokasi, pendidikan, program studi, dan dokumen pendukung. Baca catatan kaki atau lampiran karena syarat khusus bisa dicantumkan terpisah dari tabel formasi.",
+          "Pastikan kode dan nama jabatan di portal sama dengan dokumen instansi. Jangan mengambil keputusan dari daftar salinan yang tidak memuat sumber dan tahun seleksi.",
         ],
       },
       {
-        heading: "Portal rujukan",
+        heading: "Ketentuan penetapan kebutuhan",
         paragraphs: [
-          "Gunakan portal pemerintah yang tercantum berikut untuk mencari pengumuman terbaru.",
+          "PermenPANRB Nomor 6 Tahun 2024 mengatur pengadaan ASN. Pengumuman instansi tetap menjadi rujukan untuk melihat jabatan, jumlah kebutuhan, unit penempatan, kualifikasi pendidikan, jadwal, dan persyaratan yang dibuka.",
         ],
       },
     ],
-    sourceLinks: officialSources,
+    sourceLinks: formationSources,
   },
   "syarat-cpns": {
     title: "Persyaratan CPNS",
@@ -339,30 +394,35 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
     description:
       "Periksa persyaratan CPNS berdasarkan pengumuman resmi instansi. Ketentuan dapat berbeda dan tidak ditetapkan oleh situs ini.",
     intro:
-      "Persyaratan yang berlaku harus dibaca pada pengumuman resmi untuk formasi dan instansi yang dituju. Halaman ini tidak menetapkan atau menggantikan syarat resmi.",
+      "Syarat CPNS bergantung pada jabatan, kualifikasi, dan ketentuan instansi. Gunakan ringkasan ini sebagai daftar pemeriksaan awal, lalu pastikan setiap butir pada pengumuman formasi yang Anda pilih.",
+    verifiedAt: "9 November 2026",
+    sourceNote: {
+      title: "Pengumuman instansi menentukan syarat jabatan",
+      body: "Peraturan pengadaan ASN memuat kerangka umum. Kualifikasi pendidikan, dokumen, dan syarat tambahan perlu dicocokkan dengan formasi serta lampiran pengumuman periode yang aktif.",
+    },
     sections: [
       {
-        heading: "Periksa persyaratan secara teliti",
+        heading: "Apa yang perlu diperiksa",
         paragraphs: [
-          "Baca dokumen pengumuman dari awal sampai akhir. Cocokkan setiap persyaratan dengan jabatan dan instansi yang dituju, serta pastikan tidak ada perubahan atau penjelasan tambahan.",
-          "Jangan mengirim NIK, Kartu Keluarga, dokumen identitas, atau kata sandi SSCASN ke situs latihan ini.",
+          "Mulai dari batas usia, pendidikan dan program studi, akreditasi atau pengakuan ijazah bila dipersyaratkan, serta kondisi khusus jabatan. Rincian yang berlaku harus mengikuti pengumuman instansi, bukan daftar dari seleksi sebelumnya.",
+          "Periksa juga daftar dokumen, format berkas, ukuran file, dan ketentuan unggah. Persyaratan teknis dapat ditetapkan berbeda untuk setiap jabatan.",
         ],
       },
       {
-        heading: "Buat daftar cek dari pengumuman instansi",
+        heading: "Buat daftar cek pribadi",
         paragraphs: [
-          "Pisahkan persyaratan umum yang tertulis, kualifikasi jabatan, dokumen pendukung, format berkas, dan ketentuan khusus bila tercantum. Tandai butir yang membutuhkan bukti agar Anda dapat memeriksanya sebelum mengisi portal resmi. Jangan menganggap persyaratan dari seleksi sebelumnya masih berlaku untuk periode berikutnya.",
-          "Jika ada istilah atau ketentuan yang tidak jelas, cari penjelasan pada lampiran atau kanal tanya jawab resmi instansi. Jangan mengunggah dokumen identitas ke Daftar CPNS; latihan di situs ini tidak membutuhkan data pendaftaran.",
+          "Catat setiap syarat dari pengumuman dan lampiran, lalu siapkan bukti yang diminta sebelum pendaftaran. Pastikan nama, tanggal, dan data pada dokumen terbaca serta sesuai dengan isian di portal.",
+          "Jika ada butir yang belum jelas, hubungi kanal resmi instansi atau Helpdesk SSCASN. Daftar CPNS hanya menyediakan panduan belajar dan tidak memproses dokumen pendaftaran.",
         ],
       },
       {
-        heading: "Sumber resmi",
+        heading: "Jaga dokumen dan akun Anda",
         paragraphs: [
-          "Portal berikut membantu Anda menuju kanal pemerintah. Persyaratan final tetap merujuk pada pengumuman instansi yang relevan.",
+          "Unggah dokumen hanya melalui portal resmi ketika pendaftaran dibuka. Jangan membagikan kata sandi, NIK, Kartu Keluarga, atau dokumen pribadi kepada pihak yang menawarkan jasa pendaftaran melalui situs latihan atau pesan pribadi.",
         ],
       },
     ],
-    sourceLinks: officialSources,
+    sourceLinks: requirementSources,
   },
   "cara-daftar-cpns": {
     title: "Cara Mendaftar CPNS",
@@ -370,20 +430,25 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
     description:
       "Panduan awal untuk menemukan informasi pendaftaran CPNS dan selalu mengikuti petunjuk resmi SSCASN serta instansi.",
     intro:
-      "Pendaftaran ASN bukan dilakukan di Daftar CPNS. Buka portal resmi SSCASN dan ikuti petunjuk terbaru serta pengumuman instansi yang dituju.",
+      "Pendaftaran CPNS dilakukan secara daring melalui SSCASN. Daftar CPNS bukan portal pendaftaran dan tidak meminta data identitas atau dokumen Anda.",
+    verifiedAt: "9 November 2026",
+    sourceNote: {
+      title: "Daftar hanya saat pengadaan aktif",
+      body: "Beranda SSCASN menampilkan seleksi yang sedang berlangsung, tautan buku petunjuk, dan Helpdesk. Ikuti langkah yang tampil di portal karena menu dan prosedur dapat berubah sesuai periode.",
+    },
     sections: [
       {
-        heading: "Langkah awal yang aman",
+        heading: "Sebelum membuat akun",
         paragraphs: [
-          "Mulai dengan membaca pengumuman resmi, memastikan alamat situs pemerintah, dan mencocokkan persyaratan jabatan dengan dokumen sumber.",
-          "Tahapan, dokumen, dan tenggat dapat berubah sesuai pengumuman. Karena itu, panduan ini tidak menyalin prosedur yang belum diverifikasi untuk periode tertentu.",
+          "Baca pengumuman instansi dan seluruh lampirannya. Pastikan periode seleksi, jabatan, kualifikasi, dokumen, serta tenggat sesuai dengan yang Anda tuju.",
+          "Ketik alamat SSCASN secara langsung atau ikuti tautan dari kanal pemerintah. Pastikan alamat berakhir dengan domain resmi sebelum memasukkan data.",
         ],
       },
       {
-        heading: "Alur umum sebelum mengisi portal resmi",
+        heading: "Alur pendaftaran",
         paragraphs: [
-          "Baca pengumuman beserta lampirannya, tentukan jabatan yang sesuai, lalu periksa kembali kualifikasi dan daftar dokumen. Akses SSCASN dengan mengetik alamat portal secara langsung atau mengikuti tautan dari pengumuman pemerintah. Setelah masuk ke portal, ikuti urutan dan petunjuk yang sedang ditampilkan di sana; nama menu dan langkah rinci dapat berubah.",
-          "Periksa ulang data dan berkas sebelum mengirim sesuai petunjuk portal. Simpan bukti atau nomor pendaftaran hanya pada perangkat pribadi Anda. Daftar CPNS tidak menerima berkas, tidak mengelola akun SSCASN, dan tidak dapat mengoreksi pendaftaran.",
+          "Buat akun pada SSCASN ketika pendaftaran dibuka, lalu ikuti Buku Petunjuk untuk melengkapi profil dan memilih formasi. Isi data dengan teliti, unggah dokumen yang diminta, dan periksa kembali sebelum mengirim pendaftaran.",
+          "Simpan bukti pendaftaran dan pantau pengumuman instansi untuk jadwal seleksi berikutnya. Jika mengalami kendala akun atau pendaftaran, gunakan Helpdesk SSCASN.",
         ],
       },
       {
@@ -393,28 +458,28 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         ],
       },
     ],
-    sourceLinks: officialSources,
+    sourceLinks: registrationSources,
   },
   "passing-grade-cpns": {
     title: "Passing Grade CPNS",
     metaTitle: "Informasi Passing Grade CPNS dan Aturan Resmi | Daftar CPNS",
     description:
-      "Informasi mengenai cara memeriksa ketentuan nilai seleksi CPNS dari sumber resmi tanpa mengarang ambang batas.",
+      "Kalkulator interaktif untuk memeriksa rujukan ambang SKD dan tautan dokumen resmi berdasarkan tahun aturan.",
     intro:
-      "Halaman ini tidak menetapkan angka ambang batas. Ketentuan nilai dan cara seleksi harus diperiksa pada peraturan serta pengumuman resmi untuk periode yang berlaku.",
+      "Gunakan kalkulator untuk membandingkan nilai dengan rujukan peraturan yang ditampilkan. Aturan yang tersedia berasal dari tahun berbeda, jadi periksa pengumuman resmi sesuai periode dan instansi yang Anda pilih.",
     sections: [
       {
         heading: "Bedakan nilai latihan dan ketentuan seleksi",
         paragraphs: [
-          "Angka pada simulasi demo hanyalah poin latihan yang dihitung dari jawaban benar. Nilai tersebut bukan passing grade dan tidak dapat dipakai untuk memprediksi kelulusan.",
-          "Sebelum memakai informasi angka seleksi, periksa dokumen resmi pemerintah dan cocokkan konteks, periode, serta jenis seleksinya.",
+          "Angka pada simulasi demo hanyalah poin latihan yang dihitung dari jawaban benar. Nilai tersebut bukan passing grade dan tidak dapat dibandingkan langsung dengan kalkulator di halaman ini.",
+          "Kalkulator merujuk KepmenPANRB 321/2024 untuk kategori umum, cumlaude, disabilitas, dan Papua, serta KepmenPANRB 1023/2021 untuk dokter/spesialis. Periksa dokumen resmi dan pengumuman instansi untuk periode seleksi yang Anda ikuti.",
         ],
       },
       {
         heading: "Cara mengecek angka dari sumber primer",
         paragraphs: [
           "Jika menemukan angka ambang batas di artikel atau unggahan, cari peraturan atau pengumuman pemerintah yang menjadi sumbernya. Cocokkan periode seleksi, jenis tes, kelompok atau jabatan yang disebut, dan tanggal dokumen. Pastikan tidak membaca nilai dari tahun atau jenis seleksi lain sebagai ketentuan saat ini.",
-          "Nilai pada simulator ini dihitung untuk latihan berdasarkan kunci contoh. Ia tidak membuktikan seseorang memenuhi syarat, melewati ambang resmi, atau akan memperoleh peringkat tertentu.",
+          "Nilai pada simulator dihitung untuk latihan berdasarkan kunci contoh. Kalkulator mengecek angka terhadap rujukan pada tahun yang ditampilkan. Hasil ini tidak membuktikan peserta memenuhi syarat pada periode lain atau akan memperoleh peringkat tertentu.",
         ],
       },
       {
@@ -422,7 +487,7 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
         paragraphs: ["Rujuk kanal BKN, Kementerian PANRB, dan pengumuman resmi instansi terkait."],
       },
     ],
-    sourceLinks: officialSources,
+    sourceLinks: passingGradeSources,
   },
   panduan: {
     title: "Panduan Persiapan Seleksi ASN",
@@ -612,23 +677,23 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
     sourceLinks: officialSources,
   },
   dashboard: {
-    title: "Ringkasan Latihan",
-    metaTitle: "Ringkasan Latihan Demo | Daftar CPNS",
+    title: "Dashboard Latihan",
+    metaTitle: "Dashboard dan Riwayat Latihan CAT | Daftar CPNS",
     description:
-      "Ringkasan privat dari hasil latihan demo terakhir yang hanya tersimpan pada browser perangkat ini.",
+      "Lanjutkan sesi CAT yang tersimpan, tinjau riwayat hasil, dan lihat tren akurasi latihan pada browser ini.",
     intro:
-      "Ringkasan hanya menampilkan hasil latihan yang tersimpan di browser ini. Akun, sinkronisasi lintas perangkat, dan riwayat berbasis server belum tersedia.",
+      "Pusat belajar ini menampilkan sesi yang belum selesai, riwayat tryout, dan tren akurasi dari data browser lokal.",
     sections: [
       {
         heading: "Data lokal perangkat",
         paragraphs: [
-          "Jika sesi demo pernah diselesaikan pada browser ini, ringkasannya dapat dibuka di bawah. Jika tidak ada, mulailah latihan dari halaman simulasi.",
+          "Lanjutkan sesi yang masih berjalan atau pilih paket baru. Hasil tryout dan tren akurasi muncul setelah sesi selesai.",
         ],
       },
       {
         heading: "Privasi latihan",
         paragraphs: [
-          "Halaman ini tidak meminta identitas atau data pendaftaran. Hasil demo tidak dikirim ke server.",
+          "Halaman ini tidak meminta identitas atau data pendaftaran. Sesi dan riwayat disimpan di localStorage browser dan tidak disinkronkan ke server.",
         ],
       },
     ],
