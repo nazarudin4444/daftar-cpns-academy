@@ -11,6 +11,9 @@ import {
   RotateCcw,
   Search,
   ArrowLeft,
+  PlayCircle,
+  Home,
+  BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { canonicalUrl, SITE_ORIGIN, OPERATOR_NAME, CONTACT_EMAIL } from "@/lib/site-config";
@@ -67,33 +70,41 @@ const SUBJECT_NAMES: Record<Subject, string> = {
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6 lg:px-8">
         <Link to="/" className="flex min-h-11 items-center gap-3" aria-label="Daftar CPNS, beranda">
-          <span className="relative size-11 shrink-0 overflow-hidden" aria-hidden="true">
-            <img src="/brand/daftar-cpns-mark.svg" alt="" width={44} height={44} />
+          <span className="relative size-10 shrink-0 overflow-hidden" aria-hidden="true">
+            <img src="/brand/daftar-cpns-mark.svg" alt="" width={40} height={40} />
           </span>
           <span className="leading-tight">
-            <span className="block font-extrabold text-foreground">Daftar CPNS</span>
-            <span className="hidden text-xs text-muted-foreground sm:block">
-              Belajar dan Latihan CAT CPNS
+            <span className="block font-extrabold tracking-tight text-foreground">Daftar CPNS</span>
+            <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold text-positive">
+              <span className="size-1.5 rounded-full bg-positive" aria-hidden="true" />
+              Latihan mandiri · 100% Gratis
             </span>
           </span>
         </Link>
-        <nav aria-label="Navigasi utama" className="hidden items-center gap-1 xl:flex">
+        <nav
+          aria-label="Navigasi utama"
+          className="hidden items-center gap-0.5 rounded-full border border-border bg-card/70 p-1 xl:flex"
+        >
           {nav.map(([label, href]) => (
             <Link
               key={href}
               to={href}
-              className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-primary"
+              activeOptions={{ exact: href === "/" }}
+              className="rounded-full px-3.5 py-1.5 text-sm font-medium text-foreground/75 transition-colors hover:bg-secondary hover:text-primary"
+              activeProps={{ className: "bg-primary !text-primary-foreground hover:bg-primary" }}
             >
               {label}
             </Link>
           ))}
         </nav>
         <div className="hidden xl:block">
-          <Button asChild className="min-h-11">
-            <Link to="/simulasi-cat-cpns">Mulai latihan</Link>
+          <Button asChild className="min-h-11 rounded-full px-5 shadow-sm">
+            <Link to="/simulasi-cat-cpns">
+              <PlayCircle /> Mulai Simulasi Gratis
+            </Link>
           </Button>
         </div>
         <Button
@@ -101,7 +112,7 @@ export function SiteHeader() {
           size="icon"
           aria-label={open ? "Tutup menu" : "Buka menu"}
           aria-expanded={open}
-          className="min-h-11 min-w-11 xl:hidden"
+          className="min-h-11 min-w-11 rounded-full xl:hidden"
           onClick={() => setOpen(!open)}
         >
           {open ? <X /> : <Menu />}
@@ -117,19 +128,50 @@ export function SiteHeader() {
               key={href}
               to={href}
               onClick={() => setOpen(false)}
-              className="flex min-h-11 items-center rounded-md px-3 font-medium hover:bg-secondary"
+              activeOptions={{ exact: href === "/" }}
+              className="flex min-h-11 items-center rounded-lg px-3 font-medium hover:bg-secondary"
+              activeProps={{ className: "bg-secondary text-primary" }}
             >
               {label}
             </Link>
           ))}
-          <Button asChild className="mt-2 min-h-11">
-            <Link to="/simulasi-cat-cpns" onClick={() => setOpen(false)}>
-              Mulai latihan
-            </Link>
-          </Button>
         </nav>
       )}
     </header>
+  );
+}
+
+export function MobileBottomNav() {
+  const side =
+    "flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-lg text-muted-foreground transition-colors hover:text-foreground";
+  return (
+    <nav
+      aria-label="Navigasi bawah"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md xl:hidden"
+    >
+      <div className="mx-auto grid max-w-md grid-cols-3 items-end px-4 pt-1.5 pb-1.5">
+        <Link to="/" activeOptions={{ exact: true }} className={side} activeProps={{ className: "!text-primary" }}>
+          <Home className="size-5" aria-hidden="true" />
+          <span className="text-[11px] font-semibold">Beranda</span>
+        </Link>
+        <div className="flex justify-center">
+          <Link
+            to="/simulasi-cat-cpns"
+            className="relative -mt-7 flex flex-col items-center gap-0.5 rounded-full border-4 border-card bg-primary px-5 py-2.5 text-primary-foreground shadow-lg shadow-primary/30 transition-transform active:scale-95"
+          >
+            <span className="absolute -top-2.5 rounded-full border-2 border-card bg-positive px-2 py-px text-[10px] font-extrabold tracking-wider text-primary-foreground">
+              GRATIS
+            </span>
+            <PlayCircle className="size-6" aria-hidden="true" />
+            <span className="whitespace-nowrap text-[11px] font-bold">Simulasi CAT</span>
+          </Link>
+        </div>
+        <Link to="/latihan-soal-cpns" className={side} activeProps={{ className: "!text-primary" }}>
+          <BookOpen className="size-5" aria-hidden="true" />
+          <span className="text-[11px] font-semibold">Bank Soal</span>
+        </Link>
+      </div>
+    </nav>
   );
 }
 
@@ -209,8 +251,11 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <SiteHeader />
-      {children}
-      <SiteFooter />
+      <div className="pb-24 xl:pb-0">
+        {children}
+        <SiteFooter />
+      </div>
+      <MobileBottomNav />
     </>
   );
 }
