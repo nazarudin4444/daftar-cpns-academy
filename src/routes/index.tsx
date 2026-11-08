@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpenCheck, CircleHelp, Clock3, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { HomeCatPreview } from "@/components/home-cat-preview";
 import { SiteShell } from "@/components/site";
-import studySheet from "@/assets/study-sheet-illustration.jpg";
 import { canonicalUrl, CONTACT_EMAIL, OPERATOR_NAME, SITE_ORIGIN } from "@/lib/site-config";
 
 export const Route = createFileRoute("/")({
@@ -55,7 +55,7 @@ const category = [
   },
   {
     title: "PPPK",
-    copy: "Contoh manajerial, sosial kultural, dan teknis.",
+    copy: "Panduan kelompok kompetensi dan rujukan informasi seleksi resmi.",
     href: "/pppk",
     label: "Lihat latihan",
   },
@@ -175,21 +175,44 @@ function HomePage() {
               </p>
             </div>
           </div>
-          <div className="relative mx-auto w-full max-w-[500px]">
-            <img
-              src={studySheet}
-              alt="Lembar latihan pilihan ganda, pensil, dan tanda jawaban benar"
-              width={1104}
-              height={1008}
-              fetchPriority="high"
-              className="h-auto w-full"
-            />
-            <div className="absolute bottom-4 left-2 border-l-2 border-primary bg-card/95 px-4 py-3 shadow-sm sm:bottom-8 sm:left-4">
-              <p className="text-sm font-extrabold text-foreground">Latihan demo</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Soal orisinal, bukan materi resmi
-              </p>
-            </div>
+          <div className="mx-auto w-full max-w-[500px] border border-border bg-card p-5 sm:p-6">
+            <p className="text-sm font-bold text-primary">Pusat informasi CPNS</p>
+            <h2 className="mt-2 text-xl font-extrabold text-foreground">
+              Apa yang sedang Anda cari?
+            </h2>
+            <nav
+              aria-label="Informasi CPNS yang sering dicari"
+              className="mt-4 divide-y divide-border"
+            >
+              {(
+                [
+                  ["Jadwal CPNS", "/jadwal-cpns"],
+                  ["Formasi CPNS", "/formasi-cpns"],
+                  ["Persyaratan CPNS", "/syarat-cpns"],
+                  ["Cara daftar CPNS", "/cara-daftar-cpns"],
+                ] as const
+              ).map(([label, href]) => (
+                <Link
+                  key={href}
+                  to={href}
+                  className="flex min-h-12 items-center justify-between gap-3 py-2 font-semibold text-foreground hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                >
+                  {label}
+                  <ArrowRight size={17} aria-hidden="true" />
+                </Link>
+              ))}
+            </nav>
+            <p className="mt-4 border-t border-border pt-4 text-sm leading-6 text-muted-foreground">
+              Jadwal dan formasi pada situs ini belum terverifikasi. Periksa pengumuman pemerintah
+              sebelum mengambil keputusan.
+            </p>
+            <a
+              href="#sumber-resmi"
+              className="mt-3 inline-flex min-h-11 items-center gap-2 font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              Lihat sumber resmi
+              <ArrowRight size={17} aria-hidden="true" />
+            </a>
           </div>
         </section>
         <section className="border-y border-border bg-card">
@@ -283,13 +306,15 @@ function HomePage() {
             </ol>
           </div>
         </section>
-        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <section id="sumber-resmi" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <p className="text-sm font-bold text-primary">Informasi terverifikasi</p>
-            <h2 className="mt-2 text-2xl font-extrabold">Periksa pengumuman di sumber resmi</h2>
+            <p className="text-sm font-bold text-primary">Sumber resmi</p>
+            <h2 className="mt-2 text-2xl font-extrabold">
+              Pastikan informasi seleksi di kanal pemerintah
+            </h2>
             <p className="mt-3 leading-7 text-muted-foreground">
-              Belum ada jadwal atau formasi terbaru yang terverifikasi pada halaman ini. Gunakan
-              kanal pemerintah untuk memastikan informasi.
+              Jadwal, formasi, persyaratan, dan tahapan seleksi dapat berubah. Cocokkan informasi
+              dengan pengumuman dari pemerintah atau instansi yang dituju.
             </p>
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -310,53 +335,61 @@ function HomePage() {
               </a>
             ))}
           </div>
-          <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-            <Link
-              to="/jadwal-cpns"
-              className="font-semibold text-primary underline-offset-4 hover:underline"
-            >
-              Jadwal CPNS
-            </Link>
-            <Link
-              to="/formasi-cpns"
-              className="font-semibold text-primary underline-offset-4 hover:underline"
-            >
-              Formasi CPNS
-            </Link>
-            <Link
-              to="/syarat-cpns"
-              className="font-semibold text-primary underline-offset-4 hover:underline"
-            >
-              Persyaratan CPNS
-            </Link>
-            <Link
-              to="/cara-daftar-cpns"
-              className="font-semibold text-primary underline-offset-4 hover:underline"
-            >
-              Cara daftar CPNS
-            </Link>
-          </div>
         </section>
-        <section className="border-y border-border bg-card">
-          <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-3">
-              <CircleHelp className="text-primary" />
-              <div>
-                <p className="text-sm font-bold text-primary">Pertanyaan umum</p>
-                <h2 className="text-2xl font-extrabold">Sebelum mulai belajar</h2>
+        <section className="border-y border-border bg-secondary/50">
+          <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-[1.15fr_0.85fr] md:gap-10 md:py-14 lg:px-8">
+            <div>
+              <p className="text-sm font-bold text-primary">Lihat cara kerja CAT</p>
+              <h2 className="mt-2 text-2xl font-extrabold sm:text-3xl">
+                Coba satu soal sebelum memulai simulasi
+              </h2>
+              <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
+                Pilih jawaban pada contoh soal TIU ini untuk melihat cara pembahasan ditampilkan.
+                Ini pratinjau latihan, bukan bagian dari sesi simulasi penuh.
+              </p>
+              <div className="mt-6">
+                <HomeCatPreview />
               </div>
             </div>
-            <div className="mt-7 divide-y divide-border">
-              {questions.map(([question, answer]) => (
-                <details key={question} className="group py-4">
-                  <summary className="flex min-h-11 list-none items-center justify-between gap-4 font-bold marker:hidden">
-                    {question}
-                    <span className="text-xl text-primary group-open:rotate-45">+</span>
-                  </summary>
-                  <p className="max-w-3xl pb-3 pr-8 leading-7 text-muted-foreground">{answer}</p>
-                </details>
-              ))}
+            <aside className="h-fit border-l-2 border-primary pl-5 md:mt-10">
+              <h3 className="text-lg font-extrabold">Di simulasi CAT CPNS</h3>
+              <p className="mt-2 leading-6 text-muted-foreground">
+                Paket demo SKD berisi 110 soal dengan durasi 100 menit. Jumlah dan waktu ini adalah
+                konfigurasi latihan situs, bukan ketentuan resmi seleksi.
+              </p>
+              <ul className="mt-5 space-y-3 text-sm leading-6">
+                <li>Navigasi untuk berpindah antarsoal.</li>
+                <li>Penanda untuk soal yang ingin ditinjau kembali.</li>
+                <li>Hasil per kategori dan pembahasan setelah sesi.</li>
+              </ul>
+              <Button asChild className="mt-6 min-h-11">
+                <Link to="/simulasi-cat-cpns">
+                  Coba simulasi lengkap <ArrowRight size={17} />
+                </Link>
+              </Button>
+            </aside>
+          </div>
+        </section>
+        <section className="mx-auto max-w-4xl px-4 py-9 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3">
+            <CircleHelp className="text-primary" size={20} aria-hidden="true" />
+            <div>
+              <p className="text-sm font-bold text-primary">Jawaban singkat</p>
+              <h2 className="text-xl font-extrabold">Pertanyaan umum</h2>
             </div>
+          </div>
+          <div className="mt-4 divide-y divide-border border-y border-border">
+            {questions.map(([question, answer]) => (
+              <details key={question} className="group py-1">
+                <summary className="flex min-h-11 list-none items-center justify-between gap-4 py-2 font-semibold marker:hidden">
+                  {question}
+                  <span aria-hidden="true" className="text-xl text-primary group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <p className="max-w-3xl pb-4 pr-8 leading-7 text-muted-foreground">{answer}</p>
+              </details>
+            ))}
           </div>
         </section>
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
