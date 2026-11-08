@@ -24,6 +24,7 @@ import { Route as PanduanRouteImport } from './routes/panduan'
 import { Route as PassingGradeCpnsRouteImport } from './routes/passing-grade-cpns'
 import { Route as PppkRouteImport } from './routes/pppk'
 import { Route as SekolahKedinasanRouteImport } from './routes/sekolah-kedinasan'
+import { Route as SimulasiRouteImport } from './routes/simulasi'
 import { Route as SimulasiCatCpnsRouteImport } from './routes/simulasi-cat-cpns'
 import { Route as SoalTiuRouteImport } from './routes/soal-tiu'
 import { Route as SoalTkpRouteImport } from './routes/soal-tkp'
@@ -108,6 +109,11 @@ const SekolahKedinasanRoute = SekolahKedinasanRouteImport.update({
   path: '/sekolah-kedinasan',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SimulasiRoute = SimulasiRouteImport.update({
+  id: '/simulasi',
+  path: '/simulasi',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SimulasiCatCpnsRoute = SimulasiCatCpnsRouteImport.update({
   id: '/simulasi-cat-cpns',
   path: '/simulasi-cat-cpns',
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/passing-grade-cpns': typeof PassingGradeCpnsRoute
   '/pppk': typeof PppkRoute
   '/sekolah-kedinasan': typeof SekolahKedinasanRoute
+  '/simulasi': typeof SimulasiRoute
   '/simulasi-cat-cpns': typeof SimulasiCatCpnsRoute
   '/soal-tiu': typeof SoalTiuRoute
   '/soal-tkp': typeof SoalTkpRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByTo {
   '/passing-grade-cpns': typeof PassingGradeCpnsRoute
   '/pppk': typeof PppkRoute
   '/sekolah-kedinasan': typeof SekolahKedinasanRoute
+  '/simulasi': typeof SimulasiRoute
   '/simulasi-cat-cpns': typeof SimulasiCatCpnsRoute
   '/soal-tiu': typeof SoalTiuRoute
   '/soal-tkp': typeof SoalTkpRoute
@@ -216,6 +224,7 @@ export interface FileRoutesById {
   '/passing-grade-cpns': typeof PassingGradeCpnsRoute
   '/pppk': typeof PppkRoute
   '/sekolah-kedinasan': typeof SekolahKedinasanRoute
+  '/simulasi': typeof SimulasiRoute
   '/simulasi-cat-cpns': typeof SimulasiCatCpnsRoute
   '/soal-tiu': typeof SoalTiuRoute
   '/soal-tkp': typeof SoalTkpRoute
@@ -243,6 +252,7 @@ export interface FileRouteTypes {
     | '/passing-grade-cpns'
     | '/pppk'
     | '/sekolah-kedinasan'
+    | '/simulasi'
     | '/simulasi-cat-cpns'
     | '/soal-tiu'
     | '/soal-tkp'
@@ -268,6 +278,7 @@ export interface FileRouteTypes {
     | '/passing-grade-cpns'
     | '/pppk'
     | '/sekolah-kedinasan'
+    | '/simulasi'
     | '/simulasi-cat-cpns'
     | '/soal-tiu'
     | '/soal-tkp'
@@ -293,6 +304,7 @@ export interface FileRouteTypes {
     | '/passing-grade-cpns'
     | '/pppk'
     | '/sekolah-kedinasan'
+    | '/simulasi'
     | '/simulasi-cat-cpns'
     | '/soal-tiu'
     | '/soal-tkp'
@@ -319,6 +331,7 @@ export interface RootRouteChildren {
   PassingGradeCpnsRoute: typeof PassingGradeCpnsRoute
   PppkRoute: typeof PppkRoute
   SekolahKedinasanRoute: typeof SekolahKedinasanRoute
+  SimulasiRoute: typeof SimulasiRoute
   SimulasiCatCpnsRoute: typeof SimulasiCatCpnsRoute
   SoalTiuRoute: typeof SoalTiuRoute
   SoalTkpRoute: typeof SoalTkpRoute
@@ -436,6 +449,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SekolahKedinasanRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/simulasi': {
+      id: '/simulasi'
+      path: '/simulasi'
+      fullPath: '/simulasi'
+      preLoaderRoute: typeof SimulasiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/simulasi-cat-cpns': {
       id: '/simulasi-cat-cpns'
       path: '/simulasi-cat-cpns'
@@ -511,6 +531,7 @@ const rootRouteChildren: RootRouteChildren = {
   PassingGradeCpnsRoute: PassingGradeCpnsRoute,
   PppkRoute: PppkRoute,
   SekolahKedinasanRoute: SekolahKedinasanRoute,
+  SimulasiRoute: SimulasiRoute,
   SimulasiCatCpnsRoute: SimulasiCatCpnsRoute,
   SoalTiuRoute: SoalTiuRoute,
   SoalTkpRoute: SoalTkpRoute,

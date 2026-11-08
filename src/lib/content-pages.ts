@@ -86,14 +86,14 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
     title: "Latihan Soal CPNS Online",
     metaTitle: "Latihan Soal CPNS Online dan Pembahasan | Daftar CPNS",
     description:
-      "Latihan soal CPNS online dengan contoh orisinal, pembahasan, serta kategori TWK, TIU, dan TKP.",
+      "Latihan soal CPNS orisinal per materi TWK, TIU, TKP, bab, subbab, dan seri, lengkap dengan pembahasan serta tips belajar.",
     intro:
-      "Gunakan latihan untuk membangun kebiasaan memahami soal dan mengevaluasi alasan jawaban. Materi pada situs ini merupakan contoh belajar mandiri, bukan soal resmi.",
+      "Pilih materi, bab, subbab, lalu seri latihan yang ingin dikerjakan. Setiap soal dilengkapi kunci, pembahasan, serta tips dan trik. Semua materi merupakan contoh belajar mandiri, bukan soal resmi.",
     sections: [
       {
-        heading: "Pilih kategori latihan",
+        heading: "Pilih materi dan subbab latihan",
         paragraphs: [
-          "Latihan demo SKD menggabungkan contoh TWK, TIU, dan TKP. Anda juga dapat membuka pengenalan masing-masing kategori.",
+          "Bank soal CPNS dibagi menjadi kelompok materi TWK, TIU, dan TKP. Di dalamnya tersedia bab, subbab, dan seri latihan agar Anda dapat fokus pada topik tertentu.",
         ],
         bullets: [
           "TWK: latihan penalaran nilai kebangsaan dalam situasi sehari-hari.",
@@ -104,14 +104,14 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
       {
         heading: "Gunakan hasil untuk evaluasi",
         paragraphs: [
-          "Perhatikan pembahasan dan kategori yang perlu diulang. Nilai latihan tidak dipakai untuk menyimpulkan kelulusan.",
+          "Baca pembahasan dan tips setelah menjawab, lalu ulangi seri pada subbab yang masih terasa sulit. Nilai latihan tidak dipakai untuk menyimpulkan kelulusan.",
         ],
       },
       {
         heading: "Ritme latihan yang bisa diulang",
         paragraphs: [
           "Mulai dengan satu sesi campuran untuk melihat jenis soal yang terasa sulit. Setelah membaca pembahasan, pilih satu kategori untuk latihan fokus, tulis alasan kesalahan dengan kata-kata sendiri, lalu coba sesi campuran lagi di waktu berbeda. Cara ini membantu membedakan kesalahan konsep, ketelitian, dan pengelolaan waktu.",
-          "Bank soal pada halaman TWK, TIU, dan TKP menampilkan kunci serta pembahasan setelah Anda membukanya. Semua pertanyaan merupakan contoh latihan mandiri, bukan salinan soal seleksi.",
+          "Setiap soal dalam bank dilengkapi kunci, pembahasan, dan tips yang membantu Anda memilih strategi pengerjaan. Semua pertanyaan merupakan contoh latihan mandiri, bukan salinan soal seleksi.",
         ],
       },
     ],

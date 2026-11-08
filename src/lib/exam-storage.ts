@@ -1,7 +1,9 @@
-import { DEMO_RULES, TRACKS, type Track } from "@/lib/exam";
+import { rulesForTrack, TRACKS, type Track } from "@/lib/exam";
+import { EXAM_PACKAGES } from "@/lib/exam-packages";
 
 export type ExamSession = {
   track: Track;
+  packageId?: string | undefined;
   answers: Record<string, string>;
   currentIndex: number;
   flagged: string[];
@@ -13,6 +15,7 @@ export type ExamSession = {
 
 export type ExamResult = {
   track: Track;
+  packageId?: string | undefined;
   answers: Record<string, string>;
   questionTimes: Record<string, number>;
   elapsedSeconds: number;
@@ -20,8 +23,8 @@ export type ExamResult = {
   startedAt?: number;
 };
 
-export const EXAM_SESSION_KEY = "daftar-cpns:exam-session:v1";
-export const EXAM_RESULT_KEY = "daftar-cpns:exam-result:v1";
+export const EXAM_SESSION_KEY = "daftar-cpns:exam-session:v2";
+export const EXAM_RESULT_KEY = "daftar-cpns:exam-result:v2";
 
 type BrowserStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
@@ -60,17 +63,35 @@ function isTrack(value: unknown): value is Track {
   return typeof value === "string" && TRACKS.some((track) => track.id === value);
 }
 
+function validPackage(track: Track, packageId: unknown): boolean {
+  return (
+    packageId === undefined ||
+    EXAM_PACKAGES.some((item) => item.id === packageId && item.track === track)
+  );
+}
+
+function storedRules(track: Track, packageId?: string) {
+  const item = EXAM_PACKAGES.find(
+    (candidate) => candidate.id === packageId && candidate.track === track,
+  );
+  return item
+    ? { questionsPerTrack: 110, durationSeconds: item.durationSeconds }
+    : rulesForTrack(track);
+}
+
 export function loadExamSession(storage: BrowserStorage): ExamSession | null {
   const raw = storage.getItem(EXAM_SESSION_KEY);
   if (!raw) return null;
   const value = readObject(raw) as Partial<ExamSession>;
   if (
     !isTrack(value.track) ||
+    !validPackage(value.track, value.packageId) ||
     !validAnswers(value.answers) ||
     !validTimes(value.questionTimes) ||
     !Number.isInteger(value.currentIndex) ||
     (value.currentIndex ?? -1) < 0 ||
-    (value.currentIndex ?? DEMO_RULES.questionsPerTrack) >= DEMO_RULES.questionsPerTrack ||
+    (value.currentIndex ?? Infinity) >=
+      storedRules(value.track, value.packageId).questionsPerTrack ||
     !Array.isArray(value.flagged) ||
     !value.flagged.every((id) => typeof id === "string") ||
     typeof value.answers !== "object" ||
@@ -101,10 +122,12 @@ export function loadExamResult(storage: BrowserStorage): ExamResult | null {
   const value = readObject(raw) as Partial<ExamResult>;
   if (
     !isTrack(value.track) ||
+    !validPackage(value.track, value.packageId) ||
     !validAnswers(value.answers) ||
     !validTimes(value.questionTimes) ||
     (value.elapsedSeconds ?? -1) < 0 ||
-    (value.elapsedSeconds ?? Infinity) > DEMO_RULES.durationSeconds ||
+    (value.elapsedSeconds ?? Infinity) >
+      storedRules(value.track, value.packageId).durationSeconds ||
     typeof value.answers !== "object" ||
     value.answers === null ||
     typeof value.questionTimes !== "object" ||

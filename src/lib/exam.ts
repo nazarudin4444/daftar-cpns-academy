@@ -1,3 +1,10 @@
+import { QUESTION_TIPS } from "@/lib/exam-tips";
+import { EXTENSION_QUESTIONS } from "@/lib/exam-extension";
+import { CHAPTER_QUESTIONS } from "@/lib/exam-chapter-extension";
+import { PPPK_HOTS_QUESTIONS } from "@/lib/exam-pppk-hots";
+import { PPPK_SOCIAL_QUESTIONS } from "@/lib/exam-pppk-social";
+import { PPPK_TECHNICAL_QUESTIONS } from "@/lib/exam-pppk-technical";
+
 export type Track = "cpns" | "pppk" | "kedinasan";
 export type Subject = "TWK" | "TIU" | "TKP" | "Manajerial" | "Sosial Kultural" | "Teknis";
 
@@ -8,13 +15,22 @@ export type Question = {
   options: { label: string; text: string }[];
   answer: string;
   explanation: string;
+  tip: string;
+  difficulty: "Latihan" | "HOTS";
 };
+export type QuestionDraft = Omit<Question, "tip" | "difficulty">;
 
 export const DEMO_RULES = {
   durationSeconds: 12 * 60,
   questionsPerTrack: 15,
   pointsPerCorrectAnswer: 1,
 } as const;
+
+export function rulesForTrack(track: Track) {
+  return track === "cpns"
+    ? { ...DEMO_RULES, durationSeconds: 100 * 60, questionsPerTrack: 110 }
+    : DEMO_RULES;
+}
 
 export const TRACKS: { id: Track; name: string; description: string; subjects: Subject[] }[] = [
   {
@@ -37,7 +53,7 @@ export const TRACKS: { id: Track; name: string; description: string; subjects: S
   },
 ];
 
-export const QUESTION_BANK: Question[] = [
+const QUESTION_DRAFTS: QuestionDraft[] = [
   {
     id: "tiu-10",
     subject: "TIU",
@@ -1422,6 +1438,347 @@ export const QUESTION_BANK: Question[] = [
     explanation:
       "Pemetaan beban dan kapasitas membantu tim memilih perubahan yang bisa dijalankan tanpa mengorbankan mutu. Kesepakatan ulang dan titik pemeriksaan menjaga akuntabilitas serta memberi kesempatan memperbaiki arah lebih awal.",
   },
+  {
+    id: "twk-hots-06",
+    subject: "TWK",
+    prompt:
+      "Dalam musyawarah penggunaan ruang publik, kelompok warga dengan jumlah peserta lebih sedikit meminta jadwal yang bertepatan dengan hari ibadah mereka. Mayoritas mengusulkan jadwal tetap yang membuat kelompok tersebut tidak dapat hadir. Keputusan yang paling mencerminkan penghormatan terhadap keberagaman sekaligus kepentingan bersama adalah ...",
+    options: [
+      {
+        label: "A",
+        text: "Mengikuti pilihan mayoritas karena musyawarah selalu ditentukan oleh jumlah suara.",
+      },
+      { label: "B", text: "Membatalkan kegiatan agar tidak ada kelompok yang merasa dirugikan." },
+      {
+        label: "C",
+        text: "Mencari jadwal atau sistem giliran yang memberi kesempatan setara, lalu menyepakatinya secara terbuka.",
+      },
+      { label: "D", text: "Memberi kelompok kecil jadwal khusus tanpa melibatkan kelompok lain." },
+      {
+        label: "E",
+        text: "Meminta kelompok kecil menyesuaikan diri demi efisiensi penggunaan ruang.",
+      },
+    ],
+    answer: "C",
+    explanation:
+      "Musyawarah bukan sekadar menghitung suara; keputusan perlu mempertimbangkan hak warga dan dampaknya. Jadwal alternatif atau giliran yang dibahas terbuka menjaga akses setara tanpa menghapus kepentingan kelompok lain.",
+  },
+  {
+    id: "twk-hots-07",
+    subject: "TWK",
+    prompt:
+      "Sebuah unggahan viral menuduh kelompok tertentu menerima bantuan secara tidak adil. Data yang menyertai unggahan hanya berupa tangkapan layar tanpa sumber. Sikap warga yang paling sesuai dengan tanggung jawab dalam kehidupan demokratis adalah ...",
+    options: [
+      { label: "A", text: "Menyebarkan unggahan agar pihak berwenang segera merasa tertekan." },
+      {
+        label: "B",
+        text: "Memeriksa sumber dan kriteria bantuan, lalu menyampaikan keberatan melalui kanal pengaduan yang dapat ditelusuri.",
+      },
+      { label: "C", text: "Menghapus semua komentar berbeda agar konflik tidak meluas." },
+      {
+        label: "D",
+        text: "Mendatangi penerima bantuan dan meminta mereka membuktikan kelayakannya.",
+      },
+      { label: "E", text: "Menganggap tuduhan benar karena sudah dibagikan banyak orang." },
+    ],
+    answer: "B",
+    explanation:
+      "Partisipasi demokratis memerlukan informasi yang dapat diperiksa dan cara menyampaikan kritik yang bertanggung jawab. Verifikasi mencegah fitnah, sedangkan pengaduan yang tercatat memungkinkan evaluasi yang adil.",
+  },
+  {
+    id: "twk-hots-08",
+    subject: "TWK",
+    prompt:
+      "Petugas pelayanan diminta mempercepat berkas seorang kenalan dengan melewati antrean. Pemohon lain sudah menunggu sesuai urutan, dan belum ada keadaan darurat. Respons yang paling menjaga prinsip keadilan dan integritas adalah ...",
+    options: [
+      { label: "A", text: "Mendahulukan kenalan karena prosesnya hanya memerlukan waktu singkat." },
+      {
+        label: "B",
+        text: "Meminta kenalan memberi imbalan agar perlakuan khusus dapat dipertanggungjawabkan.",
+      },
+      {
+        label: "C",
+        text: "Memproses sesuai urutan dan prosedur, serta menjelaskan bahwa pengecualian hanya berlaku berdasarkan kriteria layanan.",
+      },
+      {
+        label: "D",
+        text: "Menolak semua permohonan hari itu untuk menghindari tuduhan pilih kasih.",
+      },
+      {
+        label: "E",
+        text: "Meminta rekan lain memproses berkas tersebut tanpa menyebut hubungan pribadi.",
+      },
+    ],
+    answer: "C",
+    explanation:
+      "Perlakuan yang setara berarti mengikuti urutan dan kriteria yang berlaku, bukan kedekatan pribadi. Penjelasan yang transparan juga menjaga kepercayaan dan memungkinkan pengecualian hanya untuk alasan yang sah.",
+  },
+  {
+    id: "twk-hots-09",
+    subject: "TWK",
+    prompt:
+      "Dalam rapat lintas daerah, perwakilan mengusulkan kebijakan seragam untuk semua wilayah agar mudah diterapkan. Data menunjukkan kondisi akses layanan dan kebiasaan masyarakat berbeda cukup jauh. Pendekatan yang paling tepat untuk menjaga persatuan sekaligus keadilan adalah ...",
+    options: [
+      {
+        label: "A",
+        text: "Menerapkan satu cara tanpa penyesuaian karena keseragaman selalu menghasilkan keadilan.",
+      },
+      {
+        label: "B",
+        text: "Membiarkan setiap wilayah menetapkan aturan tanpa tujuan dan standar bersama.",
+      },
+      {
+        label: "C",
+        text: "Menetapkan tujuan dan standar layanan bersama, lalu merancang cara pelaksanaan yang sesuai kondisi daerah melalui konsultasi.",
+      },
+      { label: "D", text: "Menunda semua kebijakan sampai kondisi setiap wilayah menjadi sama." },
+      {
+        label: "E",
+        text: "Meminta wilayah dengan akses terbatas mengikuti kebijakan wilayah yang paling maju.",
+      },
+    ],
+    answer: "C",
+    explanation:
+      "Persatuan dapat dijaga dengan tujuan bersama tanpa mengabaikan perbedaan kondisi. Standar yang jelas memastikan hak layanan tetap sama, sedangkan penyesuaian cara pelaksanaan membuat kebijakan lebih adil dan dapat dijalankan.",
+  },
+  {
+    id: "twk-hots-10",
+    subject: "TWK",
+    prompt:
+      "Warga menemukan rancangan fasilitas umum yang berpotensi menghalangi akses pengguna kursi roda. Keputusan anggaran masih dapat ditinjau sebelum pembangunan dimulai. Langkah yang paling mencerminkan tanggung jawab warga dan penghormatan terhadap hak setara adalah ...",
+    options: [
+      {
+        label: "A",
+        text: "Menunggu sampai fasilitas selesai agar kritik didasarkan pada hasil nyata.",
+      },
+      {
+        label: "B",
+        text: "Mengunggah nama perancang dan menuduhnya sengaja mengabaikan penyandang disabilitas.",
+      },
+      {
+        label: "C",
+        text: "Menyampaikan temuan beserta usulan aksesibilitas melalui forum atau kanal resmi sebelum keputusan anggaran ditetapkan.",
+      },
+      {
+        label: "D",
+        text: "Meminta kelompok pengguna kursi roda menyediakan fasilitas tambahan secara mandiri.",
+      },
+      { label: "E", text: "Menerima rancangan karena penyesuaian dapat menambah biaya." },
+    ],
+    answer: "C",
+    explanation:
+      "Masukan sebelum pembangunan memberi kesempatan memperbaiki rancangan dengan biaya dan dampak yang lebih terkendali. Penyampaian berbasis temuan melalui kanal yang tepat mendukung hak akses tanpa menyerang pribadi.",
+  },
+  {
+    id: "tiu-hots-06",
+    subject: "TIU",
+    prompt:
+      "Satu tim memeriksa 240 berkas dalam 4 jam dengan kecepatan tetap. Setelah dua jam, 30 berkas perlu diperiksa ulang sehingga belum dapat dihitung selesai. Berapa berkas yang sudah selesai setelah pemeriksaan ulang tersebut dikeluarkan?",
+    options: [
+      { label: "A", text: "75 berkas" },
+      { label: "B", text: "90 berkas" },
+      { label: "C", text: "100 berkas" },
+      { label: "D", text: "120 berkas" },
+      { label: "E", text: "150 berkas" },
+    ],
+    answer: "B",
+    explanation:
+      "Kecepatan tim adalah 240 ÷ 4 = 60 berkas per jam. Dalam dua jam tim menangani 120 berkas. Karena 30 di antaranya perlu diperiksa ulang dan belum dianggap selesai, hasil bersihnya 120 − 30 = 90 berkas.",
+  },
+  {
+    id: "tiu-hots-07",
+    subject: "TIU",
+    prompt:
+      "Pola bilangan berikut dibentuk dengan menambahkan selisih yang selalu bertambah 3: 4, 9, 17, 28, 42, ... Angka berikutnya adalah ...",
+    options: [
+      { label: "A", text: "57" },
+      { label: "B", text: "58" },
+      { label: "C", text: "59" },
+      { label: "D", text: "60" },
+      { label: "E", text: "61" },
+    ],
+    answer: "C",
+    explanation:
+      "Selisih antarbilangan adalah 5, 8, 11, dan 14. Selisih itu naik 3 setiap langkah, sehingga selisih berikutnya 17. Maka 42 + 17 = 59.",
+  },
+  {
+    id: "tiu-hots-08",
+    subject: "TIU",
+    prompt:
+      "Empat petugas memverifikasi 360 data dalam 3 jam. Dengan laju kerja yang sama, lima petugas memverifikasi 450 data dalam ...",
+    options: [
+      { label: "A", text: "2 jam" },
+      { label: "B", text: "2 jam 15 menit" },
+      { label: "C", text: "2 jam 30 menit" },
+      { label: "D", text: "3 jam" },
+      { label: "E", text: "3 jam 15 menit" },
+    ],
+    answer: "D",
+    explanation:
+      "Empat petugas menyelesaikan 360 ÷ 3 = 120 data per jam, atau 30 data per petugas per jam. Lima petugas bekerja dengan laju 150 data per jam. Waktu untuk 450 data adalah 450 ÷ 150 = 3 jam.",
+  },
+  {
+    id: "tiu-hots-09",
+    subject: "TIU",
+    prompt:
+      "Sebuah unit menerima 500 pengajuan. Sebanyak 12% tidak lengkap. Dari pengajuan yang lengkap, 25% memerlukan pemeriksaan tambahan. Berapa pengajuan yang lengkap dan tidak memerlukan pemeriksaan tambahan?",
+    options: [
+      { label: "A", text: "300 pengajuan" },
+      { label: "B", text: "320 pengajuan" },
+      { label: "C", text: "330 pengajuan" },
+      { label: "D", text: "350 pengajuan" },
+      { label: "E", text: "380 pengajuan" },
+    ],
+    answer: "C",
+    explanation:
+      "Yang lengkap adalah 88% × 500 = 440 pengajuan. Sebanyak 25% × 440 = 110 perlu pemeriksaan tambahan. Jadi yang lengkap dan tidak memerlukannya adalah 440 − 110 = 330 pengajuan.",
+  },
+  {
+    id: "tiu-hots-10",
+    subject: "TIU",
+    prompt:
+      "Dalam satu tim, semua analis dapat menggunakan perangkat lunak. Sebagian analis juga bertugas memeriksa laporan. Kesimpulan yang pasti benar adalah ...",
+    options: [
+      { label: "A", text: "Semua pengguna perangkat lunak memeriksa laporan." },
+      { label: "B", text: "Sebagian pemeriksa laporan tidak dapat menggunakan perangkat lunak." },
+      { label: "C", text: "Semua pemeriksa laporan adalah analis." },
+      { label: "D", text: "Sebagian analis tidak dapat menggunakan perangkat lunak." },
+      { label: "E", text: "Tidak ada analis yang memeriksa laporan." },
+    ],
+    answer: "C",
+    explanation:
+      "Pernyataan menyebut sebagian analis memeriksa laporan, sehingga setiap pemeriksa dalam kelompok yang disebut itu termasuk analis. Semua analis dapat menggunakan perangkat lunak, tetapi tidak dapat disimpulkan bahwa semua pengguna perangkat lunak memeriksa laporan.",
+  },
+  {
+    id: "tkp-hots-06",
+    subject: "TKP",
+    prompt:
+      "Anda menemukan dua laporan layanan berisi angka berbeda untuk periode yang sama. Laporan harus dikirim hari ini, dan tiap angka memiliki sumber yang tampak masuk akal. Langkah terbaik adalah ...",
+    options: [
+      { label: "A", text: "Memilih angka yang lebih besar agar capaian unit terlihat baik." },
+      {
+        label: "B",
+        text: "Mengirim salah satu laporan sekarang dan memperbaikinya jika ada yang bertanya.",
+      },
+      {
+        label: "C",
+        text: "Membandingkan definisi dan sumber data, meminta konfirmasi pihak terkait, serta memberi atasan pembaruan tentang waktu penyelesaian yang realistis.",
+      },
+      { label: "D", text: "Menghapus angka yang berbeda dan mengirim laporan tanpa penjelasan." },
+      { label: "E", text: "Meminta rekan memilih angka yang menurutnya paling dapat dipercaya." },
+    ],
+    answer: "C",
+    explanation:
+      "Memeriksa definisi dan sumber mencegah kesimpulan yang keliru. Koordinasi dengan pemilik data menjaga akurasi, sementara pembaruan kepada atasan mengelola tenggat secara terbuka.",
+  },
+  {
+    id: "tkp-hots-07",
+    subject: "TKP",
+    prompt:
+      "Seorang pemohon kesulitan menggunakan formulir daring karena fitur pembaca layar tidak mengenali beberapa kolom. Antrean cukup panjang dan rekan menyarankan pemohon itu kembali lain hari. Respons terbaik adalah ...",
+    options: [
+      {
+        label: "A",
+        text: "Meminta pemohon meminta bantuan keluarga untuk mengisi formulir di rumah.",
+      },
+      { label: "B", text: "Mencatat kendala tanpa membantu agar antrean tidak bertambah." },
+      {
+        label: "C",
+        text: "Membantu melalui prosedur alternatif yang tersedia, menjaga kerahasiaan data, dan melaporkan masalah aksesibilitas untuk diperbaiki.",
+      },
+      {
+        label: "D",
+        text: "Mengisi seluruh formulir atas nama pemohon tanpa menjelaskan isi atau meminta persetujuannya.",
+      },
+      { label: "E", text: "Menyarankan pemohon menunggu sampai sistem diperbarui." },
+    ],
+    answer: "C",
+    explanation:
+      "Layanan yang inklusif mengupayakan akses setara tanpa mengorbankan persetujuan dan kerahasiaan pemohon. Bantuan sesuai prosedur menyelesaikan kebutuhan saat ini, sedangkan pelaporan membantu mencegah kendala berulang.",
+  },
+  {
+    id: "tkp-hots-08",
+    subject: "TKP",
+    prompt:
+      "Atasan meminta ringkasan cepat dari data yang belum sepenuhnya diverifikasi untuk rapat penting. Anda menemukan beberapa baris ganda yang dapat mengubah hasil. Tindakan paling profesional adalah ...",
+    options: [
+      { label: "A", text: "Mengirim hasil sementara tanpa penanda agar rapat tidak tertunda." },
+      { label: "B", text: "Menghapus baris yang tampak ganda tanpa memeriksa sumbernya." },
+      {
+        label: "C",
+        text: "Menjelaskan dampak temuan, memisahkan angka sementara dari angka terverifikasi, dan menyepakati pembaruan setelah pengecekan.",
+      },
+      { label: "D", text: "Menolak membantu sampai seluruh data sempurna." },
+      {
+        label: "E",
+        text: "Mengirim data mentah kepada semua peserta rapat agar mereka menilai sendiri.",
+      },
+    ],
+    answer: "C",
+    explanation:
+      "Pemisahan yang jelas antara angka sementara dan terverifikasi memberi bahan rapat tanpa menyamarkan ketidakpastian. Memeriksa sumber duplikasi melindungi akurasi, dan waktu pembaruan menjaga akuntabilitas.",
+  },
+  {
+    id: "tkp-hots-09",
+    subject: "TKP",
+    prompt:
+      "Dalam pelayanan langsung, seorang warga berbicara dengan nada tinggi karena tidak memahami alasan berkasnya belum diproses. Anda melihat antrean mulai terganggu, tetapi penjelasan sebelumnya mungkin kurang jelas. Anda sebaiknya ...",
+    options: [
+      { label: "A", text: "Menyuruh warga diam dan kembali setelah suasana hatinya membaik." },
+      { label: "B", text: "Menjelaskan aturan dengan suara lebih keras agar warga mendengar." },
+      {
+        label: "C",
+        text: "Mendengarkan inti keluhan, menjelaskan kekurangan berkas dan pilihan tindak lanjut dengan tenang, lalu menjaga alur antrean.",
+      },
+      { label: "D", text: "Melewati berkasnya tanpa penjelasan untuk meredakan situasi." },
+      {
+        label: "E",
+        text: "Meminta petugas keamanan mengeluarkan warga sebelum memahami keluhannya.",
+      },
+    ],
+    answer: "C",
+    explanation:
+      "Mendengarkan dan memberi penjelasan yang dapat ditindaklanjuti menangani penyebab kebingungan. Sikap tenang menjaga martabat warga, sementara pengelolaan antrean tetap melindungi pemohon lain.",
+  },
+  {
+    id: "tkp-hots-10",
+    subject: "TKP",
+    prompt:
+      "Anda ditugaskan menyusun panduan kerja, tetapi anggota tim memiliki pengalaman dan cara memahami informasi yang berbeda. Tenggat satu minggu lagi. Cara terbaik agar panduan akurat dan mudah dipakai adalah ...",
+    options: [
+      { label: "A", text: "Menyusun sendiri berdasarkan cara kerja yang paling Anda kuasai." },
+      {
+        label: "B",
+        text: "Mengumpulkan semua pendapat tanpa menentukan kriteria atau penanggung jawab.",
+      },
+      {
+        label: "C",
+        text: "Menyepakati tujuan dan struktur, meminta masukan dari pengguna dengan pengalaman beragam, lalu menguji draf pada beberapa tugas nyata.",
+      },
+      { label: "D", text: "Menyalin panduan lama agar pekerjaan selesai lebih cepat." },
+      { label: "E", text: "Menunggu arahan rinci dari atasan sebelum memulai." },
+    ],
+    answer: "C",
+    explanation:
+      "Tujuan dan struktur bersama menjaga konsistensi. Masukan dari calon pengguna serta uji pada tugas nyata membantu menemukan istilah atau langkah yang membingungkan sebelum panduan dipakai luas.",
+  },
+];
+
+export const QUESTION_BANK: Question[] = [
+  ...QUESTION_DRAFTS.map((question) => {
+    const tip = QUESTION_TIPS[question.id];
+    if (!tip) throw new Error(`Tips belajar belum tersedia untuk ${question.id}`);
+    return {
+      ...question,
+      tip,
+      difficulty: question.id.includes("-hots-") ? ("HOTS" as const) : ("Latihan" as const),
+    };
+  }),
+  ...EXTENSION_QUESTIONS,
+  ...CHAPTER_QUESTIONS,
+  ...PPPK_HOTS_QUESTIONS,
+  ...PPPK_SOCIAL_QUESTIONS,
+  ...PPPK_TECHNICAL_QUESTIONS,
 ];
 
 function questionHash(value: string): number {
@@ -1441,6 +1798,8 @@ export function questionsForTrack(track: Track, seed = 0): Question[] {
         left.id.localeCompare(right.id),
     ),
   );
+  if (track === "cpns")
+    return bySubject.flatMap((questions, index) => questions.slice(0, [30, 35, 45][index]));
   return Array.from(
     { length: DEMO_RULES.questionsPerTrack },
     (_, index) => bySubject[index % bySubject.length]?.[Math.floor(index / bySubject.length)],
