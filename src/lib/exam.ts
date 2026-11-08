@@ -1110,6 +1110,318 @@ export const QUESTION_BANK: Question[] = [
     explanation:
       "Klarifikasi mencegah kesalahan dan memberi kesempatan kepada pihak berwenang menjelaskan apakah ada pembaruan atau konteks khusus. Hindari bertindak berdasarkan asumsi atau menyebarkan informasi yang belum dipastikan.",
   },
+  {
+    id: "twk-hots-01",
+    subject: "TWK",
+    prompt:
+      "Dua wilayah mengajukan jadwal penggunaan balai warga yang terbatas. Wilayah pertama memiliki warga lebih banyak, sedangkan wilayah kedua memiliki akses transportasi yang jarang dan hanya bisa hadir pada jam tertentu. Data kebutuhan tiap wilayah belum lengkap. Keputusan awal yang paling adil adalah ...",
+    options: [
+      { label: "A", text: "Memberi seluruh jadwal kepada wilayah dengan warga terbanyak." },
+      { label: "B", text: "Mempertahankan jadwal lama tanpa memeriksa dampaknya." },
+      {
+        label: "C",
+        text: "Mengumpulkan data kebutuhan, menyepakati kriteria terbuka, lalu membagi jadwal secara proporsional dan meninjau hasilnya.",
+      },
+      { label: "D", text: "Meminta kedua ketua wilayah menyelesaikannya secara pribadi." },
+      { label: "E", text: "Memberi jadwal kepada pihak yang pertama mengajukan surat." },
+    ],
+    answer: "C",
+    explanation:
+      "Jumlah warga penting, tetapi bukan satu-satunya ukuran akses yang setara. Data kebutuhan dan hambatan tiap wilayah perlu dibandingkan dengan kriteria yang diketahui bersama. Pembagian yang dapat ditinjau ulang menjaga keputusan tetap bertanggung jawab ketika kondisi belum sepenuhnya diketahui.",
+  },
+  {
+    id: "twk-hots-02",
+    subject: "TWK",
+    prompt:
+      "Sebuah unggahan yang belum terverifikasi menuduh kelompok tertentu menerima bantuan secara tidak sah. Warga meminta Anda meneruskan unggahan itu agar ada tindakan cepat. Informasi resmi belum tersedia, tetapi layanan pengaduan resmi dapat dihubungi. Langkah yang paling bertanggung jawab adalah ...",
+    options: [
+      { label: "A", text: "Meneruskan unggahan dengan catatan bahwa kebenarannya belum pasti." },
+      { label: "B", text: "Menghapus nama kelompok lalu membagikan isi tuduhan." },
+      {
+        label: "C",
+        text: "Menyimpan bukti untuk dilaporkan melalui kanal resmi, memeriksa klarifikasi, dan tidak menyebarkan tuduhan.",
+      },
+      { label: "D", text: "Membalas unggahan dengan dugaan lain agar perhatian warga terbagi." },
+      { label: "E", text: "Menganggap tuduhan benar karena banyak warga membicarakannya." },
+    ],
+    answer: "C",
+    explanation:
+      "Laporan melalui kanal resmi memungkinkan pemeriksaan tanpa memperluas tuduhan yang belum terbukti. Menahan penyebaran juga melindungi warga dari prasangka dan konflik. Kecepatan bertindak tetap penting, tetapi harus disertai pemeriksaan fakta.",
+  },
+  {
+    id: "twk-hots-03",
+    subject: "TWK",
+    prompt:
+      "Dalam rapat, usulan mayoritas akan mengubah jam layanan menjadi daring sepenuhnya. Catatan menunjukkan sebagian warga tidak memiliki akses internet stabil, sementara petugas menilai layanan daring mengurangi antrean. Cara mengambil keputusan yang paling mencerminkan kepentingan bersama adalah ...",
+    options: [
+      { label: "A", text: "Menerapkan usulan mayoritas segera karena hasil suara sudah jelas." },
+      { label: "B", text: "Menolak perubahan agar cara lama tidak menimbulkan keluhan." },
+      {
+        label: "C",
+        text: "Menguji layanan daring dengan pilihan bantuan luring, mengukur hasilnya, lalu membahas penyesuaian bersama.",
+      },
+      {
+        label: "D",
+        text: "Meminta warga tanpa internet mengurus kebutuhan melalui kenalan petugas.",
+      },
+      { label: "E", text: "Menunda keputusan sampai semua warga menyetujui satu cara yang sama." },
+    ],
+    answer: "C",
+    explanation:
+      "Keputusan bersama perlu mempertimbangkan manfaat efisiensi sekaligus dampak pada kelompok yang aksesnya terbatas. Uji terbatas dengan alternatif luring menghasilkan bukti dan menjaga layanan tetap dapat dijangkau. Musyawarah memberi ruang untuk menilai hasil sebelum perubahan diperluas.",
+  },
+  {
+    id: "twk-hots-04",
+    subject: "TWK",
+    prompt:
+      "Sebuah formulir digital wajib diisi untuk memperoleh layanan. Seorang warga tunanetra tidak dapat menggunakannya dengan pembaca layar. Data yang diminta tetap diperlukan, tetapi cara pengisiannya dapat disesuaikan. Tindakan yang paling tepat adalah ...",
+    options: [
+      { label: "A", text: "Meminta warga membawa pendamping yang dapat melihat layar." },
+      { label: "B", text: "Mengecualikan warga tersebut dari persyaratan data." },
+      {
+        label: "C",
+        text: "Menyediakan bantuan pengisian yang aksesibel melalui kanal resmi sambil menjaga persyaratan data dan privasi.",
+      },
+      {
+        label: "D",
+        text: "Mengisi formulir memakai akun pribadi warga tanpa menjelaskan langkahnya.",
+      },
+      {
+        label: "E",
+        text: "Menunda layanan sampai formulir digital dapat digunakan oleh semua orang.",
+      },
+    ],
+    answer: "C",
+    explanation:
+      "Kesetaraan layanan berarti mengatasi hambatan akses tanpa menghapus persyaratan yang memang diperlukan. Kanal bantuan resmi menjaga warga tetap dapat mengendalikan informasinya dan mengurangi risiko privasi dibanding meminta kredensial atau bantuan informal.",
+  },
+  {
+    id: "twk-hots-05",
+    subject: "TWK",
+    prompt:
+      "Tim akan memakai dana kegiatan untuk dua kebutuhan: perbaikan fasilitas umum dan pelatihan warga. Anggaran tidak cukup untuk memenuhi semua permintaan, dan setiap kelompok mengajukan alasan yang berbeda. Proses penetapan prioritas yang paling dapat dipertanggungjawabkan adalah ...",
+    options: [
+      { label: "A", text: "Membagi dana sama rata tanpa memeriksa kebutuhan atau biaya." },
+      { label: "B", text: "Memilih usulan yang diajukan oleh kelompok dengan anggota terbanyak." },
+      {
+        label: "C",
+        text: "Menilai urgensi, manfaat, jumlah warga terdampak, dan biaya dengan kriteria yang diumumkan sebelum keputusan.",
+      },
+      { label: "D", text: "Mendahulukan usulan yang paling mudah dilaksanakan oleh panitia." },
+      {
+        label: "E",
+        text: "Menyerahkan seluruh dana kepada kelompok yang paling aktif menghadiri rapat.",
+      },
+    ],
+    answer: "C",
+    explanation:
+      "Kriteria yang diumumkan sebelum penilaian mengurangi pengaruh kedekatan atau tekanan saat rapat. Menimbang urgensi, manfaat, cakupan warga, dan biaya membuat prioritas lebih transparan ketika dana terbatas, meski tidak semua permintaan dapat dipenuhi.",
+  },
+  {
+    id: "tiu-hots-01",
+    subject: "TIU",
+    prompt:
+      "Tiga unit mengajukan kebutuhan perlengkapan: unit A meminta 50, unit B 70, dan unit C 80. Persediaan yang dapat dibagikan hanya 120 buah. Jika pembagian mengikuti perbandingan jumlah permintaan, berapa buah yang diterima unit C?",
+    options: [
+      { label: "A", text: "40 buah" },
+      { label: "B", text: "42 buah" },
+      { label: "C", text: "48 buah" },
+      { label: "D", text: "52 buah" },
+      { label: "E", text: "60 buah" },
+    ],
+    answer: "C",
+    explanation:
+      "Total permintaan adalah 50 + 70 + 80 = 200. Porsi unit C adalah 80/200 atau 40 persen. Maka bagian unit C sebesar 40 persen × 120 = 48 buah. Periksa total kebutuhan terlebih dahulu sebelum menghitung porsi unit.",
+  },
+  {
+    id: "tiu-hots-02",
+    subject: "TIU",
+    prompt:
+      "Tim X memeriksa 12 berkas per jam per petugas, sedangkan tim Y memeriksa 8 berkas per jam per petugas. Selama 4 jam, tiga petugas X dan dua petugas Y bekerja dengan laju tetap. Dari seluruh berkas yang diperiksa, 16 perlu diperiksa ulang karena ditemukan kesalahan. Berapa berkas yang tidak perlu diperiksa ulang?",
+    options: [
+      { label: "A", text: "176 berkas" },
+      { label: "B", text: "192 berkas" },
+      { label: "C", text: "208 berkas" },
+      { label: "D", text: "224 berkas" },
+      { label: "E", text: "240 berkas" },
+    ],
+    answer: "B",
+    explanation:
+      "Tim X memeriksa 3 × 12 × 4 = 144 berkas, sedangkan tim Y memeriksa 2 × 8 × 4 = 64. Totalnya 208 berkas. Kurangi 16 berkas yang harus diperiksa ulang: 208 − 16 = 192 berkas tidak perlu diperiksa ulang.",
+  },
+  {
+    id: "tiu-hots-03",
+    subject: "TIU",
+    prompt:
+      "Sebuah daftar pekerjaan memuat tugas P, Q, R, dan S. P harus selesai sebelum Q, R harus langsung dikerjakan setelah Q, dan S harus selesai sebelum P. Urutan yang memenuhi semua ketentuan adalah ...",
+    options: [
+      { label: "A", text: "P, S, Q, R" },
+      { label: "B", text: "S, P, Q, R" },
+      { label: "C", text: "S, Q, P, R" },
+      { label: "D", text: "P, Q, S, R" },
+      { label: "E", text: "Q, R, S, P" },
+    ],
+    answer: "B",
+    explanation:
+      "S harus mendahului P, lalu P harus mendahului Q. Karena R langsung setelah Q, urutannya menjadi S, P, Q, R. Pilihan lain melanggar setidaknya satu syarat urutan atau syarat bahwa Q dan R berurutan.",
+  },
+  {
+    id: "tiu-hots-04",
+    subject: "TIU",
+    prompt:
+      "Dari 240 berkas, 25 persen selesai pada tahap pertama. Pada tahap kedua, petugas menyelesaikan 40 persen dari berkas yang tersisa. Berapa berkas yang masih belum selesai setelah kedua tahap?",
+    options: [
+      { label: "A", text: "72 berkas" },
+      { label: "B", text: "96 berkas" },
+      { label: "C", text: "108 berkas" },
+      { label: "D", text: "120 berkas" },
+      { label: "E", text: "132 berkas" },
+    ],
+    answer: "C",
+    explanation:
+      "Tahap pertama menyelesaikan 25 persen × 240 = 60, sehingga tersisa 180. Tahap kedua menyelesaikan 40 persen × 180 = 72, sehingga tersisa 180 − 72 = 108 berkas. Persentase tahap kedua dihitung dari sisa, bukan dari jumlah awal.",
+  },
+  {
+    id: "tiu-hots-05",
+    subject: "TIU",
+    prompt:
+      "Semua laporan bertanda merah masuk pemeriksaan ulang. Laporan yang sedang diperiksa ulang ditahan sampai koreksi selesai. Laporan K belum dikoreksi, tetapi sudah dikirim. Dengan asumsi prosedur dipatuhi, kesimpulan yang pasti benar adalah ...",
+    options: [
+      { label: "A", text: "Laporan K ditandai merah." },
+      { label: "B", text: "Laporan K sudah dikoreksi sebelum dikirim." },
+      { label: "C", text: "Laporan K tidak ditandai merah." },
+      { label: "D", text: "Semua laporan yang dikirim telah dikoreksi." },
+      { label: "E", text: "Laporan K pasti dikirim oleh petugas yang sama." },
+    ],
+    answer: "C",
+    explanation:
+      "Jika K bertanda merah, K harus masuk pemeriksaan ulang dan ditahan sampai koreksi selesai. Namun K sudah dikirim sebelum dikoreksi. Dengan asumsi prosedur dipatuhi, K tidak mungkin bertanda merah. Kesimpulan ini memakai hubungan dua syarat, bukan membalik satu pernyataan saja.",
+  },
+  {
+    id: "tkp-hots-01",
+    subject: "TKP",
+    prompt:
+      "Antrean layanan cukup panjang ketika seorang pemohon pengguna kursi roda datang. Jalur antrean biasa sempit, tetapi loket samping dapat digunakan dan petugas boleh mengatur antrean sesuai kebutuhan akses. Respons paling tepat adalah ...",
+    options: [
+      {
+        label: "A",
+        text: "Meminta pemohon menunggu sampai antrean kosong agar tidak mengganggu alur.",
+      },
+      { label: "B", text: "Memindahkan semua orang dalam antrean ke urutan paling belakang." },
+      {
+        label: "C",
+        text: "Menawarkan loket samping sesuai prosedur, menjelaskan pengaturan antrean, dan menjaga giliran pemohon lain tetap jelas.",
+      },
+      { label: "D", text: "Meminta pemohon mencari bantuan dari warga lain." },
+      {
+        label: "E",
+        text: "Membawa pemohon ke ruang petugas tanpa memberi penjelasan kepada antrean.",
+      },
+    ],
+    answer: "C",
+    explanation:
+      "Akomodasi yang diizinkan mengatasi hambatan akses tanpa mengabaikan keteraturan layanan. Menjelaskan proses kepada pemohon dan antrean menjaga martabat, transparansi, serta kejelasan giliran.",
+  },
+  {
+    id: "tkp-hots-02",
+    subject: "TKP",
+    prompt:
+      "Menjelang tenggat, sebuah angka pada laporan berbeda antara lembar kerja dan sistem sumber. Atasan meminta laporan dikirim segera, tetapi belum menjelaskan apakah angka itu memengaruhi kesimpulan. Tindakan terbaik adalah ...",
+    options: [
+      { label: "A", text: "Memilih angka yang paling sering muncul agar laporan dapat dikirim." },
+      {
+        label: "B",
+        text: "Mengirim laporan tanpa angka tersebut dan tidak memberi tahu siapa pun.",
+      },
+      {
+        label: "C",
+        text: "Memeriksa sumber dan dampak selisih, segera memberi tahu atasan, lalu mengirim versi tervalidasi dengan catatan yang jelas.",
+      },
+      { label: "D", text: "Menunda laporan sampai atasan menghubungi Anda kembali." },
+      { label: "E", text: "Mengubah sistem sumber agar sama dengan lembar kerja." },
+    ],
+    answer: "C",
+    explanation:
+      "Pemeriksaan sumber mencegah angka keliru dijadikan dasar keputusan. Memberi tahu atasan sejak awal membantu menentukan apakah laporan dapat dikirim dengan catatan atau perlu menunggu koreksi. Jangan mengubah sumber data atau menyembunyikan ketidakpastian.",
+  },
+  {
+    id: "tkp-hots-03",
+    subject: "TKP",
+    prompt:
+      "Seorang warga mengunggah keluhan layanan ke media sosial dan mencantumkan nomor berkas serta nama petugas. Anda ingin merespons cepat, tetapi belum mengetahui seluruh kronologi. Respons yang paling tepat adalah ...",
+    options: [
+      {
+        label: "A",
+        text: "Menjelaskan kronologi lengkap di kolom komentar agar publik memahami masalahnya.",
+      },
+      { label: "B", text: "Meminta warga menghapus unggahan tanpa menawarkan bantuan." },
+      {
+        label: "C",
+        text: "Mengakui keluhan secara umum, mengarahkan pembahasan kasus ke kanal resmi yang aman, dan memeriksa kronologi sebelum memberi penjelasan.",
+      },
+      { label: "D", text: "Membela petugas yang disebut karena belum ada bukti kesalahan." },
+      {
+        label: "E",
+        text: "Mengirim pesan pribadi dari akun personal dan meminta semua data berkas.",
+      },
+    ],
+    answer: "C",
+    explanation:
+      "Respons publik yang mengakui keluhan menunjukkan perhatian tanpa membuka informasi kasus. Kanal resmi menjaga data, sedangkan pemeriksaan kronologi mencegah janji atau pembelaan yang belum didukung fakta.",
+  },
+  {
+    id: "tkp-hots-04",
+    subject: "TKP",
+    prompt:
+      "Rekan meminta Anda mengirim daftar pemohon ke surel pribadinya karena sistem kantor sedang lambat. Daftar tersebut memuat data yang tidak diperlukan untuk tugasnya, dan ada penyimpanan resmi yang masih dapat diakses melalui perangkat kantor. Tindakan terbaik adalah ...",
+    options: [
+      {
+        label: "A",
+        text: "Mengirim seluruh daftar agar rekan dapat memilih data yang diperlukan.",
+      },
+      { label: "B", text: "Menolak membantu dan membiarkan pekerjaan terhenti." },
+      {
+        label: "C",
+        text: "Menggunakan penyimpanan resmi, membagikan hanya data yang diperlukan, dan memberi tahu rekan tentang cara akses yang aman.",
+      },
+      {
+        label: "D",
+        text: "Mengirim daftar ke akun pribadi lalu menghapusnya setelah rekan mengunduh.",
+      },
+      { label: "E", text: "Meminta rekan memakai akun pribadi Anda untuk membuka sistem." },
+    ],
+    answer: "C",
+    explanation:
+      "Kebutuhan operasional tetap dapat dipenuhi dengan kanal resmi dan prinsip pembatasan data. Mengirim seluruh daftar atau memakai akun pribadi memperluas paparan dan mengurangi kendali atas informasi.",
+  },
+  {
+    id: "tkp-hots-05",
+    subject: "TKP",
+    prompt:
+      "Sebuah tugas tim terlambat karena cara kerja yang disepakati tidak cocok dengan kemampuan anggota baru. Tenggat masih dapat dicapai jika pembagian tugas diubah, tetapi anggota lain khawatir beban mereka bertambah. Langkah paling konstruktif adalah ...",
+    options: [
+      {
+        label: "A",
+        text: "Meminta anggota baru bekerja lebih lama tanpa meninjau pembagian tugas.",
+      },
+      {
+        label: "B",
+        text: "Mengambil alih tugas anggota baru dan tidak membahas perubahan dengan tim.",
+      },
+      {
+        label: "C",
+        text: "Memetakan pekerjaan tersisa dan kapasitas tim, menyepakati pembagian ulang yang realistis, serta menetapkan titik pemeriksaan progres.",
+      },
+      {
+        label: "D",
+        text: "Melaporkan anggota baru sebagai penyebab keterlambatan sebelum memeriksa hambatan lain.",
+      },
+      { label: "E", text: "Mengurangi pemeriksaan mutu agar tenggat pasti tercapai." },
+    ],
+    answer: "C",
+    explanation:
+      "Pemetaan beban dan kapasitas membantu tim memilih perubahan yang bisa dijalankan tanpa mengorbankan mutu. Kesepakatan ulang dan titik pemeriksaan menjaga akuntabilitas serta memberi kesempatan memperbaiki arah lebih awal.",
+  },
 ];
 
 function questionHash(value: string): number {

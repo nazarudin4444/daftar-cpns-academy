@@ -8,10 +8,10 @@ import {
 } from "@/lib/exam-storage";
 
 describe("Bank soal dan penilaian", () => {
-  it("memuat 15 soal orisinal di setiap kategori SKD", () => {
-    expect(QUESTION_BANK.filter((question) => question.subject === "TWK")).toHaveLength(15);
-    expect(QUESTION_BANK.filter((question) => question.subject === "TIU")).toHaveLength(15);
-    expect(QUESTION_BANK.filter((question) => question.subject === "TKP")).toHaveLength(15);
+  it("memuat 20 soal orisinal di setiap kategori SKD", () => {
+    expect(QUESTION_BANK.filter((question) => question.subject === "TWK")).toHaveLength(20);
+    expect(QUESTION_BANK.filter((question) => question.subject === "TIU")).toHaveLength(20);
+    expect(QUESTION_BANK.filter((question) => question.subject === "TKP")).toHaveLength(20);
   });
   it("memiliki ID unik dan kunci yang tersedia pada opsi", () => {
     expect(new Set(QUESTION_BANK.map((q) => q.id)).size).toBe(QUESTION_BANK.length);
