@@ -1754,26 +1754,41 @@ function CATSimulator() {
               <ArrowLeft size={16} aria-hidden="true" />
               Pilih sesi lain
             </Button>
-            <div className="space-y-3">
-              <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm">
-                <input
-                  type="checkbox"
-                  checked={readyToStart}
-                  onChange={(event) => setReadyToStart(event.target.checked)}
-                  className="size-5 accent-primary"
-                />
-                Saya memahami panduan dan siap mulai.
-              </label>
-              <Button
-                disabled={!readyToStart || !packageReady}
-                className="min-h-12 w-full"
-                onClick={() => startExam(selectedTrack, activePackage?.id)}
-              >
-                Mulai simulasi · {questionCount} soal
-              </Button>
-            </div>
+            <p className="text-sm text-muted-foreground">
+              Timer berjalan setelah Anda menekan tombol mulai.
+            </p>
           </div>
         </section>
+      )}
+      {selectedTrack && activeTrack && (
+        <div className="sticky bottom-24 z-30 mt-5 xl:bottom-4">
+          <div className="flex flex-col gap-3 rounded-xl border border-primary/30 bg-card/95 p-3 shadow-lg backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:p-4">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                Paket terpilih
+              </p>
+              <p className="truncate font-bold text-foreground">
+                {activeTrack.name}
+                {activePackage ? ` · ${activePackage.title}` : ""}
+              </p>
+              <p className="text-xs tabular-nums text-muted-foreground">
+                {questionCount} soal ·{" "}
+                {formatDuration(
+                  activePackage?.durationSeconds ?? rulesForTrack(selectedTrack).durationSeconds,
+                )}
+              </p>
+            </div>
+            <Button
+              size="lg"
+              disabled={!packageReady}
+              className="min-h-12 shrink-0 text-base font-bold"
+              onClick={() => startExam(selectedTrack, activePackage?.id)}
+            >
+              <PlayCircle aria-hidden="true" />
+              Mulai simulasi sekarang
+            </Button>
+          </div>
+        </div>
       )}
       {result && !selectedTrack && (
         <p className="mt-4 text-sm text-muted-foreground">
