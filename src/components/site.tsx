@@ -80,7 +80,7 @@ export function SiteHeader() {
             <span className="block font-extrabold tracking-tight text-foreground">Daftar CPNS</span>
             <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold text-positive">
               <span className="size-1.5 rounded-full bg-positive" aria-hidden="true" />
-              Latihan mandiri · 100% Gratis
+              Belajar dan Latihan CAT CPNS Gratis
             </span>
           </span>
         </Link>
