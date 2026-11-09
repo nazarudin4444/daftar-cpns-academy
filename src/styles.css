@@ -175,3 +175,10 @@
     color: var(--color-foreground);
   }
 }
+
+@utility bg-hero {
+  background:
+    radial-gradient(60rem 30rem at 85% -10%, color-mix(in oklab, var(--brand) 55%, transparent), transparent 60%),
+    radial-gradient(40rem 24rem at 0% 110%, color-mix(in oklab, var(--positive) 30%, transparent), transparent 60%),
+    linear-gradient(160deg, oklch(0.24 0.08 256), var(--primary) 55%, oklch(0.42 0.15 258));
+}

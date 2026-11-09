@@ -1,11 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
-  BookOpenCheck,
   Briefcase,
   CalendarDays,
   CircleHelp,
-  Clock3,
   FileSearch,
   GraduationCap,
   Landmark,
@@ -182,134 +180,91 @@ function HomePage() {
             __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
           }}
         />
-        <section className="mx-auto grid max-w-7xl items-center gap-7 px-4 pb-12 pt-8 sm:px-6 md:grid-cols-[1.05fr_0.95fr] md:gap-10 md:py-14 lg:px-8 lg:py-16">
-          <div className="max-w-2xl">
-            <p className="inline-flex items-center gap-2 border-l-2 border-positive pl-3 text-sm font-bold text-positive">
-              Platform Edukasi &amp; Simulasi CAT Independen
-            </p>
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.12] text-foreground sm:text-5xl">
-              Belajar &amp; Latihan CAT CPNS
-            </h1>
-            <p className="mt-5 max-w-xl text-lg leading-8 text-muted-foreground">
-              Kerjakan simulasi demo SKD CPNS 110 soal, berlatih TWK, TIU, dan TKP, lalu pelajari
-              pembahasan setiap jawaban. Materi ini dibuat untuk belajar mandiri, bukan layanan
-              resmi pemerintah.
-            </p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Button asChild className="min-h-12">
-                <Link to="/simulasi-cat-cpns">
-                  Mulai Simulasi Gratis <ArrowRight size={17} />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" className="min-h-12">
-                <Link to="/latihan-soal-cpns">Latihan Soal CPNS</Link>
-              </Button>
+        <section className="bg-hero relative overflow-hidden text-primary-foreground">
+          <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 pb-20 pt-14 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:pb-28 md:pt-20 lg:px-8">
+            <div className="max-w-2xl">
+              <p className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3.5 py-1.5 text-sm font-semibold backdrop-blur-md">
+                <ShieldCheck size={16} aria-hidden="true" />
+                Platform Edukasi &amp; Simulasi CAT Independen
+              </p>
+              <h1 className="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-6xl">
+                Belajar &amp; Latihan CAT CPNS
+              </h1>
+              <p className="mt-5 max-w-xl text-lg leading-8 text-primary-foreground/80">
+                Simulasi demo SKD 110 soal, latihan TWK, TIU, dan TKP, lengkap dengan pembahasan
+                setiap jawaban. Gratis, tanpa akun.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Button asChild variant="secondary" className="min-h-12 px-6 text-base font-bold shadow-lg">
+                  <Link to="/simulasi-cat-cpns">
+                    Mulai Simulasi Gratis <ArrowRight size={17} />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="min-h-12 border-primary-foreground/30 bg-transparent px-6 text-base text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                >
+                  <Link to="/latihan-soal-cpns">Latihan Soal CPNS</Link>
+                </Button>
+              </div>
+              <p className="mt-6 text-sm text-primary-foreground/70">
+                Bukan portal pemerintah. Pendaftaran resmi hanya di{" "}
+                <a
+                  href="https://sscasn.bkn.go.id/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-semibold text-primary-foreground underline underline-offset-4"
+                >
+                  SSCASN
+                </a>
+                .
+              </p>
             </div>
-            <p className="mt-4 text-sm">
-              <a
-                href="https://sscasn.bkn.go.id/"
-                target="_blank"
-                rel="noreferrer"
-                className="font-semibold text-primary underline-offset-4 hover:underline"
-              >
-                Panduan pendaftaran resmi di SSCASN
-              </a>
-            </p>
-            <div className="mt-7 flex items-start gap-3 border-t border-border pt-4">
-              <ShieldCheck className="mt-0.5 shrink-0 text-positive" size={19} />
-              <p className="text-sm leading-6 text-muted-foreground">
-                <strong className="text-foreground">Independen, bukan portal pemerintah.</strong>{" "}
-                Kami tidak meminta NIK, Kartu Keluarga, kata sandi SSCASN, atau dokumen identitas.
+            <div className="hidden rounded-2xl border border-primary-foreground/15 bg-primary-foreground/10 p-6 backdrop-blur-md md:block">
+              <p className="text-sm font-semibold text-primary-foreground/70">Format paket demo SKD</p>
+              <dl className="mt-4 grid grid-cols-2 gap-3">
+                {[
+                  ["110", "soal pilihan ganda"],
+                  ["100", "menit timer CAT"],
+                  ["3", "materi: TWK, TIU, TKP"],
+                  ["Rp0", "tanpa akun"],
+                ].map(([value, label]) => (
+                  <div key={label} className="rounded-xl bg-primary-foreground/10 p-4">
+                    <dt className="text-3xl font-extrabold tabular-nums">{value}</dt>
+                    <dd className="mt-1 text-sm text-primary-foreground/75">{label}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="mt-4 text-xs leading-5 text-primary-foreground/60">
+                Konfigurasi latihan situs, bukan ketentuan resmi seleksi.
               </p>
             </div>
           </div>
-          <div className="mx-auto w-full max-w-[500px] rounded-xl border border-border bg-card p-5 shadow-sm sm:p-6">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-sm font-bold text-primary">Pusat informasi CPNS</p>
-                <h2 className="mt-2 text-xl font-extrabold text-foreground">
-                  Apa yang sedang Anda cari?
-                </h2>
-              </div>
-              <span className="shrink-0 rounded-md bg-secondary px-2.5 py-1.5 text-xs font-semibold text-secondary-foreground">
-                Diperiksa 9 Nov 2026
-              </span>
-            </div>
-            <div className="mt-4 rounded-lg border border-border bg-secondary/60 p-3.5">
-              <div className="flex items-start gap-3">
-                <ShieldCheck
-                  className="mt-0.5 shrink-0 text-primary"
-                  size={18}
-                  aria-hidden="true"
-                />
-                <p className="text-sm leading-6 text-muted-foreground">
-                  Belum ada jadwal CPNS umum yang tampil di SSCASN saat diperiksa. Cek pengumuman
-                  resmi sebelum merencanakan pendaftaran.
-                </p>
-              </div>
-            </div>
-            <nav aria-label="Informasi CPNS yang sering dicari" className="mt-4 grid gap-2">
-              {cpnsInfoLinks.map(({ label, copy, href, icon: Icon }) => (
-                <Link
-                  key={href}
-                  to={href}
-                  className="group flex min-h-[60px] items-center gap-3 rounded-lg border border-border bg-background px-3 py-2.5 transition-colors hover:border-primary/50 hover:bg-secondary/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                >
-                  <span className="grid size-10 shrink-0 place-items-center rounded-md bg-secondary text-primary">
-                    <Icon size={19} aria-hidden="true" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-bold text-foreground">{label}</span>
-                    <span className="mt-0.5 block text-sm leading-5 text-muted-foreground">
-                      {copy}
-                    </span>
-                  </span>
-                  <ArrowRight
-                    className="shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
-                    size={17}
-                    aria-hidden="true"
-                  />
-                </Link>
-              ))}
-            </nav>
-            <a
-              href="https://sscasn.bkn.go.id/"
-              target="_blank"
-              rel="noreferrer"
-              className="mt-4 inline-flex min-h-11 items-center gap-2 font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              Buka portal resmi SSCASN
-              <ArrowRight size={17} aria-hidden="true" />
-            </a>
-          </div>
         </section>
-        <section className="border-y border-border bg-card">
-          <div className="mx-auto grid max-w-7xl gap-7 px-4 py-8 sm:px-6 md:grid-cols-3 lg:px-8">
-            {[
-              [Clock3, "Latihan bertimer", "Atur ritme menjawab dalam sesi demo."],
-              [BookOpenCheck, "Pembahasan jawaban", "Tinjau alasan pada setiap soal."],
-              [
-                ShieldCheck,
-                "Progres tersimpan lokal",
-                "Lanjutkan sesi pada browser perangkat ini.",
-              ],
-            ].map(([Icon, title, copy]) => {
-              const IconPart = Icon as typeof Clock3;
-              return (
-                <div key={String(title)} className="flex gap-4">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-md bg-secondary text-primary">
-                    <IconPart size={21} />
-                  </span>
-                  <div>
-                    <h2 className="font-bold">{String(title)}</h2>
-                    <p className="mt-1 text-sm leading-6 text-muted-foreground">{String(copy)}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+        <section className="relative z-10 mx-auto -mt-12 max-w-7xl px-4 sm:px-6 lg:px-8">
+          <nav
+            aria-label="Informasi CPNS yang sering dicari"
+            className="grid gap-2 rounded-2xl border border-border bg-card p-2 shadow-xl sm:grid-cols-2 lg:grid-cols-4"
+          >
+            {cpnsInfoLinks.map(({ label, copy, href, icon: Icon }) => (
+              <Link
+                key={href}
+                to={href}
+                className="group flex min-h-16 items-center gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-secondary"
+              >
+                <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+                  <Icon size={19} aria-hidden="true" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block font-bold">{label}</span>
+                  <span className="block text-xs leading-5 text-muted-foreground">{copy}</span>
+                </span>
+              </Link>
+            ))}
+          </nav>
         </section>
-        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
             <div>
               <p className="text-sm font-bold text-primary">Pilih fokus belajar</p>
@@ -365,70 +320,8 @@ function HomePage() {
             ))}
           </div>
         </section>
-        <section className="bg-secondary">
-          <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[0.85fr_1.15fr] lg:px-8">
-            <div>
-              <p className="text-sm font-bold text-primary">Panduan belajar</p>
-              <h2 className="mt-2 text-2xl font-extrabold">Belajar dengan langkah yang jelas</h2>
-              <p className="mt-4 leading-7 text-muted-foreground">
-                Gunakan latihan untuk memahami pola soal. Cocokkan persiapan dan informasi seleksi
-                dengan pengumuman resmi.
-              </p>
-              <Button asChild variant="outline" className="mt-5 min-h-11">
-                <Link to="/panduan">Baca panduan</Link>
-              </Button>
-            </div>
-            <ol className="grid gap-0">
-              {[
-                "Periksa informasi dari kanal pemerintah.",
-                "Pilih kategori dan kerjakan latihan demo.",
-                "Baca pembahasan dan ulangi materi yang perlu diperkuat.",
-              ].map((text, i) => (
-                <li
-                  key={text}
-                  className="flex gap-4 border-b border-border py-4 first:pt-0 last:border-b-0"
-                >
-                  <span className="grid size-9 shrink-0 place-items-center rounded-md bg-background font-bold text-primary">
-                    {i + 1}
-                  </span>
-                  <p className="pt-1 leading-6">{text}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-        <section id="sumber-resmi" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <p className="text-sm font-bold text-primary">Sumber resmi</p>
-            <h2 className="mt-2 text-2xl font-extrabold">
-              Pastikan informasi seleksi di kanal pemerintah
-            </h2>
-            <p className="mt-3 leading-7 text-muted-foreground">
-              Jadwal, formasi, persyaratan, dan tahapan seleksi dapat berubah. Cocokkan informasi
-              dengan pengumuman dari pemerintah atau instansi yang dituju.
-            </p>
-          </div>
-          <div className="mt-6 flex flex-wrap gap-3">
-            {[
-              ["SSCASN BKN", "https://sscasn.bkn.go.id/"],
-              ["BKN", "https://www.bkn.go.id/"],
-              ["Kementerian PANRB", "https://www.menpan.go.id/"],
-            ].map(([label, href]) => (
-              <a
-                key={href}
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                className="flex min-h-11 items-center gap-2 border border-border bg-card px-4 font-semibold hover:border-primary hover:text-primary"
-              >
-                {label}
-                <ArrowRight size={15} />
-              </a>
-            ))}
-          </div>
-        </section>
-        <section className="border-y border-border bg-secondary/50">
-          <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-[1.15fr_0.85fr] md:gap-10 md:py-14 lg:px-8">
+        <section className="bg-card">
+          <div className="mx-auto grid max-w-7xl gap-8 px-4 py-20 sm:px-6 md:grid-cols-[1.15fr_0.85fr] md:gap-12 lg:px-8">
             <div>
               <p className="text-sm font-bold text-primary">Lihat cara kerja CAT</p>
               <h2 className="mt-2 text-2xl font-extrabold sm:text-3xl">
@@ -461,7 +354,7 @@ function HomePage() {
             </aside>
           </div>
         </section>
-        <section className="mx-auto max-w-4xl px-4 py-9 sm:px-6 lg:px-8">
+        <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <CircleHelp className="text-primary" size={20} aria-hidden="true" />
             <div>
@@ -483,20 +376,29 @@ function HomePage() {
             ))}
           </div>
         </section>
-        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-start justify-between gap-6 border-l-4 border-primary bg-card px-5 py-6 sm:flex-row sm:items-center sm:px-8">
-            <div>
-              <p className="text-sm font-bold text-primary">Latihan tanpa akun</p>
-              <h2 className="mt-2 text-2xl font-extrabold">Mulai sesi demo Anda</h2>
-              <p className="mt-2 text-muted-foreground">
-                Jawaban tersimpan lokal di browser perangkat ini.
-              </p>
+        <section id="sumber-resmi" className="border-t border-border bg-card">
+          <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-8 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+            <p className="flex items-start gap-2 text-sm leading-6 text-muted-foreground">
+              <ShieldCheck className="mt-0.5 shrink-0 text-positive" size={18} aria-hidden="true" />
+              Cocokkan jadwal dan syarat seleksi dengan kanal resmi. Kami tidak meminta NIK, KK, atau kata sandi SSCASN.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                ["SSCASN BKN", "https://sscasn.bkn.go.id/"],
+                ["BKN", "https://www.bkn.go.id/"],
+                ["Kementerian PANRB", "https://www.menpan.go.id/"],
+              ].map(([label, href]) => (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-border px-4 text-sm font-semibold hover:border-primary hover:text-primary"
+                >
+                  {label} <ArrowRight size={14} aria-hidden="true" />
+                </a>
+              ))}
             </div>
-            <Button asChild className="min-h-12">
-              <Link to="/simulasi-cat-cpns">
-                Mulai simulasi gratis <ArrowRight size={17} />
-              </Link>
-            </Button>
           </div>
         </section>
       </main>
