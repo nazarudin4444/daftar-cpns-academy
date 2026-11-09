@@ -1468,6 +1468,7 @@ function CATSimulator() {
   const [reviewFilter, setReviewFilter] = useState<"all" | "incorrect" | "flagged">("all");
   const [questionTextScale, setQuestionTextScale] = useState<0 | 1 | 2>(1);
   const [showFinishReview, setShowFinishReview] = useState(false);
+  const [packageHistory, setPackageHistory] = useState<Record<string, number>>({});
   const isExamActive = session !== null;
   const navigationBlocker = useBlocker({
     shouldBlockFn: () => isExamActive,
@@ -1482,6 +1483,15 @@ function CATSimulator() {
       if (savedSession) setPendingResume(savedSession);
       else saveExamSession(storage, null);
       setResult(loadExamResult(storage));
+      const latest: Record<string, number> = {};
+      for (const attempt of loadExamHistory(storage)) {
+        if (!attempt.packageId || attempt.packageId in latest) continue;
+        const attemptScore = scoreAttempt(attempt, attempt.answers);
+        latest[attempt.packageId] = attemptScore.total
+          ? Math.round((attemptScore.correct / attemptScore.total) * 100)
+          : 0;
+      }
+      setPackageHistory(latest);
     } catch {
       setStorageError(true);
     } finally {
@@ -1799,7 +1809,7 @@ function CATSimulator() {
                   role="timer"
                   aria-label={`Waktu tersisa ${displayTime}${timerState === "urgent" ? ", tiga menit atau kurang" : timerState === "warning" ? ", sepuluh menit atau kurang" : ""}`}
                   aria-live="off"
-                  className={`flex min-h-12 items-center gap-2 rounded-md border px-3 font-bold tabular-nums ${timerState === "urgent" ? "border-red-200 bg-red-50 text-red-900 dark:border-red-800 dark:bg-red-950 dark:text-red-100" : timerState === "warning" ? "border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100" : "border-white/25 bg-white/15 text-white"}`}
+                  className={`flex min-h-12 items-center gap-2 rounded-md border px-3 font-bold tabular-nums ${timerState === "urgent" ? "border-red-200 bg-red-50 text-red-900 motion-safe:animate-pulse dark:border-red-800 dark:bg-red-950 dark:text-red-100" : timerState === "warning" ? "border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100" : "border-white/25 bg-white/15 text-white"}`}
                 >
                   <Clock3 size={17} aria-hidden="true" />
                   <span>{displayTime}</span>
@@ -2171,6 +2181,25 @@ function CATSimulator() {
               </BarChart>
             </ResponsiveContainer>
           </div>
+          {(() => {
+            const ranked = score.breakdown
+              .filter((item) => item.total > 0)
+              .map((item) => ({ ...item, pct: Math.round((item.correct / item.total) * 100) }))
+              .sort((a, b) => a.pct - b.pct);
+            const weakest = ranked[0];
+            const strongest = ranked[ranked.length - 1];
+            if (!weakest || !strongest) return null;
+            return (
+              <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6">
+                <p className="font-bold text-primary">Saran belajar berikutnya</p>
+                <p className="mt-1">
+                  {weakest === strongest
+                    ? `Anda menjawab benar ${weakest.pct}% soal ${weakest.subject}. Baca pembahasan soal yang salah, lalu ulangi paket lain.`
+                    : `Hasil terbaik Anda di ${strongest.subject} (${strongest.pct}% benar). Prioritaskan ${weakest.subject} (${weakest.pct}% benar): baca pembahasannya, lalu coba latihan kilat ${weakest.subject}.`}
+                </p>
+              </div>
+            );
+          })()}
           <ul className="mt-2 grid gap-2 text-sm sm:grid-cols-3">
             {score.breakdown.map((item) => (
               <li key={item.subject} className="border border-border p-3">
@@ -2457,8 +2486,12 @@ function CATSimulator() {
                       .map(([subject, count]) => `${subject} ${count}`)
                       .join(" · ")}
                   </span>
-                  <span className="mt-2 block text-xs font-semibold">
-                    {packageReady ? "Pembahasan dan tips tersedia" : "Soal sedang dilengkapi"}
+                  <span
+                    className={`mt-3 inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${item.id in packageHistory ? "bg-positive/10 text-positive" : "bg-muted text-muted-foreground"}`}
+                  >
+                    {item.id in packageHistory
+                      ? `Terakhir dicoba: ${packageHistory[item.id]}% benar`
+                      : "Belum dikerjakan"}
                   </span>
                 </span>
               </label>

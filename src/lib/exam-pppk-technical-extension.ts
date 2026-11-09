@@ -287,7 +287,7 @@ const ITEMS: Item[] = [
     "85%",
     "88%",
     "D",
-    "272 ÷ 320 × 100% = 85%.",
+    "Persentase dihitung dari 272 ÷ 320 × 100% = 85%.",
     "Bagi jumlah yang memenuhi standar dengan seluruh permohonan pada kelompok yang sama.",
   ],
   [
@@ -311,7 +311,7 @@ const ITEMS: Item[] = [
     "6%",
     "24%",
     "C",
-    "24 ÷ 600 × 100% = 4%.",
+    "Persentase dihitung dari 24 ÷ 600 × 100% = 4%.",
     "Pastikan pembilang dan penyebut berasal dari periode serta kelompok yang sama.",
   ],
   [
