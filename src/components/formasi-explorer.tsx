@@ -26,6 +26,7 @@ type Filters = {
   procurement: string;
   formation: string;
   education: string;
+  educationPreset: string;
 };
 const initialFilters: Filters = {
   query: "",
@@ -33,6 +34,7 @@ const initialFilters: Filters = {
   procurement: "",
   formation: "",
   education: "",
+  educationPreset: "",
 };
 
 function educationLevel(value: string): string {
@@ -192,12 +194,19 @@ export function FormasiExplorer() {
           ? "CPNS"
           : row.procurementType;
       const level = educationLevel(`${row.educationGroup} ${row.educationName}`);
+      const educationDetail = `${row.educationGroup} ${row.educationName}`.toLocaleLowerCase("id-ID");
+      const quickEducationMatches =
+        !filters.educationPreset ||
+        (filters.educationPreset === "s1-all" && level === "S1" && /semua jurusan|segala jurusan/.test(educationDetail)) ||
+        (filters.educationPreset === "d3-management" && level === "Diploma" && /manajemen/.test(educationDetail)) ||
+        (filters.educationPreset === "sma" && level === "SMA/SMK");
       return (
         (!term || recordText(row).includes(term)) &&
         (!filters.event || row.eventName === filters.event) &&
         (!filters.procurement || procurement === filters.procurement) &&
         (!filters.formation || row.formationType === filters.formation) &&
-        (!filters.education || level === filters.education)
+        (!filters.education || level === filters.education) &&
+        quickEducationMatches
       );
     });
   }, [feed, filters]);
@@ -219,16 +228,16 @@ export function FormasiExplorer() {
               <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-background/80 px-3 py-1.5 text-xs font-semibold text-primary">
                 <ShieldCheck className="size-4" aria-hidden="true" /> Snapshot formasi dari API BKN
               </p>
-              <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
                 Pencarian Formasi ASN
               </h1>
-              <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
+              <p className="mt-3 max-w-2xl text-base leading-7 text-white/85">
                 Telusuri jabatan, instansi, jenis pengadaan, dan kualifikasi dari data formasi BKN.
                 Pastikan kembali syarat lengkap di pengumuman instansi.
               </p>
-              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
                 <span
-                  className={`inline-flex items-center gap-2 font-medium ${successful ? "text-positive" : "text-muted-foreground"}`}
+                  className={`inline-flex items-center gap-2 font-medium ${successful ? "text-white" : "text-white/75"}`}
                 >
                   <span
                     className={`size-2 rounded-full ${successful ? "bg-positive" : "bg-muted-foreground/50"}`}
@@ -239,7 +248,7 @@ export function FormasiExplorer() {
                       ? "Snapshot data formasi dari API BKN"
                       : "Menampilkan snapshot lokal terakhir"}
                 </span>
-                <span className="text-muted-foreground">
+                <span className="text-white/85">
                   Diperbarui: {formatDate(feed?.fetchedAt ?? null)}
                 </span>
                 <button
@@ -249,7 +258,7 @@ export function FormasiExplorer() {
                     void load(true);
                   }}
                   disabled={loading || refreshing}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-md px-2 font-semibold text-primary hover:bg-primary/5 disabled:opacity-50"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-md px-3 font-semibold text-white hover:bg-white/10 disabled:opacity-50"
                 >
                   <RefreshCw
                     className={`size-4 ${refreshing ? "animate-spin" : ""}`}
@@ -390,6 +399,14 @@ export function FormasiExplorer() {
                   ))}
                 </select>
               </label>
+            </div>
+            <div className="mt-4 flex flex-wrap items-center gap-2" aria-label="Filter pendidikan populer">
+              <span className="mr-1 text-xs font-semibold text-muted-foreground">Pencarian cepat:</span>
+              {([["s1-all", "Semua jurusan · S1"], ["d3-management", "D-III Manajemen"], ["sma", "SLTA / sederajat"]] as const).map(([value, label]) => (
+                <button key={value} type="button" aria-pressed={filters.educationPreset === value} onClick={() => { setFilters((current) => ({ ...current, educationPreset: current.educationPreset === value ? "" : value })); setVisibleCount(PAGE_SIZE); }} className={`min-h-10 rounded-full border px-3 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${filters.educationPreset === value ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background hover:border-primary/50"}`}>
+                  {label}
+                </button>
+              ))}
             </div>
             <div className="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-4 text-sm">
               <p aria-live="polite" className="font-semibold">

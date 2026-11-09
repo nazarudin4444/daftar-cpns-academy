@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useBlocker } from "@tanstack/react-router";
 import {
@@ -14,6 +14,9 @@ import {
   PlayCircle,
   Home,
   BookOpen,
+  Bookmark,
+  Flag,
+  Printer,
 } from "lucide-react";
 import {
   Bar,
@@ -79,6 +82,35 @@ const SUBJECT_NAMES: Record<Subject, string> = {
   "Sosial Kultural": "Kompetensi Sosial Kultural",
   Teknis: "Kompetensi Teknis",
 };
+
+const BOOKMARKS_KEY = "daftar-cpns:bookmarked-questions:v1";
+function readBookmarkedIds(): string[] {
+  try {
+    const value: unknown = JSON.parse(window.localStorage.getItem(BOOKMARKS_KEY) ?? "[]");
+    return Array.isArray(value) ? value.filter((id): id is string => typeof id === "string") : [];
+  } catch {
+    return [];
+  }
+}
+function setQuestionBookmark(questionId: string, saved: boolean) {
+  const ids = readBookmarkedIds().filter((id) => id !== questionId);
+  if (saved) ids.push(questionId);
+  try {
+    window.localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(ids));
+  } catch {
+    // The control remains usable for the current view when browser storage is unavailable.
+  }
+  return ids;
+}
+
+function jakartaDateKey(date = new Date()) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -903,6 +935,13 @@ const PASSING_GRADE_CATEGORIES = [
     thresholds: { total: 311, TIU: 85 },
   },
   {
+    id: "diaspora",
+    name: "Diaspora",
+    year: "2024",
+    kind: "total",
+    thresholds: { total: 311, TIU: 85 },
+  },
+  {
     id: "disabilitas",
     name: "Penyandang disabilitas",
     year: "2024",
@@ -925,16 +964,135 @@ const PASSING_GRADE_CATEGORIES = [
   },
 ] as const;
 
+function DailyChallenge() {
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [completedDates, setCompletedDates] = useState<string[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const today = jakartaDateKey();
+  const pool = QUESTION_BANK.filter((item) => ["TWK", "TIU", "TKP"].includes(item.subject));
+  let seed = [...today].reduce((total, char) => total * 31 + char.charCodeAt(0), 7) >>> 0;
+  const dailyQuestions = [...pool]
+    .sort((left, right) => {
+      const rank = (id: string) => [...id].reduce((total, char) => (total * 33 + char.charCodeAt(0)) >>> 0, seed);
+      return rank(left.id) - rank(right.id);
+    })
+    .slice(0, 5);
+
+  useEffect(() => {
+    try {
+      const value: unknown = JSON.parse(window.localStorage.getItem("daftar-cpns:daily-streak:v1") ?? "[]");
+      if (Array.isArray(value)) setCompletedDates(value.filter((date): date is string => typeof date === "string"));
+    } catch {
+      // Challenge works without persistence.
+    } finally {
+      setLoaded(true);
+    }
+  }, []);
+
+  const done = dailyQuestions.length > 0 && dailyQuestions.every((item) => answers[item.id]);
+  useEffect(() => {
+    if (!loaded || !done || completedDates.includes(today)) return;
+    const next = [...completedDates, today].slice(-400);
+    setCompletedDates(next);
+    try {
+      window.localStorage.setItem("daftar-cpns:daily-streak:v1", JSON.stringify(next));
+    } catch {
+      // Completion is still shown for this visit.
+    }
+  }, [completedDates, done, loaded, today]);
+
+  const completed = new Set(completedDates);
+  let streak = 0;
+  const cursor = new Date(`${today}T12:00:00+07:00`);
+  if (!completed.has(today)) cursor.setDate(cursor.getDate() - 1);
+  while (completed.has(jakartaDateKey(cursor))) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return (
+    <section aria-labelledby="daily-challenge-heading" className="rounded-xl border border-border bg-card p-4 sm:p-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wide text-primary">Tantangan harian · 5 soal</p>
+          <h3 id="daily-challenge-heading" className="mt-1 text-lg font-bold">Latihan singkat hari ini</h3>
+          <p className="mt-1 text-sm text-muted-foreground">Soal berganti setiap hari. Progres dan streak disimpan di browser ini.</p>
+        </div>
+        <p className="rounded-full bg-accent px-3 py-1.5 text-sm font-semibold text-foreground" aria-live="polite">🔥 {streak} hari beruntun</p>
+      </div>
+      {done ? (
+        <p className="mt-4 rounded-md border border-positive/40 bg-positive/5 p-3 text-sm font-semibold" role="status">Tantangan hari ini selesai. Kembali besok untuk menjaga streak.</p>
+      ) : (
+        <ol className="mt-4 space-y-4">
+          {dailyQuestions.map((question, index) => (
+            <li key={question.id} className="border-t border-border pt-4">
+              <p className="text-xs font-semibold text-muted-foreground">{question.subject} · Soal {index + 1}</p>
+              <p className="mt-1 text-sm font-semibold leading-6">{question.prompt}</p>
+              <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                {question.options.map((option) => (
+                  <button key={option.label} type="button" disabled={Boolean(answers[question.id])} aria-pressed={answers[question.id] === option.label} onClick={() => setAnswers((current) => ({ ...current, [question.id]: option.label }))} className="min-h-11 rounded-md border border-border px-3 py-2 text-left text-sm leading-5 hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default">
+                    <strong>{option.label}.</strong> {option.text}
+                  </button>
+                ))}
+              </div>
+              {answers[question.id] && <p className="mt-2 text-sm leading-6 text-muted-foreground" aria-live="polite">{answers[question.id] === question.answer ? "Tepat." : `Kunci latihan: ${question.answer}.`} {question.explanation}</p>}
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
+  );
+}
+
+function StudyFlashcards() {
+  const cards = [
+    { subject: "TWK · UUD 1945", title: "Persamaan di hadapan hukum", description: "Pasal 27 ayat (1) memuat prinsip kesamaan kedudukan warga negara di dalam hukum dan pemerintahan. Kata kunci belajar: persamaan hak dan kewajiban." },
+    { subject: "TWK · UUD 1945", title: "Hak atas pekerjaan", description: "Pasal 27 ayat (2) menyatakan hak warga negara atas pekerjaan dan penghidupan yang layak bagi kemanusiaan." },
+    { subject: "TWK · UUD 1945", title: "Kepastian hukum yang adil", description: "Pasal 28D ayat (1) menjamin pengakuan, perlindungan, dan kepastian hukum yang adil serta perlakuan yang sama di hadapan hukum." },
+    { subject: "TWK · UUD 1945", title: "Hak memperoleh pendidikan", description: "Pasal 31 ayat (1) menyatakan setiap warga negara berhak mendapat pendidikan. Bedakan hak warga dengan kewajiban mengikuti pendidikan dasar pada ayat berikutnya." },
+    { subject: "TWK · Lembaga negara", title: "Majelis Permusyawaratan Rakyat", description: "Pasal 3 memberi MPR wewenang mengubah dan menetapkan UUD, melantik Presiden/Wakil Presiden, serta memutus usul pemberhentian sesuai UUD." },
+    { subject: "TWK · Lembaga negara", title: "Dewan Perwakilan Rakyat", description: "Pasal 20A menjelaskan fungsi legislasi, anggaran, dan pengawasan DPR. Ingat tiga fungsi ini sebagai kata kunci." },
+    { subject: "TIU · Aritmetika", title: "Jarak, kecepatan, waktu", description: "Rumus dasar: jarak = kecepatan × waktu; kecepatan = jarak ÷ waktu; waktu = jarak ÷ kecepatan. Samakan satuan sebelum menghitung." },
+    { subject: "TIU · Perbandingan", title: "Senilai dan berbalik nilai", description: "Senilai: jika satu besaran dikali faktor k, besaran lain juga dikali k. Berbalik nilai: hasil kali kedua besaran tetap, sehingga satu naik k kali dan lainnya turun menjadi 1/k." },
+  ];
+  const [index, setIndex] = useState(0);
+  const [showBack, setShowBack] = useState(false);
+  const card = cards[index];
+  if (!card) return null;
+  return (
+    <section aria-labelledby="study-cards-heading" className="rounded-xl border border-border bg-card p-4 sm:p-5">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div><p className="text-xs font-bold uppercase tracking-wide text-primary">Kartu belajar</p><h3 id="study-cards-heading" className="mt-1 text-lg font-bold">Ringkasan materi SKD</h3></div>
+        <span className="text-sm text-muted-foreground">{index + 1} / {cards.length}</span>
+      </div>
+      <div className="mt-4 min-h-36 rounded-lg border border-border bg-background p-4">
+        <p className="text-xs font-bold text-primary">{card.subject}</p>
+        <h4 className="mt-2 font-semibold">{card.title}</h4>
+        {showBack && <p className="mt-3 text-sm leading-6 text-muted-foreground">{card.description}</p>}
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <Button type="button" variant="outline" className="min-h-11" onClick={() => setShowBack((value) => !value)}>{showBack ? "Tutup ringkasan" : "Lihat ringkasan"}</Button>
+        <Button type="button" className="min-h-11" onClick={() => { setIndex((value) => (value + 1) % cards.length); setShowBack(false); }}>Kartu berikutnya</Button>
+      </div>
+      <p className="mt-2 text-xs leading-5 text-muted-foreground">Ringkasan ini untuk mengingat kata kunci; cek bunyi pasal dan perubahan resmi sebelum menghafal detail.</p>
+      <a href="https://jdih.dpr.go.id/setjen/index/id/UUD-1945-BAGIAN-PERTIMBANGAN-DAN-DOKUMENTASI-INFORMASI-HUKUM" target="_blank" rel="noreferrer" className="mt-1 inline-flex min-h-10 items-center text-sm font-semibold text-primary underline">Baca naskah UUD di JDIH DPR <ArrowUpRight size={14} className="ml-1" /></a>
+    </section>
+  );
+}
+
 function LearningDashboard() {
   const [history, setHistory] = useState<ExamResult[]>([]);
   const [unfinishedSession, setUnfinishedSession] = useState<ExamSession | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [storageUnavailable, setStorageUnavailable] = useState(false);
+  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<Question[]>([]);
 
   useEffect(() => {
     try {
       setHistory(loadExamHistory(window.localStorage));
       setUnfinishedSession(loadExamSession(window.localStorage));
+      const savedIds = readBookmarkedIds();
+      setBookmarkedQuestions(QUESTION_BANK.filter((question) => savedIds.includes(question.id)));
     } catch {
       setStorageUnavailable(true);
     } finally {
@@ -1029,6 +1187,25 @@ function LearningDashboard() {
           )}
         </section>
       )}
+
+      <DailyChallenge />
+      <StudyFlashcards />
+
+      <section aria-labelledby="bookmarks-heading" className="rounded-lg border border-border bg-card p-4 sm:p-5">
+        <h3 id="bookmarks-heading" className="font-bold">Soal yang perlu diulang</h3>
+        {bookmarkedQuestions.length ? (
+          <ol className="mt-3 space-y-4">
+            {bookmarkedQuestions.map((question, index) => (
+              <li key={question.id} className="border-t border-border pt-3">
+                <p className="text-xs font-semibold text-primary">{question.subject}</p>
+                <p className="mt-1 text-sm font-semibold leading-6">{question.prompt}</p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">Kunci latihan: {question.answer}. {question.explanation}</p>
+                <Button type="button" variant="outline" className="mt-2 min-h-10" onClick={() => { setQuestionBookmark(question.id, false); setBookmarkedQuestions((items) => items.filter((item) => item.id !== question.id)); }}>Hapus dari tersimpan</Button>
+              </li>
+            ))}
+          </ol>
+        ) : <p className="mt-2 text-sm leading-6 text-muted-foreground">Belum ada soal tersimpan. Tandai soal dari pembahasan hasil simulasi untuk mengulanginya di sini.</p>}
+      </section>
 
       <section
         aria-labelledby="progress-trend-heading"
@@ -1186,6 +1363,8 @@ function LearningDashboard() {
 function PassingGradeCalculator() {
   const [formasi, setFormasi] = useState<(typeof PASSING_GRADE_CATEGORIES)[number]["id"]>("umum");
   const [scores, setScores] = useState({ TWK: 0, TIU: 0, TKP: 45 });
+  const [quota, setQuota] = useState(5);
+  const [currentRank, setCurrentRank] = useState(10);
   const total = scores.TWK + scores.TIU + scores.TKP;
   const category = PASSING_GRADE_CATEGORIES.find((item) => item.id === formasi)!;
   const meetsThreshold =
@@ -1307,6 +1486,30 @@ function PassingGradeCalculator() {
           pada nilai peserta lain dan jumlah formasi.
         </span>
       </p>
+      <div className="mt-6 rounded-lg border border-border bg-background p-4">
+        <h3 className="font-bold">Simulasi batas peringkat 3× kuota</h3>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">Sebagai ilustrasi aturan seleksi CPNS pada PermenPANRB 6/2024, peserta yang memenuhi ambang dapat diikutkan ke SKB paling banyak tiga kali jumlah kebutuhan jabatan. Hasil akhir tetap mengikuti pengumuman instansi dan ketentuan periode berjalan.</p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <label className="text-sm font-semibold">Jumlah formasi
+            <input type="number" min={1} max={100000} value={quota} onChange={(event) => setQuota(Math.max(1, Number(event.target.value) || 1))} className="mt-1.5 min-h-11 w-full rounded-md border border-input bg-card px-3" />
+          </label>
+          <label className="text-sm font-semibold">Peringkat simulasi Anda
+            <input type="number" min={1} max={10000000} value={currentRank} onChange={(event) => setCurrentRank(Math.max(1, Number(event.target.value) || 1))} className="mt-1.5 min-h-11 w-full rounded-md border border-input bg-card px-3" />
+          </label>
+        </div>
+        <p className="mt-4 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm leading-6" aria-live="polite">Batas ilustrasi: peringkat {Math.min(quota * 3, 300000).toLocaleString("id-ID")}. Peringkat {currentRank.toLocaleString("id-ID")} {currentRank <= quota * 3 ? "berada dalam rentang ilustrasi" : "di luar rentang ilustrasi"}. Ini bukan jaminan lolos: peserta tetap harus memenuhi ambang dan pemeringkatan resmi.</p>
+        <a href="https://jdih.menpan.go.id/common/dokumen/2024permenpanrb006.pdf" target="_blank" rel="noreferrer" className="mt-2 inline-flex min-h-10 items-center font-semibold text-primary underline">Buka PermenPANRB 6/2024 <ArrowUpRight size={15} className="ml-1" /></a>
+      </div>
+      <div className="mt-6">
+        <h3 className="font-bold">Perbandingan patokan dari beberapa periode</h3>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">Angka berikut berasal dari tahun rujukan yang tercantum; ini bukan satu tabel ketentuan aktif lintas jalur.</p>
+        <div className="mt-3 overflow-x-auto rounded-md border border-border">
+          <table className="w-full min-w-[520px] text-left text-sm">
+            <thead className="bg-muted/50"><tr><th className="p-3">Kategori</th><th className="p-3">Tahun</th><th className="p-3">Patokan</th></tr></thead>
+            <tbody>{PASSING_GRADE_CATEGORIES.map((item) => <tr key={item.id} className="border-t border-border"><th scope="row" className="p-3 font-semibold">{item.name}</th><td className="p-3">{item.year}</td><td className="p-3">{item.kind === "subtest" ? `TWK ${item.thresholds.TWK} · TIU ${item.thresholds.TIU} · TKP ${item.thresholds.TKP}` : `Total ${item.thresholds.total} · TIU ${item.thresholds.TIU}`}</td></tr>)}</tbody>
+          </table>
+        </div>
+      </div>
     </section>
   );
 }
@@ -1474,6 +1677,8 @@ function CATSimulator() {
   const [reviewFilter, setReviewFilter] = useState<"all" | "incorrect" | "flagged">("all");
   const [questionTextScale, setQuestionTextScale] = useState<0 | 1 | 2>(1);
   const [showFinishReview, setShowFinishReview] = useState(false);
+  const [showMobileQuestionNav, setShowMobileQuestionNav] = useState(false);
+  const [classicDisplay, setClassicDisplay] = useState(false);
   const [packageHistory, setPackageHistory] = useState<Record<string, number>>({});
   const isExamActive = session !== null;
   const navigationBlocker = useBlocker({
@@ -1482,6 +1687,37 @@ function CATSimulator() {
     withResolver: true,
   });
 
+  const moveToQuestion = useCallback(
+    (nextIndex: number) => {
+      if (!session) return;
+      const questions = questionsForAttempt(session);
+      if (nextIndex < 0 || nextIndex >= questions.length) return;
+      const currentQuestion = questions[session.currentIndex];
+      if (!currentQuestion) return;
+      const elapsed = Math.max(0, Math.floor((Date.now() - session.questionStartedAt) / 1000));
+      setSession({
+        ...session,
+        currentIndex: nextIndex,
+        questionStartedAt: Date.now(),
+        questionTimes: {
+          ...session.questionTimes,
+          [currentQuestion.id]: (session.questionTimes[currentQuestion.id] ?? 0) + elapsed,
+        },
+      });
+      setShowFinishReview(false);
+      setShowMobileQuestionNav(false);
+      window.requestAnimationFrame(() => {
+        document.getElementById("exam-heading")?.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+            ? "auto"
+            : "smooth",
+          block: "start",
+        });
+      });
+    },
+    [session],
+  );
+
   useEffect(() => {
     try {
       const storage = window.localStorage;
@@ -1489,6 +1725,7 @@ function CATSimulator() {
       if (savedSession) setPendingResume(savedSession);
       else saveExamSession(storage, null);
       setResult(loadExamResult(storage));
+      setClassicDisplay(storage.getItem("daftar-cpns:cat-display:v1") === "classic");
       const latest: Record<string, number> = {};
       for (const attempt of loadExamHistory(storage)) {
         if (!attempt.packageId || attempt.packageId in latest) continue;
@@ -1555,7 +1792,7 @@ function CATSimulator() {
     }
     document.addEventListener("keydown", onExamKeyDown);
     return () => document.removeEventListener("keydown", onExamKeyDown);
-  }, [session]);
+  }, [moveToQuestion, session]);
 
   useEffect(() => {
     const dialog = examDialogRef.current;
@@ -1621,6 +1858,7 @@ function CATSimulator() {
     setResult(null);
     setSelectedTrack(null);
     setShowFinishReview(false);
+    setShowMobileQuestionNav(false);
     setSession({
       track,
       packageId,
@@ -1632,25 +1870,6 @@ function CATSimulator() {
       questionStartedAt: now,
       questionTimes: {},
     });
-  }
-
-  function moveToQuestion(nextIndex: number) {
-    if (!session) return;
-    const questions = questionsForAttempt(session);
-    if (nextIndex < 0 || nextIndex >= questions.length) return;
-    const currentQuestion = questions[session.currentIndex];
-    if (!currentQuestion) return;
-    const elapsed = Math.max(0, Math.floor((Date.now() - session.questionStartedAt) / 1000));
-    setSession({
-      ...session,
-      currentIndex: nextIndex,
-      questionStartedAt: Date.now(),
-      questionTimes: {
-        ...session.questionTimes,
-        [currentQuestion.id]: (session.questionTimes[currentQuestion.id] ?? 0) + elapsed,
-      },
-    });
-    setShowFinishReview(false);
   }
 
   function toggleFlag(questionId: string) {
@@ -1784,16 +2003,16 @@ function CATSimulator() {
         onCancel={(event) => event.preventDefault()}
         className="fixed inset-0 m-0 h-dvh w-full max-h-none max-w-none overflow-hidden border-0 bg-transparent p-0 text-slate-950 backdrop:bg-slate-950/45 dark:text-foreground"
       >
-        <div className="flex h-full flex-col overflow-y-auto bg-slate-50 dark:bg-background">
+        <div data-exam-display={classicDisplay ? "classic" : "modern"} className="exam-room flex h-full flex-col overflow-y-auto bg-slate-50 dark:bg-background">
           <header className="sticky top-0 z-20 shrink-0 bg-primary text-primary-foreground shadow-md">
-            <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+            <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2 px-3 py-2.5 sm:gap-3 sm:px-6 sm:py-3">
               <div className="flex min-w-0 items-center gap-3">
                 <img
                   src="/brand/daftar-cpns-mark.svg"
                   alt=""
-                  width={42}
-                  height={42}
-                  className="size-10 shrink-0"
+                  width={40}
+                  height={40}
+                  className="size-8 shrink-0 sm:size-10"
                 />
                 <div className="min-w-0">
                   <h2 id="exam-dialog-title" className="truncate text-sm font-extrabold">
@@ -1804,7 +2023,10 @@ function CATSimulator() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Button type="button" variant="outline" aria-pressed={classicDisplay} className="min-h-11 border-white/30 bg-white/10 px-2 text-xs text-white hover:bg-white/20 sm:px-3 sm:text-sm" onClick={() => setClassicDisplay((current) => { const next = !current; try { window.localStorage.setItem("daftar-cpns:cat-display:v1", next ? "classic" : "modern"); } catch { /* Display choice lasts for this session. */ } return next; })}>
+                  {classicDisplay ? "Mode klasik" : "Mode modern"}
+                </Button>
                 <div className="hidden text-right sm:block">
                   <p className="text-xs text-primary-foreground/80">Soal</p>
                   <p className="text-sm font-bold tabular-nums">
@@ -1815,12 +2037,12 @@ function CATSimulator() {
                   role="timer"
                   aria-label={`Waktu tersisa ${displayTime}${timerState === "urgent" ? ", tiga menit atau kurang" : timerState === "warning" ? ", sepuluh menit atau kurang" : ""}`}
                   aria-live="off"
-                  className={`flex min-h-12 items-center gap-2 rounded-md border px-3 font-bold tabular-nums ${timerState === "urgent" ? "border-red-200 bg-red-50 text-red-900 motion-safe:animate-pulse dark:border-red-800 dark:bg-red-950 dark:text-red-100" : timerState === "warning" ? "border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100" : "border-white/25 bg-white/15 text-white"}`}
+                  className={`flex min-h-11 items-center gap-1.5 rounded-md border px-2.5 text-sm font-bold tabular-nums sm:min-h-12 sm:gap-2 sm:px-3 sm:text-base ${timerState === "urgent" ? "border-red-200 bg-red-50 text-red-900 motion-safe:animate-pulse dark:border-red-800 dark:bg-red-950 dark:text-red-100" : timerState === "warning" ? "border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100" : "border-white/25 bg-white/15 text-white"}`}
                 >
                   <Clock3 size={17} aria-hidden="true" />
                   <span>{displayTime}</span>
                   {timerState !== "normal" && (
-                    <span className="text-xs font-semibold">
+                    <span className="hidden text-xs font-semibold sm:inline">
                       {timerState === "urgent" ? "Waktu hampir habis" : "Waktu menipis"}
                     </span>
                   )}
@@ -1843,7 +2065,7 @@ function CATSimulator() {
           </header>
 
           <div className="mx-auto grid w-full max-w-[1440px] flex-1 grid-cols-1 gap-4 px-3 py-4 pb-6 sm:gap-6 sm:px-6 sm:py-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-start">
-            <aside className="order-2 h-fit rounded-lg border border-slate-200 bg-white p-4 dark:border-border dark:bg-card lg:sticky lg:top-5 lg:order-1">
+            <aside className="order-2 hidden h-fit rounded-lg border border-slate-200 bg-white p-4 dark:border-border dark:bg-card lg:sticky lg:top-5 lg:order-1 lg:block">
               {storageNotice}
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -1911,7 +2133,10 @@ function CATSimulator() {
                     <p className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
                       {question.subject}
                     </p>
-                    <h1 id="exam-heading" className="mt-1 text-xl font-extrabold sm:text-2xl">
+                    <h1
+                      id="exam-heading"
+                      className="mt-1 scroll-mt-24 text-xl font-extrabold sm:text-2xl"
+                    >
                       Soal {session.currentIndex + 1}
                       <span className="font-medium text-muted-foreground">
                         {" "}
@@ -1989,7 +2214,7 @@ function CATSimulator() {
                       ? "Hapus tanda tinjau"
                       : "Tandai untuk ditinjau"}
                   </button>
-                  <div className="flex w-full flex-wrap gap-2 sm:w-auto">
+                  <div className="hidden w-full flex-wrap gap-2 lg:flex lg:w-auto">
                     <Button
                       variant="outline"
                       className="min-h-11 flex-1 sm:flex-none"
@@ -2063,6 +2288,92 @@ function CATSimulator() {
               )}
             </section>
           </div>
+          <div className="sticky bottom-0 z-20 border-t border-slate-200 bg-white/95 px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur-sm dark:border-border dark:bg-card/95 lg:hidden">
+            <section
+              id="mobile-question-navigation"
+              aria-label="Daftar nomor soal"
+              hidden={!showMobileQuestionNav}
+              className="mb-2 max-h-[44dvh] overflow-y-auto rounded-lg border border-border bg-background p-3"
+            >
+              <div className="sticky top-0 z-10 mb-3 flex items-center justify-between gap-3 bg-background pb-2">
+                <p className="text-sm font-bold">Navigasi soal</p>
+                <p className="text-xs text-muted-foreground">
+                  {answered} dijawab · {unanswered} belum
+                </p>
+              </div>
+              <div className="grid grid-cols-[repeat(5,minmax(0,1fr))] gap-2 sm:grid-cols-8">
+                {questions.map((item, index) => {
+                  const isCurrent = index === session.currentIndex;
+                  const isAnswered = Boolean(session.answers[item.id]);
+                  const isFlagged = session.flagged.includes(item.id);
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => moveToQuestion(index)}
+                      aria-label={`Soal ${index + 1}, ${isAnswered ? "sudah dijawab" : "belum dijawab"}${isFlagged ? ", ditandai ragu" : ""}${isCurrent ? ", sedang dibuka" : ""}`}
+                      aria-current={isCurrent ? "step" : undefined}
+                      className={`relative min-h-11 rounded-md border text-sm font-bold tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isCurrent ? "border-primary bg-primary text-primary-foreground" : isAnswered ? "border-primary/40 bg-primary/10 text-primary" : "border-slate-200 bg-white text-slate-700 dark:border-border dark:bg-card dark:text-foreground"}`}
+                    >
+                      {index + 1}
+                      {isFlagged && (
+                        <span
+                          aria-hidden="true"
+                          className="absolute -right-1 -top-1 size-2.5 rounded-full border-2 border-white bg-amber-500 dark:border-card"
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                Nomor berwarna menandakan soal sudah dijawab. Titik kuning menandakan soal yang
+                ditandai untuk ditinjau.
+              </p>
+            </section>
+            <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="min-h-11 px-2 text-xs sm:text-sm"
+                disabled={session.currentIndex === 0}
+                onClick={() => moveToQuestion(session.currentIndex - 1)}
+              >
+                Sebelumnya
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="min-h-11 px-3 text-xs font-bold tabular-nums sm:text-sm"
+                aria-label={showMobileQuestionNav ? "Tutup navigasi soal" : "Buka navigasi soal"}
+                aria-expanded={showMobileQuestionNav}
+                aria-controls="mobile-question-navigation"
+                onClick={() => setShowMobileQuestionNav((open) => !open)}
+              >
+                {session.currentIndex + 1}/{questions.length}
+              </Button>
+              {isLast ? (
+                <Button
+                  type="button"
+                  className="min-h-11 px-2 text-xs sm:text-sm"
+                  onClick={() => {
+                    setShowMobileQuestionNav(false);
+                    setShowFinishReview(true);
+                  }}
+                >
+                  Periksa
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  className="min-h-11 px-2 text-xs sm:text-sm"
+                  onClick={() => moveToQuestion(session.currentIndex + 1)}
+                >
+                  Berikutnya
+                </Button>
+              )}
+            </div>
+          </div>
           {navigationBlocker.status === "blocked" && (
             <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/55 p-4">
               <section
@@ -2121,6 +2432,35 @@ function CATSimulator() {
       subject: item.subject,
       benar: item.total ? Math.round((item.correct / item.total) * 100) : 0,
     }));
+    const rankedBreakdown = score.breakdown
+      .filter((item) => item.total > 0)
+      .map((item) => ({ ...item, pct: Math.round((item.correct / item.total) * 100) }))
+      .sort((left, right) => left.pct - right.pct);
+    const weakestSubject = rankedBreakdown[0];
+    const strongestSubject = rankedBreakdown[rankedBreakdown.length - 1];
+    const studyRecommendation = weakestSubject
+      ? !strongestSubject || weakestSubject.pct === strongestSubject.pct
+        ? `Hasil tiap materi masih berdekatan. Tinjau pembahasan soal yang salah pada ${weakestSubject.subject}, lalu coba paket latihan lain.`
+        : `Hasil terbaik Anda di ${strongestSubject.subject} (${strongestSubject.pct}% benar). Prioritaskan ${weakestSubject.subject} (${weakestSubject.pct}% benar): baca pembahasannya, lalu coba latihan kilat ${weakestSubject.subject}.`
+      : "Tinjau pembahasan soal yang dikerjakan, lalu pilih latihan berikutnya.";
+    const thresholdRows = score.breakdown.map((item) => {
+      const threshold = item.subject === "TWK" ? 65 : item.subject === "TIU" ? 80 : 166;
+      const comparable = item.subject === "TWK" || item.subject === "TIU";
+      const practiceScore = comparable ? item.correct * 5 : null;
+      return {
+        subject: item.subject,
+        score: practiceScore,
+        threshold,
+        met: practiceScore !== null && practiceScore >= threshold,
+      };
+    });
+    const comparableThresholds = thresholdRows.filter((item) => item.score !== null);
+    const allComparableThresholdsMet =
+      comparableThresholds.length > 0 && comparableThresholds.every((item) => item.met);
+    const thresholdSummary =
+      result.track !== "cpns"
+        ? "Ambang SKD tidak dibandingkan untuk jalur latihan ini."
+        : `${allComparableThresholdsMet ? "Memenuhi" : "Belum memenuhi"} patokan subtes TWK/TIU yang dapat dihitung. Status keseluruhan SKD tidak disimpulkan karena bobot TKP per pilihan tidak tersimpan.`;
     const thresholdData = score.breakdown
       .filter((item) => item.subject === "TWK" || item.subject === "TIU")
       .map((item) => ({
@@ -2130,244 +2470,335 @@ function CATSimulator() {
         maksimum: item.subject === "TWK" ? 150 : 175,
       }));
     return (
-      <section
-        aria-labelledby="result-heading"
-        className="border-t-2 border-positive bg-card p-4 sm:p-6"
-      >
-        {storageNotice}
-        <p className="text-sm font-bold text-positive">Latihan selesai</p>
-        <h2 id="result-heading" className="mt-1 text-2xl font-extrabold">
-          Ringkasan hasil demo
-        </h2>
-        <p className="mt-2 leading-6 text-muted-foreground">
-          {TRACKS.find((track) => track.id === result.track)?.name}. Angka ini hanya menggambarkan
-          latihan pada sesi ini, bukan passing grade atau prediksi kelulusan.
-        </p>
-        <div className="mt-5 grid gap-3 sm:grid-cols-3">
-          <div className="border border-border p-4">
-            <p className="text-sm text-muted-foreground">Jawaban benar</p>
-            <p className="mt-1 text-2xl font-extrabold">
-              {score.correct}
-              <span className="text-base font-medium text-muted-foreground"> / {score.total}</span>
-            </p>
-          </div>
-          <div className="border border-border p-4">
-            <p className="text-sm text-muted-foreground">Waktu pengerjaan</p>
-            <p className="mt-1 text-2xl font-extrabold">{formatDuration(result.elapsedSeconds)}</p>
-          </div>
-          <div className="border border-border p-4">
-            <p className="text-sm text-muted-foreground">Rata-rata waktu per soal yang dibuka</p>
-            <p className="mt-1 text-2xl font-extrabold">{average} detik</p>
-          </div>
-        </div>
-        <div className="mt-6">
-          <h3 className="font-bold">Persentase jawaban benar per materi</h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Perbandingan ini memakai jumlah soal latihan yang benar pada setiap kelompok.
+      <>
+        <section
+          aria-labelledby="result-heading"
+          className="border-t-2 border-positive bg-card p-4 sm:p-6"
+        >
+          {storageNotice}
+          <p className="text-sm font-bold text-positive">Latihan selesai</p>
+          <h2 id="result-heading" className="mt-1 text-2xl font-extrabold">
+            Ringkasan hasil demo
+          </h2>
+          <p className="mt-2 leading-6 text-muted-foreground">
+            {TRACKS.find((track) => track.id === result.track)?.name}. Angka ini hanya menggambarkan
+            latihan pada sesi ini, bukan passing grade atau prediksi kelulusan.
           </p>
-          <div
-            role="img"
-            aria-label={chartData
-              .map((item) => `${item.subject}: ${item.benar} persen benar`)
-              .join(". ")}
-            className="mt-3 h-56 w-full"
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 8, right: 12, left: -18, bottom: 0 }}>
-                <CartesianGrid vertical={false} stroke="var(--border)" />
-                <XAxis dataKey="subject" tickLine={false} axisLine={false} />
-                <YAxis
-                  domain={[0, 100]}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) => `${value}%`}
-                />
-                <Tooltip formatter={(value) => [`${value}%`, "Jawaban benar"]} />
-                <Bar dataKey="benar" fill="var(--primary)" radius={[4, 4, 0, 0]} maxBarSize={56} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          {(() => {
-            const ranked = score.breakdown
-              .filter((item) => item.total > 0)
-              .map((item) => ({ ...item, pct: Math.round((item.correct / item.total) * 100) }))
-              .sort((a, b) => a.pct - b.pct);
-            const weakest = ranked[0];
-            const strongest = ranked[ranked.length - 1];
-            if (!weakest || !strongest) return null;
-            return (
-              <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6">
-                <p className="font-bold text-primary">Saran belajar berikutnya</p>
-                <p className="mt-1">
-                  {weakest === strongest
-                    ? `Anda menjawab benar ${weakest.pct}% soal ${weakest.subject}. Baca pembahasan soal yang salah, lalu ulangi paket lain.`
-                    : `Hasil terbaik Anda di ${strongest.subject} (${strongest.pct}% benar). Prioritaskan ${weakest.subject} (${weakest.pct}% benar): baca pembahasannya, lalu coba latihan kilat ${weakest.subject}.`}
-                </p>
-              </div>
-            );
-          })()}
-          <ul className="mt-2 grid gap-2 text-sm sm:grid-cols-3">
-            {score.breakdown.map((item) => (
-              <li key={item.subject} className="border border-border p-3">
-                <span className="font-semibold">{item.subject}</span>
-                <span className="mt-1 block text-muted-foreground">
-                  {item.correct} dari {item.total} soal benar
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="col-span-2 border border-border p-4 sm:col-span-1">
+              <p className="text-sm text-muted-foreground">Jawaban benar</p>
+              <p className="mt-1 text-2xl font-extrabold">
+                {score.correct}
+                <span className="text-base font-medium text-muted-foreground">
+                  {" "}
+                  / {score.total}
                 </span>
-              </li>
-            ))}
-          </ul>
-          {result.track === "cpns" && (
-            <section
-              aria-labelledby="skd-threshold-result-heading"
-              className="mt-6 border-t border-border pt-5"
-            >
-              <h3 id="skd-threshold-result-heading" className="font-bold">
-                Perbandingan dengan ambang SKD umum 2024
-              </h3>
-              <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                TWK dan TIU memakai konversi resmi 5 poin per jawaban benar. Soal latihan TKP belum
-                menyimpan bobot nilai untuk tiap pilihan.
               </p>
-              {thresholdData.length > 0 && (
-                <div
-                  role="img"
-                  aria-label={thresholdData
-                    .map(
-                      (item) =>
-                        `${item.subject}: skor latihan ${item.peserta} dari ${item.maksimum}, ambang ${item.ambang}`,
-                    )
-                    .join(". ")}
-                  className="mt-3 h-60 w-full"
-                >
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={thresholdData}
-                      margin={{ top: 12, right: 12, left: -18, bottom: 0 }}
-                    >
-                      <CartesianGrid vertical={false} stroke="var(--border)" />
-                      <XAxis dataKey="subject" tickLine={false} axisLine={false} />
-                      <YAxis domain={[0, 175]} tickLine={false} axisLine={false} />
-                      <Tooltip
-                        formatter={(value, name) => [
-                          `${value}`,
-                          name === "peserta" ? "Skor peserta" : "Ambang batas",
-                        ]}
-                      />
-                      <Bar
-                        dataKey="peserta"
-                        name="Skor peserta"
-                        fill="var(--primary)"
-                        radius={[4, 4, 0, 0]}
-                        maxBarSize={42}
-                      />
-                      <Bar
-                        dataKey="ambang"
-                        name="Ambang batas"
-                        fill="var(--chart-4)"
-                        radius={[4, 4, 0, 0]}
-                        maxBarSize={42}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
-              <ul className="mt-3 grid gap-2 sm:grid-cols-3">
-                {score.breakdown.map((item) => {
-                  const officialScore = item.subject === "TKP" ? null : item.correct * 5;
-                  const threshold = item.subject === "TWK" ? 65 : item.subject === "TIU" ? 80 : 166;
-                  const met = officialScore !== null && officialScore >= threshold;
-                  return (
-                    <li
-                      key={item.subject}
-                      className={`border p-3 ${officialScore === null ? "border-amber-400/50 bg-amber-50 dark:bg-amber-950/20" : met ? "border-positive/40 bg-positive/5" : "border-destructive/40 bg-destructive/5"}`}
-                    >
-                      <p className="font-semibold">{item.subject}</p>
-                      <p className="mt-1 text-sm">
-                        {officialScore === null
-                          ? "Skor resmi tidak dapat dihitung"
-                          : `${officialScore} / ${threshold} ambang`}
-                      </p>
-                      <p
-                        className={`mt-1 text-xs font-semibold ${officialScore === null ? "text-amber-800 dark:text-amber-200" : met ? "text-positive" : "text-destructive"}`}
-                      >
-                        {officialScore === null
-                          ? "Bobot pilihan belum tersedia"
-                          : met
-                            ? "Memenuhi ambang"
-                            : "Di bawah ambang"}
-                      </p>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-          )}
-        </div>
-        <div className="mt-6 flex flex-col flex-wrap gap-2 sm:flex-row">
-          <Button className="min-h-11" onClick={() => setShowReview(!showReview)}>
-            {showReview ? "Tutup pembahasan" : "Tinjau pembahasan"}
-          </Button>
-          <Button variant="outline" className="min-h-11" onClick={downloadResult}>
-            <Download size={17} aria-hidden="true" />
-            Unduh hasil dan pembahasan
-          </Button>
-          <Button
-            variant="outline"
-            className="min-h-11"
-            onClick={() => startExam(result.track, result.packageId)}
-          >
-            <RotateCcw size={17} aria-hidden="true" />
-            Ulangi latihan
-          </Button>
-          <Button variant="outline" className="min-h-11" onClick={() => setResult(null)}>
-            Pilih jalur lain
-          </Button>
-        </div>
-        {showReview && (
-          <div className="mt-6 space-y-4 border-t border-border pt-5">
-            <h3 className="font-bold">Jawaban dan pembahasan</h3>
-            <div role="group" aria-label="Saring pembahasan" className="flex flex-wrap gap-2">
-              {(
-                [
-                  ["all", "Semua soal"],
-                  ["incorrect", "Jawaban salah"],
-                  ["flagged", "Ditandai ragu"],
-                ] as const
-              ).map(([filter, label]) => (
-                <Button
-                  key={filter}
-                  type="button"
-                  size="sm"
-                  variant={reviewFilter === filter ? "default" : "outline"}
-                  aria-pressed={reviewFilter === filter}
-                  className="min-h-11"
-                  onClick={() => setReviewFilter(filter)}
-                >
-                  {label}
-                </Button>
-              ))}
             </div>
-            {reviewQuestions.length ? (
-              reviewQuestions.map(({ item, index }) => (
-                <ReviewQuestion
-                  key={item.id}
-                  question={item}
-                  index={index}
-                  answer={result.answers[item.id]}
-                  flagged={Boolean(result.flagged?.includes(item.id))}
-                />
-              ))
-            ) : (
-              <p
-                role="status"
-                className="rounded-md border border-border p-4 text-sm text-muted-foreground"
-              >
-                Tidak ada soal yang cocok dengan filter ini.
+            <div className="border border-border p-4">
+              <p className="text-sm text-muted-foreground">Waktu pengerjaan</p>
+              <p className="mt-1 text-2xl font-extrabold">
+                {formatDuration(result.elapsedSeconds)}
               </p>
+            </div>
+            <div className="border border-border p-4">
+              <p className="text-sm text-muted-foreground">Rata-rata waktu per soal yang dibuka</p>
+              <p className="mt-1 text-2xl font-extrabold">{average} detik</p>
+            </div>
+          </div>
+          <div className="mt-6">
+            <h3 className="font-bold">Persentase jawaban benar per materi</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Perbandingan ini memakai jumlah soal latihan yang benar pada setiap kelompok.
+            </p>
+            <div
+              role="img"
+              aria-label={chartData
+                .map((item) => `${item.subject}: ${item.benar} persen benar`)
+                .join(". ")}
+              className="mt-3 h-56 w-full"
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 8, right: 12, left: -18, bottom: 0 }}>
+                  <CartesianGrid vertical={false} stroke="var(--border)" />
+                  <XAxis dataKey="subject" tickLine={false} axisLine={false} />
+                  <YAxis
+                    domain={[0, 100]}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(value) => `${value}%`}
+                  />
+                  <Tooltip formatter={(value) => [`${value}%`, "Jawaban benar"]} />
+                  <Bar
+                    dataKey="benar"
+                    fill="var(--primary)"
+                    radius={[4, 4, 0, 0]}
+                    maxBarSize={56}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6">
+              <p className="font-bold text-primary">Saran belajar berikutnya</p>
+              <p className="mt-1">{studyRecommendation}</p>
+            </div>
+            <ul className="mt-2 grid grid-cols-2 gap-2 text-sm sm:grid-cols-3">
+              {score.breakdown.map((item) => (
+                <li key={item.subject} className="border border-border p-3">
+                  <span className="font-semibold">{item.subject}</span>
+                  <span className="mt-1 block text-muted-foreground">
+                    {item.correct} dari {item.total} soal benar
+                  </span>
+                </li>
+              ))}
+            </ul>
+            {result.track === "cpns" && (
+              <section
+                aria-labelledby="skd-threshold-result-heading"
+                className="mt-6 border-t border-border pt-5"
+              >
+                <h3 id="skd-threshold-result-heading" className="font-bold">
+                  Perbandingan dengan ambang SKD umum 2024
+                </h3>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  TWK dan TIU memakai konversi resmi 5 poin per jawaban benar. Soal latihan TKP
+                  belum menyimpan bobot nilai untuk tiap pilihan.
+                </p>
+                <p role="status" className="mt-2 rounded-md bg-secondary p-3 text-sm leading-6">
+                  {thresholdSummary}
+                </p>
+                {thresholdData.length > 0 && (
+                  <div
+                    role="img"
+                    aria-label={thresholdData
+                      .map(
+                        (item) =>
+                          `${item.subject}: skor latihan ${item.peserta} dari ${item.maksimum}, ambang ${item.ambang}`,
+                      )
+                      .join(". ")}
+                    className="mt-3 h-60 w-full"
+                  >
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        data={thresholdData}
+                        margin={{ top: 12, right: 12, left: -18, bottom: 0 }}
+                      >
+                        <CartesianGrid vertical={false} stroke="var(--border)" />
+                        <XAxis dataKey="subject" tickLine={false} axisLine={false} />
+                        <YAxis domain={[0, 175]} tickLine={false} axisLine={false} />
+                        <Tooltip
+                          formatter={(value, name) => [
+                            `${value}`,
+                            name === "peserta" ? "Skor peserta" : "Ambang batas",
+                          ]}
+                        />
+                        <Bar
+                          dataKey="peserta"
+                          name="Skor peserta"
+                          fill="var(--primary)"
+                          radius={[4, 4, 0, 0]}
+                          maxBarSize={42}
+                        />
+                        <Bar
+                          dataKey="ambang"
+                          name="Ambang batas"
+                          fill="var(--chart-4)"
+                          radius={[4, 4, 0, 0]}
+                          maxBarSize={42}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
+                <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  {thresholdRows.map((item) => {
+                    return (
+                      <li
+                        key={item.subject}
+                        className={`border p-3 ${item.score === null ? "border-amber-400/50 bg-amber-50 dark:bg-amber-950/20" : item.met ? "border-positive/40 bg-positive/5" : "border-destructive/40 bg-destructive/5"}`}
+                      >
+                        <p className="font-semibold">{item.subject}</p>
+                        <p className="mt-1 text-sm">
+                          {item.score === null
+                            ? "Skor resmi tidak dapat dihitung"
+                            : `${item.score} / ${item.threshold} ambang`}
+                        </p>
+                        <p
+                          className={`mt-1 text-xs font-semibold ${item.score === null ? "text-amber-800 dark:text-amber-200" : item.met ? "text-positive" : "text-destructive"}`}
+                        >
+                          {item.score === null
+                            ? "Bobot pilihan belum tersedia"
+                            : item.met
+                              ? "Memenuhi ambang"
+                              : "Di bawah ambang"}
+                        </p>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
             )}
           </div>
+          <div className="mt-6 flex flex-col flex-wrap gap-2 sm:flex-row">
+            <Button className="min-h-11" onClick={() => setShowReview(!showReview)}>
+              {showReview ? "Tutup pembahasan" : "Tinjau pembahasan"}
+            </Button>
+            <Button variant="outline" className="min-h-11" onClick={downloadResult}>
+              <Download size={17} aria-hidden="true" />
+              Unduh pembahasan (.txt)
+            </Button>
+            <Button className="min-h-11" onClick={() => window.print()}>
+              <Download size={17} aria-hidden="true" />
+              Unduh lembar hasil (PDF)
+            </Button>
+            <Button
+              variant="outline"
+              className="min-h-11"
+              onClick={() => startExam(result.track, result.packageId)}
+            >
+              <RotateCcw size={17} aria-hidden="true" />
+              Ulangi latihan
+            </Button>
+            <Button variant="outline" className="min-h-11" onClick={() => setResult(null)}>
+              Pilih jalur lain
+            </Button>
+          </div>
+          {showReview && (
+            <div className="mt-6 space-y-4 border-t border-border pt-5">
+              <h3 className="font-bold">Jawaban dan pembahasan</h3>
+              <div role="group" aria-label="Saring pembahasan" className="flex flex-wrap gap-2">
+                {(
+                  [
+                    ["all", "Semua soal"],
+                    ["incorrect", "Jawaban salah"],
+                    ["flagged", "Ditandai ragu"],
+                  ] as const
+                ).map(([filter, label]) => (
+                  <Button
+                    key={filter}
+                    type="button"
+                    size="sm"
+                    variant={reviewFilter === filter ? "default" : "outline"}
+                    aria-pressed={reviewFilter === filter}
+                    className="min-h-11"
+                    onClick={() => setReviewFilter(filter)}
+                  >
+                    {label}
+                  </Button>
+                ))}
+              </div>
+              {reviewQuestions.length ? (
+                reviewQuestions.map(({ item, index }) => (
+                  <ReviewQuestion
+                    key={item.id}
+                    question={item}
+                    index={index}
+                    answer={result.answers[item.id]}
+                    flagged={Boolean(result.flagged?.includes(item.id))}
+                  />
+                ))
+              ) : (
+                <p
+                  role="status"
+                  className="rounded-md border border-border p-4 text-sm text-muted-foreground"
+                >
+                  Tidak ada soal yang cocok dengan filter ini.
+                </p>
+              )}
+            </div>
+          )}
+        </section>
+        {createPortal(
+          <section id="exam-result-pdf" className="hidden" aria-label="Lembar hasil simulasi CAT">
+            <p className="text-xs font-bold uppercase tracking-wide">
+              DAFTAR CPNS · LATIHAN INDEPENDEN
+            </p>
+            <h1 className="mt-2 text-2xl font-bold">Lembar hasil simulasi CAT</h1>
+            <p className="mt-1 text-sm">
+              {TRACKS.find((track) => track.id === result.track)?.name} ·{" "}
+              {result.packageId ? getExamPackage(result.packageId).title : "Latihan umum"}
+            </p>
+            <p className="mt-1 text-sm">
+              Selesai{" "}
+              {new Intl.DateTimeFormat("id-ID", { dateStyle: "long", timeStyle: "short" }).format(
+                result.endedAt,
+              )}
+            </p>
+            <div className="mt-5 grid grid-cols-3 gap-3">
+              <div className="border p-3">
+                <p className="text-xs">Jawaban benar</p>
+                <p className="mt-1 text-lg font-bold">
+                  {score.correct} / {score.total}
+                </p>
+              </div>
+              <div className="border p-3">
+                <p className="text-xs">Waktu pengerjaan</p>
+                <p className="mt-1 text-lg font-bold">{formatDuration(result.elapsedSeconds)}</p>
+              </div>
+              <div className="border p-3">
+                <p className="text-xs">Rata-rata per soal</p>
+                <p className="mt-1 text-lg font-bold">{average} detik</p>
+              </div>
+            </div>
+            <h2 className="mt-6 text-base font-bold">Nilai per materi</h2>
+            <table className="mt-2 w-full border-collapse text-sm">
+              <thead>
+                <tr>
+                  <th className="border p-2 text-left">Materi</th>
+                  <th className="border p-2 text-left">Benar</th>
+                  <th className="border p-2 text-left">Akurasi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {score.breakdown.map((item) => (
+                  <tr key={item.subject}>
+                    <th className="border p-2 text-left font-semibold">{item.subject}</th>
+                    <td className="border p-2">
+                      {item.correct} / {item.total}
+                    </td>
+                    <td className="border p-2">
+                      {item.total ? Math.round((item.correct / item.total) * 100) : 0}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <h2 className="mt-6 text-base font-bold">Status ambang nilai</h2>
+            <p className="mt-2 text-sm leading-6">{thresholdSummary}</p>
+            {result.track === "cpns" && (
+              <ul className="mt-2 grid grid-cols-3 gap-2 text-sm">
+                {thresholdRows.map((item) => (
+                  <li key={item.subject} className="border p-3">
+                    <p className="font-bold">{item.subject}</p>
+                    <p className="mt-1">
+                      {item.score === null ? "Tidak dihitung" : `${item.score} / ${item.threshold}`}
+                    </p>
+                    <p className="mt-1">
+                      {item.score === null
+                        ? "Bobot pilihan tidak tersedia"
+                        : item.met
+                          ? "Memenuhi ambang"
+                          : "Di bawah ambang"}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <h2 className="mt-6 text-base font-bold">Saran belajar berikutnya</h2>
+            <p className="mt-2 text-sm leading-6">{studyRecommendation}</p>
+            <p className="mt-6 border-t pt-3 text-xs leading-5">
+              Nilai dan persentase di atas berasal dari latihan pada sesi ini. Perbandingan ambang
+              SKD CPNS menggunakan patokan umum 2024 untuk TWK/TIU; bobot TKP latihan tidak
+              tersimpan sehingga status kelulusan keseluruhan tidak dapat disimpulkan. Periksa
+              ketentuan resmi periode berjalan.
+            </p>
+          </section>,
+          document.body,
         )}
-      </section>
+        <p className="mt-2 text-xs text-muted-foreground print:hidden">
+          Pada dialog cetak, pilih “Simpan sebagai PDF”.
+        </p>
+      </>
     );
   }
 
@@ -2463,7 +2894,7 @@ function CATSimulator() {
               : "Setiap paket berisi 110 soal."}{" "}
             Tanpa pengulangan dalam satu sesi. Beberapa soal dapat muncul di paket lain.
           </p>
-          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-2 sm:gap-3 xl:grid-cols-3">
             {EXAM_PACKAGES.filter((item) => item.track === selectedTrack).map((item) => (
               <label
                 key={item.id}
@@ -2630,17 +3061,37 @@ function CATSimulator() {
                 )}
               </p>
             </div>
-            <Button
-              size="lg"
-              disabled={!packageReady}
-              className="min-h-12 shrink-0 text-base font-bold"
-              onClick={() => startExam(selectedTrack, activePackage?.id)}
-            >
-              <PlayCircle aria-hidden="true" />
-              Mulai simulasi sekarang
-            </Button>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button type="button" variant="outline" disabled={!packageReady || !activeQuestions.length} className="min-h-11" onClick={() => window.print()}>
+                <Printer size={16} aria-hidden="true" /> Cetak paket / Simpan PDF
+              </Button>
+              <Button
+                size="lg"
+                disabled={!packageReady}
+                className="min-h-12 shrink-0 text-base font-bold"
+                onClick={() => startExam(selectedTrack, activePackage?.id)}
+              >
+                <PlayCircle aria-hidden="true" />
+                Mulai simulasi sekarang
+              </Button>
+            </div>
           </div>
         </div>
+      )}
+      {!result && selectedTrack && activeTrack && activeQuestions.length > 0 && createPortal(
+        <section id="exam-package-pdf" className="hidden" aria-label="Paket latihan untuk dicetak">
+          <p className="text-xs font-bold uppercase tracking-wide">DAFTAR CPNS · LATIHAN INDEPENDEN</p>
+          <h1 className="mt-2 text-2xl font-bold">{activePackage?.title ?? `Latihan ${activeTrack.name}`}</h1>
+          <p className="mt-1 text-sm">{activeTrack.name} · {activeQuestions.length} soal. Kunci dan pembahasan tersedia setelah setiap soal.</p>
+          <ol className="mt-5 space-y-5">{activeQuestions.map((question, index) => <li key={question.id} className="border-t border-slate-300 pt-3">
+            <p className="text-xs font-bold">{question.subject} · {index + 1}</p>
+            <p className="mt-1 font-semibold">{question.prompt}</p>
+            <ul className="mt-2 space-y-1">{question.options.map((option) => <li key={option.label}>{option.label}. {option.text}</li>)}</ul>
+            <p className="mt-2"><strong>Kunci latihan:</strong> {question.answer}</p>
+            <p className="mt-1"><strong>Pembahasan:</strong> {question.explanation}</p>
+          </li>)}</ol>
+          <p className="mt-6 border-t pt-3 text-xs">Bank soal latihan independen; bukan naskah resmi BKN. Verifikasi materi dan aturan seleksi melalui sumber resmi.</p>
+        </section>, document.body
       )}
       {result && !selectedTrack && (
         <p className="mt-4 text-sm text-muted-foreground">
@@ -2663,6 +3114,14 @@ function ReviewQuestion({
   flagged?: boolean;
 }) {
   const correct = answer === question.answer;
+  const [saved, setSaved] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportText, setReportText] = useState("");
+  useEffect(() => {
+    setSaved(readBookmarkedIds().includes(question.id));
+  }, [question.id]);
+  const reportSubject = encodeURIComponent(`Laporan soal ${question.id} — Daftar CPNS`);
+  const reportBody = encodeURIComponent(`ID soal: ${question.id}\nMateri: ${question.subject}\n\nTemuan / koreksi:\n${reportText}\n\nMohon periksa kembali soal dan kunci latihan ini.`);
   return (
     <article className="border-l-2 border-border pl-4">
       <h4 className="font-semibold">
@@ -2684,6 +3143,25 @@ function ReviewQuestion({
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
         <strong className="text-foreground">Tips &amp; trik:</strong> {question.tip}
       </p>
+      <div className="mt-3 flex flex-wrap gap-2 print:hidden">
+        <Button type="button" variant="outline" className="min-h-10" aria-pressed={saved} onClick={() => { const next = !saved; setQuestionBookmark(question.id, next); setSaved(next); }}>
+          <Bookmark size={16} aria-hidden="true" /> {saved ? "Tersimpan" : "Simpan untuk diulang"}
+        </Button>
+        <Button type="button" variant="outline" className="min-h-10" onClick={() => setReportOpen(true)}>
+          <Flag size={16} aria-hidden="true" /> Laporkan koreksi
+        </Button>
+      </div>
+      {reportOpen && createPortal(
+        <div className="fixed inset-0 z-[100] grid place-items-center bg-slate-950/55 p-4" onMouseDown={(event) => { if (event.target === event.currentTarget) setReportOpen(false); }}>
+          <section role="dialog" aria-modal="true" aria-labelledby={`report-title-${question.id}`} className="w-full max-w-lg rounded-xl border border-border bg-background p-5 shadow-xl">
+            <div className="flex items-start justify-between gap-4"><div><h3 id={`report-title-${question.id}`} className="font-bold">Laporkan soal atau kunci</h3><p className="mt-1 text-sm text-muted-foreground">Laporan akan disiapkan sebagai draf email untuk ditinjau sebelum dikirim.</p></div><button type="button" className="min-h-11 min-w-11 rounded-md border border-border" aria-label="Tutup laporan" onClick={() => setReportOpen(false)}>×</button></div>
+            <label className="mt-4 block text-sm font-semibold">Jelaskan bagian yang perlu diperiksa
+              <textarea autoFocus value={reportText} onChange={(event) => setReportText(event.target.value)} rows={5} maxLength={2000} placeholder="Contoh: ada salah ketik pada opsi B…" className="mt-2 w-full rounded-md border border-input bg-card p-3 font-normal leading-6" />
+            </label>
+            <div className="mt-4 flex flex-wrap justify-end gap-2"><Button type="button" variant="outline" className="min-h-11" onClick={() => setReportOpen(false)}>Batal</Button><Button asChild className="min-h-11" disabled={!reportText.trim()}><a href={`mailto:${CONTACT_EMAIL}?subject=${reportSubject}&body=${reportBody}`} onClick={() => setReportOpen(false)}>Buat draf email</a></Button></div>
+          </section>
+        </div>, document.body
+      )}
     </article>
   );
 }

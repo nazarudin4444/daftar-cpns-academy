@@ -40,7 +40,8 @@ const stages: SelectionStage[] = [
       "Ijazah, program studi, dan dokumen pendukung yang diminta instansi.",
     ],
     tip: "Cocokkan jenjang, nama program studi, syarat jabatan, dan lokasi dengan dokumen resmi instansi.",
-    avoid: "Jangan memakai poster atau syarat dari periode sebelumnya sebagai acuan pendaftaran baru.",
+    avoid:
+      "Jangan memakai poster atau syarat dari periode sebelumnya sebagai acuan pendaftaran baru.",
   },
   {
     title: "Registrasi akun dan pengajuan lamaran",
@@ -51,7 +52,8 @@ const stages: SelectionStage[] = [
       "Ijazah, transkrip, pasfoto, dan berkas lain sesuai pengumuman formasi.",
     ],
     tip: "Periksa kembali biodata dan pratinjau setiap dokumen sebelum mengirim lamaran.",
-    avoid: "Jangan memasukkan NIK, kata sandi, atau dokumen ke situs selain portal resmi. Daftar CPNS tidak meminta data tersebut.",
+    avoid:
+      "Jangan memasukkan NIK, kata sandi, atau dokumen ke situs selain portal resmi. Daftar CPNS tidak meminta data tersebut.",
   },
   {
     title: "Verifikasi administrasi dan masa sanggah",
@@ -62,7 +64,8 @@ const stages: SelectionStage[] = [
       "Dokumen pendukung yang relevan jika mengajukan sanggah.",
     ],
     tip: "Baca alasan hasil administrasi. Ajukan sanggah melalui SSCASN hanya bila ada kekeliruan verifikasi, sesuai masa sanggah resmi.",
-    avoid: "Sanggah bukan kesempatan untuk mengganti atau melengkapi dokumen yang keliru dikirim pelamar.",
+    avoid:
+      "Sanggah bukan kesempatan untuk mengganti atau melengkapi dokumen yang keliru dikirim pelamar.",
   },
   {
     title: "Jadwal SKD dan kartu ujian",
@@ -73,7 +76,8 @@ const stages: SelectionStage[] = [
       "Identitas dan perlengkapan yang diminta dalam tata tertib instansi.",
     ],
     tip: "Catat sesi, lokasi, waktu kedatangan, dan aturan pakaian dari pengumuman resmi.",
-    avoid: "Jangan mengandalkan jadwal yang beredar di grup atau unggahan tanpa tautan pengumuman instansi.",
+    avoid:
+      "Jangan mengandalkan jadwal yang beredar di grup atau unggahan tanpa tautan pengumuman instansi.",
   },
   {
     title: "Ujian SKD dengan CAT BKN",
@@ -95,7 +99,8 @@ const stages: SelectionStage[] = [
       "Rincian kebutuhan jabatan yang dilamar sebagai konteks pemeringkatan.",
     ],
     tip: "Baca ketentuan periode berjalan. Pada aturan CPNS 2024, peserta yang memenuhi nilai ambang batas dapat diumumkan paling banyak tiga kali jumlah kebutuhan jabatan.",
-    avoid: "Memenuhi nilai ambang batas saja tidak selalu berarti lanjut ke SKB; peringkat dan ketentuan jabatan juga berlaku.",
+    avoid:
+      "Memenuhi nilai ambang batas saja tidak selalu berarti lanjut ke SKB; peringkat dan ketentuan jabatan juga berlaku.",
   },
   {
     title: "Seleksi Kompetensi Bidang (SKB)",
@@ -117,7 +122,8 @@ const stages: SelectionStage[] = [
       "Dokumen pemberkasan untuk penetapan NIP yang diminta pada tahap tersebut.",
     ],
     tip: "Pantau akun SSCASN dan pengumuman instansi, lalu serahkan dokumen sesuai daftar serta batas waktunya.",
-    avoid: "Keterlambatan atau dokumen pemberkasan yang tidak sesuai dapat memengaruhi proses pengangkatan.",
+    avoid:
+      "Keterlambatan atau dokumen pemberkasan yang tidak sesuai dapat memengaruhi proses pengangkatan.",
   },
 ];
 
@@ -172,7 +178,7 @@ const officialLinks = [
     label: "PermenPANRB Nomor 6 Tahun 2024",
     href: "https://jdih.menpan.go.id/dokumen-hukum/peraturan-menteri-pendayagunaan-aparatur-negara-dan-reformasi-birokrasi-nomor-6-tahun-2024-tentang-p-1849",
   },
-];
+] as const;
 
 export function ScheduleTracker() {
   return (
@@ -241,15 +247,22 @@ export function ScheduleTracker() {
           </div>
         </section>
 
-        <section aria-labelledby="timeline-heading" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+        <section
+          aria-labelledby="timeline-heading"
+          className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16 lg:px-8"
+        >
           <div className="max-w-3xl">
             <p className="text-sm font-bold text-primary">Roadmap umum, tanpa tanggal rekaan</p>
-            <h2 id="timeline-heading" className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
+            <h2
+              id="timeline-heading"
+              className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl"
+            >
               Delapan tahapan yang perlu dipahami
             </h2>
             <p className="mt-3 leading-7 text-muted-foreground">
-              Buka setiap tahap untuk melihat dokumen, panduan, dan hal yang perlu dihindari. Urutan,
-              ketentuan, dan jadwal aktual mengikuti pengumuman resmi periode serta instansi.
+              Buka setiap tahap untuk melihat dokumen, panduan, dan hal yang perlu dihindari.
+              Urutan, ketentuan, dan jadwal aktual mengikuti pengumuman resmi periode serta
+              instansi.
             </p>
           </div>
 
@@ -270,7 +283,9 @@ export function ScheduleTracker() {
                         <span className="block text-xs font-semibold text-primary">
                           Tahap {index + 1} · Alur umum
                         </span>
-                        <span className="mt-0.5 block font-bold text-foreground">{stage.title}</span>
+                        <span className="mt-0.5 block font-bold text-foreground">
+                          {stage.title}
+                        </span>
                         <span className="mt-1 block text-sm leading-5 text-muted-foreground">
                           {stage.summary}
                         </span>
@@ -284,7 +299,9 @@ export function ScheduleTracker() {
                       <div>
                         <h3 className="text-sm font-bold text-foreground">Yang disiapkan</h3>
                         <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm leading-6 text-muted-foreground">
-                          {stage.documents.map((document) => <li key={document}>{document}</li>)}
+                          {stage.documents.map((document) => (
+                            <li key={document}>{document}</li>
+                          ))}
                         </ul>
                       </div>
                       <div>
@@ -293,7 +310,9 @@ export function ScheduleTracker() {
                       </div>
                       <div>
                         <h3 className="text-sm font-bold text-foreground">Hindari</h3>
-                        <p className="mt-2 text-sm leading-6 text-muted-foreground">{stage.avoid}</p>
+                        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                          {stage.avoid}
+                        </p>
                       </div>
                     </div>
                   </details>
@@ -303,8 +322,8 @@ export function ScheduleTracker() {
           </ol>
 
           <p className="mt-5 max-w-4xl text-xs leading-5 text-muted-foreground">
-            Catatan SKD: paket latihan di situs ini berisi 110 soal dengan durasi 100 menit. Angka itu
-            adalah konfigurasi demo, bukan penetapan durasi seleksi resmi tahun berjalan.
+            Catatan SKD: paket latihan di situs ini berisi 110 soal dengan durasi 100 menit. Angka
+            itu adalah konfigurasi demo, bukan penetapan durasi seleksi resmi tahun berjalan.
           </p>
         </section>
 
@@ -312,7 +331,10 @@ export function ScheduleTracker() {
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
             <div className="max-w-3xl">
               <p className="text-sm font-bold text-primary">Panduan mencari formasi</p>
-              <h2 id="formasi-heading" className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
+              <h2
+                id="formasi-heading"
+                className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl"
+              >
                 Periksa formasi langsung di SSCASN
               </h2>
               <p className="mt-3 leading-7 text-muted-foreground">
@@ -325,7 +347,10 @@ export function ScheduleTracker() {
               {formasiSteps.map((step, index) => {
                 const Icon = step.icon;
                 return (
-                  <li key={step.title} className="relative rounded-xl border border-border bg-background p-4 sm:p-5">
+                  <li
+                    key={step.title}
+                    className="relative rounded-xl border border-border bg-background p-4 sm:p-5"
+                  >
                     <div className="flex items-center justify-between">
                       <span className="grid size-10 place-items-center rounded-lg bg-secondary text-primary">
                         <Icon size={19} aria-hidden="true" />
@@ -351,12 +376,15 @@ export function ScheduleTracker() {
               <details className="group rounded-xl border border-border bg-background p-4">
                 <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 font-semibold text-foreground marker:hidden">
                   Cara membaca kode formasi dan catatan jabatan
-                  <ChevronDown className="size-4 shrink-0 transition-transform group-open:rotate-180" aria-hidden="true" />
+                  <ChevronDown
+                    className="size-4 shrink-0 transition-transform group-open:rotate-180"
+                    aria-hidden="true"
+                  />
                 </summary>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Cocokkan nama jabatan, kualifikasi pendidikan, jenis kebutuhan, unit kerja, lokasi,
-                  dan catatan khusus pada lampiran instansi. Kode serta penjelasannya dapat berbeda;
-                  gunakan keterangan yang menyertai formasi tersebut.
+                  Cocokkan nama jabatan, kualifikasi pendidikan, jenis kebutuhan, unit kerja,
+                  lokasi, dan catatan khusus pada lampiran instansi. Kode serta penjelasannya dapat
+                  berbeda; gunakan keterangan yang menyertai formasi tersebut.
                 </p>
               </details>
               <a
@@ -371,14 +399,20 @@ export function ScheduleTracker() {
           </div>
         </section>
 
-        <section aria-labelledby="antihoax-heading" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+        <section
+          aria-labelledby="antihoax-heading"
+          className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16 lg:px-8"
+        >
           <div className="flex items-start gap-3">
             <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-destructive/10 text-destructive">
               <ShieldAlert size={20} aria-hidden="true" />
             </span>
             <div className="max-w-3xl">
               <p className="text-sm font-bold text-destructive">Periksa sebelum percaya</p>
-              <h2 id="antihoax-heading" className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
+              <h2
+                id="antihoax-heading"
+                className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl"
+              >
                 Cek keaslian jadwal dan pengumuman
               </h2>
               <p className="mt-2 leading-7 text-muted-foreground">
@@ -392,7 +426,10 @@ export function ScheduleTracker() {
             {hoaxChecks.map((item, index) => {
               const Icon = item.icon;
               return (
-                <li key={item.title} className="rounded-xl border border-border bg-card p-5 shadow-sm">
+                <li
+                  key={item.title}
+                  className="rounded-xl border border-border bg-card p-5 shadow-sm"
+                >
                   <div className="flex items-center gap-3">
                     <span className="grid size-9 place-items-center rounded-lg bg-secondary text-primary">
                       <Icon size={18} aria-hidden="true" />
@@ -424,7 +461,10 @@ export function ScheduleTracker() {
           </div>
         </section>
 
-        <section aria-labelledby="sources-heading" className="border-t border-border bg-secondary/50">
+        <section
+          aria-labelledby="sources-heading"
+          className="border-t border-border bg-secondary/50"
+        >
           <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
             <h2 id="sources-heading" className="text-lg font-bold text-foreground">
               Rujukan resmi

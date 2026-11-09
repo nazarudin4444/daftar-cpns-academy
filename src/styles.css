@@ -138,15 +138,36 @@
 }
 
 @layer base {
-  html { scroll-behavior: smooth; }
-  body { font-family: "Plus Jakarta Sans", "Inter", sans-serif; }
-  button, a, select, summary { cursor: pointer; }
-  button:disabled { cursor: not-allowed; }
-  :focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  }
+  button,
+  a,
+  select,
+  summary {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  :focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 3px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 .dark {
@@ -197,7 +218,90 @@
 
 @utility bg-hero {
   background:
-    radial-gradient(60rem 30rem at 85% -10%, color-mix(in oklab, var(--brand) 55%, transparent), transparent 60%),
-    radial-gradient(40rem 24rem at 0% 110%, color-mix(in oklab, var(--positive) 30%, transparent), transparent 60%),
+    radial-gradient(
+      60rem 30rem at 85% -10%,
+      color-mix(in oklab, var(--brand) 55%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      40rem 24rem at 0% 110%,
+      color-mix(in oklab, var(--positive) 30%, transparent),
+      transparent 60%
+    ),
     linear-gradient(160deg, oklch(0.24 0.08 256), var(--primary) 55%, oklch(0.42 0.15 258));
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: #fff !important;
+    color: #111827 !important;
+  }
+
+  body > *:not(#exam-result-pdf):not(#exam-package-pdf) {
+    display: none !important;
+  }
+
+  #exam-result-pdf,
+  #exam-package-pdf {
+    display: block !important;
+    width: 100% !important;
+    color: #111827 !important;
+    background: #fff !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 10pt !important;
+    line-height: 1.5 !important;
+  }
+
+  #exam-result-pdf *,
+  #exam-package-pdf * {
+    color: #111827 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  #exam-result-pdf h1,
+  #exam-package-pdf h1,
+  #exam-result-pdf h2,
+  #exam-package-pdf h2,
+  #exam-result-pdf tr,
+  #exam-result-pdf li,
+  #exam-result-pdf .border,
+  #exam-package-pdf li {
+    break-inside: avoid;
+  }
+
+  #exam-result-pdf h2 {
+    break-after: avoid;
+  }
+}
+
+.exam-room[data-exam-display="classic"] {
+  background: #e5e7eb !important;
+  color: #172033 !important;
+}
+
+.exam-room[data-exam-display="classic"] > header {
+  background: #183b63 !important;
+  box-shadow: 0 2px 6px rgb(15 23 42 / 18%);
+}
+
+.exam-room[data-exam-display="classic"] main,
+.exam-room[data-exam-display="classic"] aside,
+.exam-room[data-exam-display="classic"] article {
+  border-color: #9ca3af !important;
+  background: #f8fafc !important;
+  color: #172033 !important;
+}
+
+.exam-room[data-exam-display="classic"] button:not([class*="bg-primary"]),
+.exam-room[data-exam-display="classic"] [role="button"] {
+  border-color: #94a3b8;
 }
