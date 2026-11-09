@@ -91,7 +91,7 @@ export function SiteHeader() {
           </span>
           <span className="leading-tight">
             <span className="block font-extrabold tracking-tight text-foreground">Daftar CPNS</span>
-            <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold text-positive">
+            <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-positive">
               <span className="size-1.5 rounded-full bg-positive" aria-hidden="true" />
               Belajar dan Latihan CAT CPNS Gratis
             </span>
@@ -170,23 +170,23 @@ export function MobileBottomNav() {
           activeProps={{ className: "!text-primary" }}
         >
           <Home className="size-5" aria-hidden="true" />
-          <span className="text-[11px] font-semibold">Beranda</span>
+          <span className="text-xs font-semibold">Beranda</span>
         </Link>
         <div className="flex justify-center">
           <Link
             to="/simulasi-cat-cpns"
             className="relative -mt-7 flex flex-col items-center gap-0.5 rounded-full border-4 border-card bg-primary px-5 py-2.5 text-primary-foreground shadow-lg shadow-primary/30 transition-transform active:scale-95"
           >
-            <span className="absolute -top-2.5 rounded-full border-2 border-card bg-positive px-2 py-px text-[10px] font-extrabold tracking-wider text-primary-foreground">
+            <span className="absolute -top-2.5 rounded-full border-2 border-card bg-positive px-2 py-px text-xs font-extrabold tracking-wider text-primary-foreground">
               GRATIS
             </span>
             <PlayCircle className="size-6" aria-hidden="true" />
-            <span className="whitespace-nowrap text-[11px] font-bold">Simulasi CAT</span>
+            <span className="whitespace-nowrap text-xs font-bold">Simulasi CAT</span>
           </Link>
         </div>
         <Link to="/latihan-soal-cpns" className={side} activeProps={{ className: "!text-primary" }}>
           <BookOpen className="size-5" aria-hidden="true" />
-          <span className="text-[11px] font-semibold">Bank Soal</span>
+          <span className="text-xs font-semibold">Bank Soal</span>
         </Link>
       </div>
     </nav>
@@ -741,32 +741,38 @@ export function ContentPage({ page }: { page: ContentPageData }) {
             __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
           }}
         />
-        <div className="border-b border-border bg-card">
-          <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-            <nav aria-label="Breadcrumb" className="mb-5 text-sm text-muted-foreground">
+        <div className="bg-hero relative overflow-hidden text-primary-foreground">
+          <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-14 lg:px-8">
+            <nav aria-label="Breadcrumb" className="mb-5 text-sm text-primary-foreground/70">
               <ol className="flex flex-wrap items-center gap-2">
                 <li>
-                  <Link to="/" className="min-h-11 inline-flex items-center hover:text-primary">
+                  <Link
+                    to="/"
+                    className="inline-flex min-h-11 items-center hover:text-primary-foreground"
+                  >
                     Beranda
                   </Link>
                 </li>
                 <li aria-hidden="true">/</li>
-                <li aria-current="page" className="font-medium text-foreground">
+                <li aria-current="page" className="font-semibold text-primary-foreground">
                   {page.title}
                 </li>
               </ol>
             </nav>
-            <p className="text-sm font-bold text-primary">
+            <p className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3.5 py-1.5 text-sm font-semibold text-primary-foreground backdrop-blur-md">
+              <ShieldCheck size={16} aria-hidden="true" />
               Platform Edukasi &amp; Simulasi CAT Independen
             </p>
-            <h1 className="mt-3 max-w-3xl text-3xl font-extrabold leading-tight text-foreground sm:text-4xl">
+            <h1 className="mt-5 max-w-3xl text-3xl font-bold leading-tight tracking-tight text-primary-foreground sm:text-4xl">
               {page.title}
             </h1>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-muted-foreground">{page.intro}</p>
+            <p className="mt-4 max-w-3xl text-base leading-7 text-primary-foreground/80">
+              {page.intro}
+            </p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl gap-10 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_250px] lg:px-8">
-          <article className="min-w-0 space-y-9">
+        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_250px] md:gap-8 lg:px-8 lg:py-12">
+          <article className="min-w-0 space-y-9 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-8">
             {isSimulator && <CATSimulator />}
             {isPassingGrade && <PassingGradeCalculator />}
             {isDashboard && <LearningDashboard />}
@@ -846,7 +852,7 @@ export function ContentPage({ page }: { page: ContentPageData }) {
               </div>
             </section>
           </article>
-          <aside className="h-fit border-t-2 border-primary pt-4 md:border-t-0 md:border-l-2 md:border-primary md:pl-5">
+          <aside className="h-fit rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6">
             <div className="flex items-start gap-3">
               <ShieldCheck className="mt-0.5 shrink-0 text-primary" size={20} />
               <div>

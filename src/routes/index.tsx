@@ -4,11 +4,13 @@ import {
   Briefcase,
   CalendarDays,
   CircleHelp,
+  FileCheck,
   FileSearch,
   GraduationCap,
   Landmark,
   ListChecks,
   ShieldCheck,
+  Timer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HomeCatPreview } from "@/components/home-cat-preview";
@@ -132,6 +134,137 @@ const cpnsInfoLinks = [
   },
 ];
 
+const demoMetrics = [
+  { value: "110", label: "Soal pilihan ganda", compactLabel: "Soal", icon: FileCheck },
+  { value: "100", label: "Menit durasi latihan", compactLabel: "Menit", icon: Timer },
+  { value: "3", label: "Materi latihan", compactLabel: "Materi", icon: ListChecks },
+  { value: "Rp0", label: "Gratis, tanpa akun", compactLabel: "Tanpa akun", icon: ShieldCheck },
+];
+
+const materialTags = ["TWK", "TIU", "TKP"] as const;
+
+function HeroMetrics({ compact = false }: { compact?: boolean }) {
+  return (
+    <aside
+      aria-label="Ringkasan paket demo SKD"
+      className={
+        compact
+          ? "mt-5 rounded-xl border border-primary-foreground/20 bg-primary-foreground/10 p-2 backdrop-blur-md md:hidden"
+          : "hidden rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-5 backdrop-blur-md md:block md:p-6"
+      }
+    >
+      <div className={compact ? "flex items-center gap-2 px-1" : "flex items-center gap-2"}>
+        <span className="relative grid size-2 place-items-center" aria-hidden="true">
+          <span className="absolute size-2 rounded-full bg-emerald-300/40 motion-safe:animate-[ping_1.6s_cubic-bezier(0,0,0.2,1)_2]" />
+          <span className="relative size-1.5 rounded-full bg-emerald-300" />
+        </span>
+        <p className="text-xs font-semibold text-primary-foreground/80">Paket demo siap dicoba</p>
+      </div>
+      <h2
+        className={
+          compact
+            ? "px-1 pb-2 pt-1 text-xs font-bold text-primary-foreground"
+            : "mt-3 text-base font-bold text-primary-foreground"
+        }
+      >
+        Format paket demo SKD
+      </h2>
+      <dl className={compact ? "grid grid-cols-4 gap-1.5" : "mt-4 grid grid-cols-2 gap-3"}>
+        {demoMetrics.map(({ value, label, compactLabel, icon: Icon }, index) => (
+          <div
+            key={value}
+            className={
+              compact
+                ? "min-w-0 rounded-lg bg-primary-foreground/10 px-0.5 py-2 text-center"
+                : "group min-w-0 rounded-xl bg-primary-foreground/10 p-4 transition duration-200 hover:-translate-y-0.5 hover:bg-primary-foreground/15"
+            }
+          >
+            <dt
+              className={
+                compact
+                  ? "flex flex-col items-center gap-0.5"
+                  : "flex items-center gap-3"
+              }
+            >
+              <span
+                className={
+                  index === 3
+                    ? compact
+                      ? "grid size-6 place-items-center rounded-md bg-emerald-300/15 text-emerald-200"
+                      : "grid size-9 shrink-0 place-items-center rounded-lg bg-emerald-300/15 text-emerald-200"
+                    : compact
+                      ? "grid size-6 place-items-center rounded-md bg-primary-foreground/10 text-primary-foreground/80"
+                      : "grid size-9 shrink-0 place-items-center rounded-lg bg-primary-foreground/10 text-primary-foreground/80"
+                }
+              >
+                <Icon size={compact ? 14 : 18} aria-hidden="true" />
+              </span>
+              <span
+                className={
+                  compact
+                    ? "text-lg font-extrabold leading-none tabular-nums"
+                    : "text-3xl font-extrabold leading-none tabular-nums"
+                }
+              >
+                {value}
+              </span>
+            </dt>
+            <dd
+              className={
+                compact
+                  ? "mt-1 text-[11px] font-medium leading-3 text-primary-foreground/75"
+                  : "mt-2 text-sm leading-5 text-primary-foreground/75"
+              }
+            >
+              {index === 2 ? (
+                compact ? (
+                  compactLabel
+                ) : (
+                  <span className="flex gap-1.5">
+                    {materialTags.map((subject) => (
+                      <span
+                        key={subject}
+                        className="rounded-md border border-primary-foreground/20 px-2 py-0.5 text-xs font-semibold text-primary-foreground"
+                      >
+                        {subject}
+                      </span>
+                    ))}
+                  </span>
+                )
+              ) : index === 3 ? (
+                <span
+                  className={
+                    compact
+                      ? "inline-flex rounded-full bg-emerald-300/15 px-1.5 py-0.5 font-semibold text-emerald-100"
+                      : "inline-flex rounded-full bg-emerald-300/15 px-2.5 py-1 font-semibold text-emerald-100 ring-1 ring-emerald-200/20 shadow-sm shadow-emerald-300/10"
+                  }
+                >
+                  {compactLabel}
+                </span>
+              ) : (
+                compact ? compactLabel : label
+              )}
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <Link
+        to="/passing-grade-cpns"
+        className={
+          compact
+            ? "mt-1 inline-flex min-h-11 items-center gap-1 px-1 text-xs font-semibold text-primary-foreground/85 underline underline-offset-4 hover:text-primary-foreground"
+            : "mt-3 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-primary-foreground/85 underline underline-offset-4 hover:text-primary-foreground"
+        }
+      >
+        Pelajari kisi-kisi dan passing grade <ArrowRight size={14} aria-hidden="true" />
+      </Link>
+      <p className="mt-1 text-xs leading-5 text-primary-foreground/60">
+        Konfigurasi latihan situs, bukan ketentuan resmi seleksi.
+      </p>
+    </aside>
+  );
+}
+
 function HomePage() {
   const homeUrl = canonicalUrl("/");
   const structuredData = {
@@ -187,10 +320,10 @@ function HomePage() {
                 <ShieldCheck size={16} aria-hidden="true" />
                 Platform Edukasi &amp; Simulasi CAT Independen
               </p>
-              <h1 className="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-6xl">
+              <h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
                 Belajar &amp; Latihan CAT CPNS
               </h1>
-              <p className="mt-5 max-w-xl text-lg leading-8 text-primary-foreground/80">
+              <p className="mt-5 max-w-xl text-base leading-7 text-primary-foreground/80">
                 Simulasi demo SKD 110 soal, latihan TWK, TIU, dan TKP, lengkap dengan pembahasan
                 setiap jawaban. Gratis, tanpa akun.
               </p>
@@ -208,6 +341,7 @@ function HomePage() {
                   <Link to="/latihan-soal-cpns">Latihan Soal CPNS</Link>
                 </Button>
               </div>
+              <HeroMetrics compact />
               <p className="mt-6 text-sm text-primary-foreground/70">
                 Bukan portal pemerintah. Pendaftaran resmi hanya di{" "}
                 <a
@@ -221,25 +355,7 @@ function HomePage() {
                 .
               </p>
             </div>
-            <div className="hidden rounded-2xl border border-primary-foreground/15 bg-primary-foreground/10 p-6 backdrop-blur-md md:block">
-              <p className="text-sm font-semibold text-primary-foreground/70">Format paket demo SKD</p>
-              <dl className="mt-4 grid grid-cols-2 gap-3">
-                {[
-                  ["110", "soal pilihan ganda"],
-                  ["100", "menit timer CAT"],
-                  ["3", "materi: TWK, TIU, TKP"],
-                  ["Rp0", "tanpa akun"],
-                ].map(([value, label]) => (
-                  <div key={label} className="rounded-xl bg-primary-foreground/10 p-4">
-                    <dt className="text-3xl font-extrabold tabular-nums">{value}</dt>
-                    <dd className="mt-1 text-sm text-primary-foreground/75">{label}</dd>
-                  </div>
-                ))}
-              </dl>
-              <p className="mt-4 text-xs leading-5 text-primary-foreground/60">
-                Konfigurasi latihan situs, bukan ketentuan resmi seleksi.
-              </p>
-            </div>
+            <HeroMetrics />
           </div>
         </section>
         <section className="relative z-10 mx-auto -mt-12 max-w-7xl px-4 sm:px-6 lg:px-8">
