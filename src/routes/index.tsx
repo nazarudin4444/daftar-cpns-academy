@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { HomeCatPreview } from "@/components/home-cat-preview";
 import { SiteShell } from "@/components/site";
+import { FormasiQuickSearch, SelectionTimeline } from "@/components/home-portal";
 import { canonicalUrl, CONTACT_EMAIL, OPERATOR_NAME, SITE_ORIGIN } from "@/lib/site-config";
 
 export const Route = createFileRoute("/")({
@@ -314,12 +315,22 @@ function HomePage() {
           }}
         />
         <section className="bg-hero relative overflow-hidden text-primary-foreground">
-          <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 pb-20 pt-14 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:pb-28 md:pt-20 lg:px-8">
+          <div aria-hidden="true" className="bg-hero-grid pointer-events-none absolute inset-0" />
+          <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 pb-20 pt-14 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:pb-28 md:pt-20 lg:px-8">
             <div className="max-w-2xl">
-              <p className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3.5 py-1.5 text-sm font-semibold backdrop-blur-md">
-                <ShieldCheck size={16} aria-hidden="true" />
-                Platform Edukasi &amp; Simulasi CAT Independen
-              </p>
+              <Link
+                to="/jadwal-cpns"
+                className="group inline-flex max-w-full items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 py-1 pl-1 pr-3.5 text-sm backdrop-blur-md transition-colors hover:bg-primary-foreground/15"
+              >
+                <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary-foreground px-2.5 py-0.5 text-xs font-bold text-primary">
+                  <span className="size-1.5 rounded-full bg-positive motion-safe:animate-pulse" aria-hidden="true" />
+                  Info seleksi
+                </span>
+                <span className="truncate font-medium text-primary-foreground/90">
+                  Pantau tahapan CASN dari sumber resmi
+                </span>
+                <ArrowRight size={14} aria-hidden="true" className="shrink-0 transition group-hover:translate-x-0.5" />
+              </Link>
               <h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
                 Belajar &amp; Latihan CAT CPNS
               </h1>
@@ -359,9 +370,10 @@ function HomePage() {
           </div>
         </section>
         <section className="relative z-10 mx-auto -mt-12 max-w-7xl px-4 sm:px-6 lg:px-8">
+          <FormasiQuickSearch />
           <nav
             aria-label="Informasi CPNS yang sering dicari"
-            className="grid gap-2 rounded-2xl border border-border bg-card p-2 shadow-xl sm:grid-cols-2 lg:grid-cols-4"
+            className="mt-4 grid gap-2 rounded-2xl border border-border bg-card p-2 sm:grid-cols-2 lg:grid-cols-4"
           >
             {cpnsInfoLinks.map(({ label, copy, href, icon: Icon }) => (
               <Link
@@ -436,6 +448,9 @@ function HomePage() {
             ))}
           </div>
         </section>
+        <div className="border-t border-border">
+          <SelectionTimeline />
+        </div>
         <section className="bg-card">
           <div className="mx-auto grid max-w-7xl gap-8 px-4 py-20 sm:px-6 md:grid-cols-[1.15fr_0.85fr] md:gap-12 lg:px-8">
             <div>
