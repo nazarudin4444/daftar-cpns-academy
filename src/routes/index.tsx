@@ -150,7 +150,7 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
       aria-label="Ringkasan paket demo SKD"
       className={
         compact
-          ? "bg-metrics-card relative mt-5 overflow-hidden rounded-2xl border border-primary-foreground/20 p-2.5 shadow-xl backdrop-blur-xl md:hidden"
+          ? "bg-metrics-card relative mt-6 overflow-hidden rounded-2xl border border-primary-foreground/20 p-4 shadow-xl backdrop-blur-xl md:hidden"
           : "bg-metrics-card relative hidden overflow-hidden rounded-3xl border border-primary-foreground/20 p-6 shadow-2xl backdrop-blur-xl md:block lg:p-7"
       }
     >
@@ -166,26 +166,26 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
       <h2
         className={
           compact
-            ? "relative px-1 pb-2 pt-1 text-xs font-bold text-primary-foreground"
+            ? "relative mt-2 text-base font-bold tracking-tight text-primary-foreground"
             : "relative mt-4 text-xl font-bold tracking-tight text-primary-foreground"
         }
       >
         Format paket demo SKD
       </h2>
-      <dl className={compact ? "relative grid grid-cols-4 gap-1.5" : "relative mt-5 grid grid-cols-2 gap-3"}>
+      <dl className={compact ? "relative mt-3 grid grid-cols-2 gap-2" : "relative mt-5 grid grid-cols-2 gap-3"}>
         {demoMetrics.map(({ value, label, compactLabel, icon: Icon }, index) => (
           <div
             key={value}
             className={
               compact
-                ? "min-w-0 rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 px-0.5 py-2 text-center"
+                ? "min-w-0 rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 p-3"
                 : "group min-w-0 rounded-2xl border border-primary-foreground/10 bg-gradient-to-b from-primary-foreground/15 to-primary-foreground/5 p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-primary-foreground/25"
             }
           >
             <dt
               className={
                 compact
-                  ? "flex flex-col items-center gap-0.5"
+                  ? "flex items-center gap-2"
                   : "flex items-center gap-3"
               }
             >
@@ -193,10 +193,10 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
                 className={
                   index === 3
                     ? compact
-                      ? "grid size-6 place-items-center rounded-md bg-emerald-300/15 text-emerald-200"
+                      ? "grid size-7 shrink-0 place-items-center rounded-md bg-emerald-300/15 text-emerald-200"
                       : "grid size-9 shrink-0 place-items-center rounded-lg bg-emerald-300/15 text-emerald-200"
                     : compact
-                      ? "grid size-6 place-items-center rounded-md bg-primary-foreground/10 text-primary-foreground/80"
+                      ? "grid size-7 shrink-0 place-items-center rounded-md bg-primary-foreground/10 text-primary-foreground/80"
                       : "grid size-9 shrink-0 place-items-center rounded-lg bg-primary-foreground/10 text-primary-foreground/80"
                 }
               >
@@ -205,7 +205,7 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
               <span
                 className={
                   compact
-                    ? "text-lg font-extrabold leading-none tabular-nums"
+                    ? "text-xl font-extrabold leading-none tabular-nums"
                     : "text-3xl font-extrabold leading-none tabular-nums"
                 }
               >
@@ -215,25 +215,21 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
             <dd
               className={
                 compact
-                  ? "mt-1 text-[11px] font-medium leading-3 text-primary-foreground/75"
+                  ? "mt-2 text-xs font-medium leading-4 text-primary-foreground/75"
                   : "mt-2 text-sm leading-5 text-primary-foreground/75"
               }
             >
               {index === 2 ? (
-                compact ? (
-                  compactLabel
-                ) : (
-                  <span className="flex gap-1.5">
+                  <span className="flex flex-wrap gap-1">
                     {materialTags.map((subject) => (
                       <span
                         key={subject}
-                        className="rounded-md border border-primary-foreground/20 px-2 py-0.5 text-xs font-semibold text-primary-foreground"
+                        className="rounded-md border border-primary-foreground/20 px-1.5 py-0.5 text-[11px] font-semibold sm:px-2 sm:text-xs text-primary-foreground"
                       >
                         {subject}
                       </span>
                     ))}
                   </span>
-                )
               ) : index === 3 ? (
                 <span
                   className={
@@ -255,13 +251,13 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
         to="/passing-grade-cpns"
         className={
           compact
-            ? "relative mt-1 inline-flex min-h-11 items-center gap-1 px-1 text-xs font-semibold text-primary-foreground/85 underline underline-offset-4 hover:text-primary-foreground"
+            ? "group/link relative mt-3 flex min-h-11 w-full items-center justify-between gap-2 rounded-xl bg-primary-foreground px-4 text-sm font-bold text-primary shadow-lg transition hover:bg-primary-foreground/90"
             : "group/link relative mt-5 flex min-h-11 w-full items-center justify-between rounded-xl bg-primary-foreground px-4 text-sm font-bold text-primary shadow-lg transition hover:bg-primary-foreground/90"
         }
       >
         Pelajari kisi-kisi dan passing grade <ArrowRight size={16} aria-hidden="true" className="transition group-hover/link:translate-x-0.5" />
       </Link>
-      <p className={compact ? "relative mt-1 px-1 text-xs leading-5 text-primary-foreground/60" : "relative mt-3 text-center text-xs leading-5 text-primary-foreground/60"}>
+      <p className={compact ? "relative mt-2 text-center text-xs leading-5 text-primary-foreground/65" : "relative mt-3 text-center text-xs leading-5 text-primary-foreground/60"}>
         Konfigurasi latihan situs, bukan ketentuan resmi seleksi.
       </p>
     </aside>
