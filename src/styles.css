@@ -306,6 +306,14 @@
   border-color: #94a3b8;
 }
 
+@utility bg-metrics-card {
+  background: linear-gradient(
+    150deg,
+    color-mix(in oklab, var(--primary-foreground) 16%, transparent),
+    color-mix(in oklab, var(--primary-foreground) 4%, transparent)
+  );
+}
+
 @utility bg-hero-grid {
   background-image: radial-gradient(
     color-mix(in oklab, var(--primary-foreground) 9%, transparent) 1px,

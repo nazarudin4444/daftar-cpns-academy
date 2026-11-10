@@ -150,11 +150,13 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
       aria-label="Ringkasan paket demo SKD"
       className={
         compact
-          ? "mt-5 rounded-xl border border-primary-foreground/20 bg-primary-foreground/10 p-2 backdrop-blur-md md:hidden"
-          : "hidden rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-5 backdrop-blur-md md:block md:p-6"
+          ? "bg-metrics-card relative mt-5 overflow-hidden rounded-2xl border border-primary-foreground/20 p-2.5 shadow-xl backdrop-blur-xl md:hidden"
+          : "bg-metrics-card relative hidden overflow-hidden rounded-3xl border border-primary-foreground/20 p-6 shadow-2xl backdrop-blur-xl md:block lg:p-7"
       }
     >
-      <div className={compact ? "flex items-center gap-2 px-1" : "flex items-center gap-2"}>
+      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-brand/40 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-20 -left-12 size-44 rounded-full bg-positive/25 blur-3xl" />
+      <div className={compact ? "relative flex items-center gap-2 px-1" : "relative inline-flex items-center gap-2 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-3 py-1"}>
         <span className="relative grid size-2 place-items-center" aria-hidden="true">
           <span className="absolute size-2 rounded-full bg-emerald-300/40 motion-safe:animate-[ping_1.6s_cubic-bezier(0,0,0.2,1)_2]" />
           <span className="relative size-1.5 rounded-full bg-emerald-300" />
@@ -164,20 +166,20 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
       <h2
         className={
           compact
-            ? "px-1 pb-2 pt-1 text-xs font-bold text-primary-foreground"
-            : "mt-3 text-base font-bold text-primary-foreground"
+            ? "relative px-1 pb-2 pt-1 text-xs font-bold text-primary-foreground"
+            : "relative mt-4 text-xl font-bold tracking-tight text-primary-foreground"
         }
       >
         Format paket demo SKD
       </h2>
-      <dl className={compact ? "grid grid-cols-4 gap-1.5" : "mt-4 grid grid-cols-2 gap-3"}>
+      <dl className={compact ? "relative grid grid-cols-4 gap-1.5" : "relative mt-5 grid grid-cols-2 gap-3"}>
         {demoMetrics.map(({ value, label, compactLabel, icon: Icon }, index) => (
           <div
             key={value}
             className={
               compact
-                ? "min-w-0 rounded-lg bg-primary-foreground/10 px-0.5 py-2 text-center"
-                : "group min-w-0 rounded-xl bg-primary-foreground/10 p-4 transition duration-200 hover:-translate-y-0.5 hover:bg-primary-foreground/15"
+                ? "min-w-0 rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 px-0.5 py-2 text-center"
+                : "group min-w-0 rounded-2xl border border-primary-foreground/10 bg-gradient-to-b from-primary-foreground/15 to-primary-foreground/5 p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-primary-foreground/25"
             }
           >
             <dt
@@ -253,13 +255,13 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
         to="/passing-grade-cpns"
         className={
           compact
-            ? "mt-1 inline-flex min-h-11 items-center gap-1 px-1 text-xs font-semibold text-primary-foreground/85 underline underline-offset-4 hover:text-primary-foreground"
-            : "mt-3 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-primary-foreground/85 underline underline-offset-4 hover:text-primary-foreground"
+            ? "relative mt-1 inline-flex min-h-11 items-center gap-1 px-1 text-xs font-semibold text-primary-foreground/85 underline underline-offset-4 hover:text-primary-foreground"
+            : "group/link relative mt-5 flex min-h-11 w-full items-center justify-between rounded-xl bg-primary-foreground px-4 text-sm font-bold text-primary shadow-lg transition hover:bg-primary-foreground/90"
         }
       >
-        Pelajari kisi-kisi dan passing grade <ArrowRight size={14} aria-hidden="true" />
+        Pelajari kisi-kisi dan passing grade <ArrowRight size={16} aria-hidden="true" className="transition group-hover/link:translate-x-0.5" />
       </Link>
-      <p className="mt-1 text-xs leading-5 text-primary-foreground/60">
+      <p className={compact ? "relative mt-1 px-1 text-xs leading-5 text-primary-foreground/60" : "relative mt-3 text-center text-xs leading-5 text-primary-foreground/60"}>
         Konfigurasi latihan situs, bukan ketentuan resmi seleksi.
       </p>
     </aside>
