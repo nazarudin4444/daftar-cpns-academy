@@ -582,13 +582,20 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
     description:
       "Praktik privasi Daftar CPNS: penyimpanan latihan di browser, penggunaan email dukungan, dan kontak pengelola Perawat Center.",
     intro:
-      "MVP ini tidak meminta akun, NIK, Kartu Keluarga, kata sandi SSCASN, maupun dokumen identitas. Progres latihan demo disimpan pada penyimpanan browser di perangkat yang digunakan.",
+      "Situs ini tidak meminta akun, NIK, Kartu Keluarga, atau kata sandi SSCASN. Progres latihan disimpan pada browser. Alat persiapan dokumen memproses file pilihan dan isian surat secara lokal di perangkat Anda.",
     sections: [
       {
         heading: "Data pada latihan demo",
         paragraphs: [
           "Untuk memulihkan sesi setelah halaman dimuat ulang, browser menyimpan jenis latihan, jawaban, penanda ragu, nomor aktif, dan waktu sesi. Data ini tersimpan lokal di perangkat dan tidak dikirim ke server oleh fitur demo.",
           "Menghapus data situs di browser akan menghapus progres yang tersimpan. Jangan menggunakan perangkat bersama bila Anda tidak ingin orang lain melihat sesi latihan yang tersisa.",
+        ],
+      },
+      {
+        heading: "File lokal dan draf surat",
+        paragraphs: [
+          "File yang dipilih untuk pemeriksaan atau kompresi dibaca di browser tanpa dikirim ke server oleh alat ini. File dan isian surat tidak disimpan ke localStorage. Muat ulang atau tutup halaman untuk menghapus isian dari halaman; hasil yang sudah diunduh tetap berada pada perangkat Anda.",
+          "Alat dokumen tidak menerbitkan e-Meterai, memverifikasi identitas, atau menentukan kelulusan administrasi. Jangan memproses dokumen yang sudah ditandatangani digital atau diberi e-Meterai. Gunakan format dan persyaratan resmi instansi untuk pemeriksaan akhir.",
         ],
       },
       {

@@ -380,6 +380,27 @@ function HomePage() {
             ))}
           </nav>
         </section>
+        <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
+          <Link
+            to="/situs"
+            className="group flex flex-col gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-primary/40 hover:bg-secondary/40 sm:flex-row sm:items-center sm:justify-between sm:p-6"
+          >
+            <span className="flex items-start gap-3">
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                <ShieldCheck size={20} aria-hidden="true" />
+              </span>
+              <span>
+                <span className="block font-bold">Cari rujukan sebelum mulai belajar</span>
+                <span className="mt-1 block text-sm leading-6 text-muted-foreground">
+                  Buka direktori portal pemerintah, kanal belajar, dan sumber literasi.
+                </span>
+              </span>
+            </span>
+            <span className="inline-flex min-h-11 shrink-0 items-center gap-2 font-semibold text-primary sm:pl-4">
+              Lihat direktori <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            </span>
+          </Link>
+        </section>
         <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
             <div>

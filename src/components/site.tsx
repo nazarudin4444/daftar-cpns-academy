@@ -30,6 +30,7 @@ import {
   YAxis,
 } from "recharts";
 import { Button } from "@/components/ui/button";
+import { ExamControls, ReadingMode, VisualScorecard } from "@/components/study-tools";
 import { canonicalUrl, SITE_ORIGIN, OPERATOR_NAME, CONTACT_EMAIL } from "@/lib/site-config";
 import { CONTENT_PAGES, type ContentPageData } from "@/lib/content-pages";
 import {
@@ -71,6 +72,7 @@ const nav = [
   ["Info CPNS", "/jadwal-cpns"],
   ["PPPK", "/pppk"],
   ["Panduan", "/panduan"],
+  ["Alat belajar", "/alat-belajar"],
   ["Dashboard", "/dashboard"],
 ] as const;
 
@@ -101,6 +103,27 @@ function setQuestionBookmark(questionId: string, saved: boolean) {
     // The control remains usable for the current view when browser storage is unavailable.
   }
   return ids;
+}
+
+function QuestionBookmark({ questionId }: { questionId: string }) {
+  const [saved, setSaved] = useState(false);
+  useEffect(() => {
+    setSaved(readBookmarkedIds().includes(questionId));
+  }, [questionId]);
+  return (
+    <button
+      type="button"
+      className="study-control mb-3"
+      aria-pressed={saved}
+      onClick={() => {
+        setQuestionBookmark(questionId, !saved);
+        setSaved(!saved);
+      }}
+    >
+      <Bookmark size={16} aria-hidden="true" />
+      {saved ? "Tersimpan untuk diulang" : "Simpan soal"}
+    </button>
+  );
 }
 
 function jakartaDateKey(date = new Date()) {
@@ -264,6 +287,9 @@ export function SiteFooter() {
             <Link to="/pppk" className="min-h-8 hover:text-primary">
               Panduan PPPK
             </Link>
+            <Link to="/situs" className="min-h-8 hover:text-primary">
+              Direktori rujukan
+            </Link>
           </div>
         </div>
         <div>
@@ -301,6 +327,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <SiteHeader />
+      <div className="mx-auto flex max-w-7xl justify-end px-4 py-2 print:hidden">
+        <ReadingMode />
+      </div>
       <div className="pb-24 xl:pb-0">
         {children}
         <SiteFooter />
@@ -803,8 +832,12 @@ export function ContentPage({ page }: { page: ContentPageData }) {
             </p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_250px] md:gap-8 lg:px-8 lg:py-12">
-          <article className="min-w-0 space-y-9 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-8">
+        <div
+          className={`mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10 ${isSimulator ? "" : "grid gap-6 md:grid-cols-[minmax(0,1fr)_250px] md:gap-8"}`}
+        >
+          <article
+            className={`min-w-0 ${isSimulator ? "" : "space-y-9 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-8"}`}
+          >
             {isSimulator && <CATSimulator />}
             {isPassingGrade && <PassingGradeCalculator />}
             {isDashboard && <LearningDashboard />}
@@ -884,7 +917,9 @@ export function ContentPage({ page }: { page: ContentPageData }) {
               </div>
             </section>
           </article>
-          <aside className="h-fit rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6">
+          <aside
+            className={`h-fit rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6 ${isSimulator ? "hidden" : ""}`}
+          >
             <div className="flex items-start gap-3">
               <ShieldCheck className="mt-0.5 shrink-0 text-primary" size={20} />
               <div>
@@ -971,17 +1006,24 @@ function DailyChallenge() {
   const today = jakartaDateKey();
   const pool = QUESTION_BANK.filter((item) => ["TWK", "TIU", "TKP"].includes(item.subject));
   let seed = [...today].reduce((total, char) => total * 31 + char.charCodeAt(0), 7) >>> 0;
-  const dailyQuestions = [...pool]
+  const rankedPool = [...pool]
     .sort((left, right) => {
-      const rank = (id: string) => [...id].reduce((total, char) => (total * 33 + char.charCodeAt(0)) >>> 0, seed);
+      const rank = (id: string) =>
+        [...id].reduce((total, char) => (total * 33 + char.charCodeAt(0)) >>> 0, seed);
       return rank(left.id) - rank(right.id);
     })
-    .slice(0, 5);
+    .slice(0);
+  const dailyQuestions = (["TWK", "TIU", "TKP"] as const).flatMap((subject) =>
+    rankedPool.filter((item) => item.subject === subject).slice(0, subject === "TKP" ? 1 : 2),
+  );
 
   useEffect(() => {
     try {
-      const value: unknown = JSON.parse(window.localStorage.getItem("daftar-cpns:daily-streak:v1") ?? "[]");
-      if (Array.isArray(value)) setCompletedDates(value.filter((date): date is string => typeof date === "string"));
+      const value: unknown = JSON.parse(
+        window.localStorage.getItem("daftar-cpns:daily-streak:v1") ?? "[]",
+      );
+      if (Array.isArray(value))
+        setCompletedDates(value.filter((date): date is string => typeof date === "string"));
     } catch {
       // Challenge works without persistence.
     } finally {
@@ -1011,31 +1053,79 @@ function DailyChallenge() {
   }
 
   return (
-    <section aria-labelledby="daily-challenge-heading" className="rounded-xl border border-border bg-card p-4 sm:p-5">
+    <section
+      aria-labelledby="daily-challenge-heading"
+      className="rounded-xl border border-border bg-card p-4 sm:p-5"
+    >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-primary">Tantangan harian · 5 soal</p>
-          <h3 id="daily-challenge-heading" className="mt-1 text-lg font-bold">Latihan singkat hari ini</h3>
-          <p className="mt-1 text-sm text-muted-foreground">Soal berganti setiap hari. Progres dan streak disimpan di browser ini.</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-primary">
+            Tantangan harian · 5 soal
+          </p>
+          <h3 id="daily-challenge-heading" className="mt-1 text-lg font-bold">
+            Latihan singkat hari ini
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Target 5 menit: 2 TWK, 2 TIU, 1 TKP. Soal berganti setiap hari; streak disimpan di
+            browser ini.
+          </p>
         </div>
-        <p className="rounded-full bg-accent px-3 py-1.5 text-sm font-semibold text-foreground" aria-live="polite">🔥 {streak} hari beruntun</p>
+        <p
+          className="rounded-full bg-accent px-3 py-1.5 text-sm font-semibold text-foreground"
+          aria-live="polite"
+        >
+          🔥 {streak} hari beruntun
+        </p>
       </div>
       {done ? (
-        <p className="mt-4 rounded-md border border-positive/40 bg-positive/5 p-3 text-sm font-semibold" role="status">Tantangan hari ini selesai. Kembali besok untuk menjaga streak.</p>
+        <div className="mt-4" role="status">
+          <p className="rounded-md border border-positive/40 bg-positive/5 p-3 font-semibold">
+            Selesai: {dailyQuestions.filter((q) => answers[q.id] === q.answer).length} / 5 sesuai
+            kunci latihan.
+          </p>
+          <div className="mt-4 space-y-4">
+            {dailyQuestions.map((question, index) => (
+              <ReviewQuestion
+                key={question.id}
+                question={question}
+                index={index}
+                answer={answers[question.id]}
+              />
+            ))}
+          </div>
+        </div>
       ) : (
         <ol className="mt-4 space-y-4">
           {dailyQuestions.map((question, index) => (
             <li key={question.id} className="border-t border-border pt-4">
-              <p className="text-xs font-semibold text-muted-foreground">{question.subject} · Soal {index + 1}</p>
+              <p className="text-xs font-semibold text-muted-foreground">
+                {question.subject} · Soal {index + 1}
+              </p>
               <p className="mt-1 text-sm font-semibold leading-6">{question.prompt}</p>
               <div className="mt-2 grid gap-2 sm:grid-cols-2">
                 {question.options.map((option) => (
-                  <button key={option.label} type="button" disabled={Boolean(answers[question.id])} aria-pressed={answers[question.id] === option.label} onClick={() => setAnswers((current) => ({ ...current, [question.id]: option.label }))} className="min-h-11 rounded-md border border-border px-3 py-2 text-left text-sm leading-5 hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default">
+                  <button
+                    key={option.label}
+                    type="button"
+                    disabled={Boolean(answers[question.id])}
+                    aria-pressed={answers[question.id] === option.label}
+                    onClick={() =>
+                      setAnswers((current) => ({ ...current, [question.id]: option.label }))
+                    }
+                    className="min-h-11 rounded-md border border-border px-3 py-2 text-left text-sm leading-5 hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default"
+                  >
                     <strong>{option.label}.</strong> {option.text}
                   </button>
                 ))}
               </div>
-              {answers[question.id] && <p className="mt-2 text-sm leading-6 text-muted-foreground" aria-live="polite">{answers[question.id] === question.answer ? "Tepat." : `Kunci latihan: ${question.answer}.`} {question.explanation}</p>}
+              {answers[question.id] && (
+                <p className="mt-2 text-sm leading-6 text-muted-foreground" aria-live="polite">
+                  {answers[question.id] === question.answer
+                    ? "Tepat."
+                    : `Kunci latihan: ${question.answer}.`}{" "}
+                  {question.explanation}
+                </p>
+              )}
             </li>
           ))}
         </ol>
@@ -1046,36 +1136,114 @@ function DailyChallenge() {
 
 function StudyFlashcards() {
   const cards = [
-    { subject: "TWK · UUD 1945", title: "Persamaan di hadapan hukum", description: "Pasal 27 ayat (1) memuat prinsip kesamaan kedudukan warga negara di dalam hukum dan pemerintahan. Kata kunci belajar: persamaan hak dan kewajiban." },
-    { subject: "TWK · UUD 1945", title: "Hak atas pekerjaan", description: "Pasal 27 ayat (2) menyatakan hak warga negara atas pekerjaan dan penghidupan yang layak bagi kemanusiaan." },
-    { subject: "TWK · UUD 1945", title: "Kepastian hukum yang adil", description: "Pasal 28D ayat (1) menjamin pengakuan, perlindungan, dan kepastian hukum yang adil serta perlakuan yang sama di hadapan hukum." },
-    { subject: "TWK · UUD 1945", title: "Hak memperoleh pendidikan", description: "Pasal 31 ayat (1) menyatakan setiap warga negara berhak mendapat pendidikan. Bedakan hak warga dengan kewajiban mengikuti pendidikan dasar pada ayat berikutnya." },
-    { subject: "TWK · Lembaga negara", title: "Majelis Permusyawaratan Rakyat", description: "Pasal 3 memberi MPR wewenang mengubah dan menetapkan UUD, melantik Presiden/Wakil Presiden, serta memutus usul pemberhentian sesuai UUD." },
-    { subject: "TWK · Lembaga negara", title: "Dewan Perwakilan Rakyat", description: "Pasal 20A menjelaskan fungsi legislasi, anggaran, dan pengawasan DPR. Ingat tiga fungsi ini sebagai kata kunci." },
-    { subject: "TIU · Aritmetika", title: "Jarak, kecepatan, waktu", description: "Rumus dasar: jarak = kecepatan × waktu; kecepatan = jarak ÷ waktu; waktu = jarak ÷ kecepatan. Samakan satuan sebelum menghitung." },
-    { subject: "TIU · Perbandingan", title: "Senilai dan berbalik nilai", description: "Senilai: jika satu besaran dikali faktor k, besaran lain juga dikali k. Berbalik nilai: hasil kali kedua besaran tetap, sehingga satu naik k kali dan lainnya turun menjadi 1/k." },
+    {
+      subject: "TWK · UUD 1945",
+      title: "Persamaan di hadapan hukum",
+      description:
+        "Pasal 27 ayat (1) memuat prinsip kesamaan kedudukan warga negara di dalam hukum dan pemerintahan. Kata kunci belajar: persamaan hak dan kewajiban.",
+    },
+    {
+      subject: "TWK · UUD 1945",
+      title: "Hak atas pekerjaan",
+      description:
+        "Pasal 27 ayat (2) menyatakan hak warga negara atas pekerjaan dan penghidupan yang layak bagi kemanusiaan.",
+    },
+    {
+      subject: "TWK · UUD 1945",
+      title: "Kepastian hukum yang adil",
+      description:
+        "Pasal 28D ayat (1) menjamin pengakuan, perlindungan, dan kepastian hukum yang adil serta perlakuan yang sama di hadapan hukum.",
+    },
+    {
+      subject: "TWK · UUD 1945",
+      title: "Hak memperoleh pendidikan",
+      description:
+        "Pasal 31 ayat (1) menyatakan setiap warga negara berhak mendapat pendidikan. Bedakan hak warga dengan kewajiban mengikuti pendidikan dasar pada ayat berikutnya.",
+    },
+    {
+      subject: "TWK · Lembaga negara",
+      title: "Majelis Permusyawaratan Rakyat",
+      description:
+        "Pasal 3 memberi MPR wewenang mengubah dan menetapkan UUD, melantik Presiden/Wakil Presiden, serta memutus usul pemberhentian sesuai UUD.",
+    },
+    {
+      subject: "TWK · Lembaga negara",
+      title: "Dewan Perwakilan Rakyat",
+      description:
+        "Pasal 20A menjelaskan fungsi legislasi, anggaran, dan pengawasan DPR. Ingat tiga fungsi ini sebagai kata kunci.",
+    },
+    {
+      subject: "TIU · Aritmetika",
+      title: "Jarak, kecepatan, waktu",
+      description:
+        "Rumus dasar: jarak = kecepatan × waktu; kecepatan = jarak ÷ waktu; waktu = jarak ÷ kecepatan. Samakan satuan sebelum menghitung.",
+    },
+    {
+      subject: "TIU · Perbandingan",
+      title: "Senilai dan berbalik nilai",
+      description:
+        "Senilai: jika satu besaran dikali faktor k, besaran lain juga dikali k. Berbalik nilai: hasil kali kedua besaran tetap, sehingga satu naik k kali dan lainnya turun menjadi 1/k.",
+    },
   ];
   const [index, setIndex] = useState(0);
   const [showBack, setShowBack] = useState(false);
   const card = cards[index];
   if (!card) return null;
   return (
-    <section aria-labelledby="study-cards-heading" className="rounded-xl border border-border bg-card p-4 sm:p-5">
+    <section
+      aria-labelledby="study-cards-heading"
+      className="rounded-xl border border-border bg-card p-4 sm:p-5"
+    >
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div><p className="text-xs font-bold uppercase tracking-wide text-primary">Kartu belajar</p><h3 id="study-cards-heading" className="mt-1 text-lg font-bold">Ringkasan materi SKD</h3></div>
-        <span className="text-sm text-muted-foreground">{index + 1} / {cards.length}</span>
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wide text-primary">Kartu belajar</p>
+          <h3 id="study-cards-heading" className="mt-1 text-lg font-bold">
+            Ringkasan materi SKD
+          </h3>
+        </div>
+        <span className="text-sm text-muted-foreground">
+          {index + 1} / {cards.length}
+        </span>
       </div>
       <div className="mt-4 min-h-36 rounded-lg border border-border bg-background p-4">
         <p className="text-xs font-bold text-primary">{card.subject}</p>
         <h4 className="mt-2 font-semibold">{card.title}</h4>
-        {showBack && <p className="mt-3 text-sm leading-6 text-muted-foreground">{card.description}</p>}
+        {showBack && (
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">{card.description}</p>
+        )}
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
-        <Button type="button" variant="outline" className="min-h-11" onClick={() => setShowBack((value) => !value)}>{showBack ? "Tutup ringkasan" : "Lihat ringkasan"}</Button>
-        <Button type="button" className="min-h-11" onClick={() => { setIndex((value) => (value + 1) % cards.length); setShowBack(false); }}>Kartu berikutnya</Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="min-h-11"
+          onClick={() => setShowBack((value) => !value)}
+        >
+          {showBack ? "Tutup ringkasan" : "Lihat ringkasan"}
+        </Button>
+        <Button
+          type="button"
+          className="min-h-11"
+          onClick={() => {
+            setIndex((value) => (value + 1) % cards.length);
+            setShowBack(false);
+          }}
+        >
+          Kartu berikutnya
+        </Button>
       </div>
-      <p className="mt-2 text-xs leading-5 text-muted-foreground">Ringkasan ini untuk mengingat kata kunci; cek bunyi pasal dan perubahan resmi sebelum menghafal detail.</p>
-      <a href="https://jdih.dpr.go.id/setjen/index/id/UUD-1945-BAGIAN-PERTIMBANGAN-DAN-DOKUMENTASI-INFORMASI-HUKUM" target="_blank" rel="noreferrer" className="mt-1 inline-flex min-h-10 items-center text-sm font-semibold text-primary underline">Baca naskah UUD di JDIH DPR <ArrowUpRight size={14} className="ml-1" /></a>
+      <p className="mt-2 text-xs leading-5 text-muted-foreground">
+        Ringkasan ini untuk mengingat kata kunci; cek bunyi pasal dan perubahan resmi sebelum
+        menghafal detail.
+      </p>
+      <a
+        href="https://jdih.dpr.go.id/setjen/index/id/UUD-1945-BAGIAN-PERTIMBANGAN-DAN-DOKUMENTASI-INFORMASI-HUKUM"
+        target="_blank"
+        rel="noreferrer"
+        className="mt-1 inline-flex min-h-10 items-center text-sm font-semibold text-primary underline"
+      >
+        Baca naskah UUD di JDIH DPR <ArrowUpRight size={14} className="ml-1" />
+      </a>
     </section>
   );
 }
@@ -1191,20 +1359,44 @@ function LearningDashboard() {
       <DailyChallenge />
       <StudyFlashcards />
 
-      <section aria-labelledby="bookmarks-heading" className="rounded-lg border border-border bg-card p-4 sm:p-5">
-        <h3 id="bookmarks-heading" className="font-bold">Soal yang perlu diulang</h3>
+      <section
+        aria-labelledby="bookmarks-heading"
+        className="rounded-lg border border-border bg-card p-4 sm:p-5"
+      >
+        <h3 id="bookmarks-heading" className="font-bold">
+          Soal yang perlu diulang
+        </h3>
         {bookmarkedQuestions.length ? (
           <ol className="mt-3 space-y-4">
             {bookmarkedQuestions.map((question, index) => (
               <li key={question.id} className="border-t border-border pt-3">
                 <p className="text-xs font-semibold text-primary">{question.subject}</p>
                 <p className="mt-1 text-sm font-semibold leading-6">{question.prompt}</p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">Kunci latihan: {question.answer}. {question.explanation}</p>
-                <Button type="button" variant="outline" className="mt-2 min-h-10" onClick={() => { setQuestionBookmark(question.id, false); setBookmarkedQuestions((items) => items.filter((item) => item.id !== question.id)); }}>Hapus dari tersimpan</Button>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Kunci latihan: {question.answer}. {question.explanation}
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mt-2 min-h-10"
+                  onClick={() => {
+                    setQuestionBookmark(question.id, false);
+                    setBookmarkedQuestions((items) =>
+                      items.filter((item) => item.id !== question.id),
+                    );
+                  }}
+                >
+                  Hapus dari tersimpan
+                </Button>
               </li>
             ))}
           </ol>
-        ) : <p className="mt-2 text-sm leading-6 text-muted-foreground">Belum ada soal tersimpan. Tandai soal dari pembahasan hasil simulasi untuk mengulanginya di sini.</p>}
+        ) : (
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Belum ada soal tersimpan. Tandai soal dari pembahasan hasil simulasi untuk mengulanginya
+            di sini.
+          </p>
+        )}
       </section>
 
       <section
@@ -1488,25 +1680,85 @@ function PassingGradeCalculator() {
       </p>
       <div className="mt-6 rounded-lg border border-border bg-background p-4">
         <h3 className="font-bold">Simulasi batas peringkat 3× kuota</h3>
-        <p className="mt-1 text-sm leading-6 text-muted-foreground">Sebagai ilustrasi aturan seleksi CPNS pada PermenPANRB 6/2024, peserta yang memenuhi ambang dapat diikutkan ke SKB paling banyak tiga kali jumlah kebutuhan jabatan. Hasil akhir tetap mengikuti pengumuman instansi dan ketentuan periode berjalan.</p>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          Sebagai ilustrasi aturan seleksi CPNS pada PermenPANRB 6/2024, peserta yang memenuhi
+          ambang dapat diikutkan ke SKB paling banyak tiga kali jumlah kebutuhan jabatan. Hasil
+          akhir tetap mengikuti pengumuman instansi dan ketentuan periode berjalan.
+        </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <label className="text-sm font-semibold">Jumlah formasi
-            <input type="number" min={1} max={100000} value={quota} onChange={(event) => setQuota(Math.max(1, Number(event.target.value) || 1))} className="mt-1.5 min-h-11 w-full rounded-md border border-input bg-card px-3" />
+          <label className="text-sm font-semibold">
+            Jumlah formasi
+            <input
+              type="number"
+              min={1}
+              max={100000}
+              value={quota}
+              onChange={(event) => setQuota(Math.max(1, Number(event.target.value) || 1))}
+              className="mt-1.5 min-h-11 w-full rounded-md border border-input bg-card px-3"
+            />
           </label>
-          <label className="text-sm font-semibold">Peringkat simulasi Anda
-            <input type="number" min={1} max={10000000} value={currentRank} onChange={(event) => setCurrentRank(Math.max(1, Number(event.target.value) || 1))} className="mt-1.5 min-h-11 w-full rounded-md border border-input bg-card px-3" />
+          <label className="text-sm font-semibold">
+            Peringkat simulasi Anda
+            <input
+              type="number"
+              min={1}
+              max={10000000}
+              value={currentRank}
+              onChange={(event) => setCurrentRank(Math.max(1, Number(event.target.value) || 1))}
+              className="mt-1.5 min-h-11 w-full rounded-md border border-input bg-card px-3"
+            />
           </label>
         </div>
-        <p className="mt-4 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm leading-6" aria-live="polite">Batas ilustrasi: peringkat {Math.min(quota * 3, 300000).toLocaleString("id-ID")}. Peringkat {currentRank.toLocaleString("id-ID")} {currentRank <= quota * 3 ? "berada dalam rentang ilustrasi" : "di luar rentang ilustrasi"}. Ini bukan jaminan lolos: peserta tetap harus memenuhi ambang dan pemeringkatan resmi.</p>
-        <a href="https://jdih.menpan.go.id/common/dokumen/2024permenpanrb006.pdf" target="_blank" rel="noreferrer" className="mt-2 inline-flex min-h-10 items-center font-semibold text-primary underline">Buka PermenPANRB 6/2024 <ArrowUpRight size={15} className="ml-1" /></a>
+        <p
+          className="mt-4 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm leading-6"
+          aria-live="polite"
+        >
+          Batas ilustrasi: peringkat {Math.min(quota * 3, 300000).toLocaleString("id-ID")}.
+          Peringkat {currentRank.toLocaleString("id-ID")}{" "}
+          {currentRank <= quota * 3
+            ? "berada dalam rentang ilustrasi"
+            : "di luar rentang ilustrasi"}
+          . Ini bukan jaminan lolos: peserta tetap harus memenuhi ambang dan pemeringkatan resmi.
+        </p>
+        <a
+          href="https://jdih.menpan.go.id/common/dokumen/2024permenpanrb006.pdf"
+          target="_blank"
+          rel="noreferrer"
+          className="mt-2 inline-flex min-h-10 items-center font-semibold text-primary underline"
+        >
+          Buka PermenPANRB 6/2024 <ArrowUpRight size={15} className="ml-1" />
+        </a>
       </div>
       <div className="mt-6">
         <h3 className="font-bold">Perbandingan patokan dari beberapa periode</h3>
-        <p className="mt-1 text-sm leading-6 text-muted-foreground">Angka berikut berasal dari tahun rujukan yang tercantum; ini bukan satu tabel ketentuan aktif lintas jalur.</p>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          Angka berikut berasal dari tahun rujukan yang tercantum; ini bukan satu tabel ketentuan
+          aktif lintas jalur.
+        </p>
         <div className="mt-3 overflow-x-auto rounded-md border border-border">
           <table className="w-full min-w-[520px] text-left text-sm">
-            <thead className="bg-muted/50"><tr><th className="p-3">Kategori</th><th className="p-3">Tahun</th><th className="p-3">Patokan</th></tr></thead>
-            <tbody>{PASSING_GRADE_CATEGORIES.map((item) => <tr key={item.id} className="border-t border-border"><th scope="row" className="p-3 font-semibold">{item.name}</th><td className="p-3">{item.year}</td><td className="p-3">{item.kind === "subtest" ? `TWK ${item.thresholds.TWK} · TIU ${item.thresholds.TIU} · TKP ${item.thresholds.TKP}` : `Total ${item.thresholds.total} · TIU ${item.thresholds.TIU}`}</td></tr>)}</tbody>
+            <thead className="bg-muted/50">
+              <tr>
+                <th className="p-3">Kategori</th>
+                <th className="p-3">Tahun</th>
+                <th className="p-3">Patokan</th>
+              </tr>
+            </thead>
+            <tbody>
+              {PASSING_GRADE_CATEGORIES.map((item) => (
+                <tr key={item.id} className="border-t border-border">
+                  <th scope="row" className="p-3 font-semibold">
+                    {item.name}
+                  </th>
+                  <td className="p-3">{item.year}</td>
+                  <td className="p-3">
+                    {item.kind === "subtest"
+                      ? `TWK ${item.thresholds.TWK} · TIU ${item.thresholds.TIU} · TKP ${item.thresholds.TKP}`
+                      : `Total ${item.thresholds.total} · TIU ${item.thresholds.TIU}`}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       </div>
@@ -1663,11 +1915,17 @@ function QuickPractice({ subject }: { subject: "TWK" | "TIU" | "TKP" }) {
 }
 
 function CATSimulator() {
+  const [resultAlias, setResultAlias] = useState("");
   const examDialogRef = useRef<HTMLDialogElement>(null);
+  const packageConfirmRef = useRef<HTMLDialogElement>(null);
   const [session, setSession] = useState<ExamSession | null>(null);
   const [pendingResume, setPendingResume] = useState<ExamSession | null>(null);
   const [result, setResult] = useState<ExamResult | null>(null);
   const [selectedTrack, setSelectedTrack] = useState<Track | null>("cpns");
+  const [trackTab, setTrackTab] = useState<"cpns" | "pppk" | "kedinasan" | "drill">("cpns");
+  const [showPackageConfirm, setShowPackageConfirm] = useState(false);
+  const [questionFilter, setQuestionFilter] = useState<"all" | "unanswered" | "flagged">("all");
+  const [eliminatedOptions, setEliminatedOptions] = useState<Record<string, string[]>>({});
   const [readyToStart, setReadyToStart] = useState(false);
   const [selectedPackageNumber, setSelectedPackageNumber] = useState(1);
   const [remainingSeconds, setRemainingSeconds] = useState(DEMO_RULES.durationSeconds);
@@ -1771,7 +2029,7 @@ function CATSimulator() {
       const target = event.target;
       if (
         target instanceof HTMLElement &&
-        target.closest("input, textarea, select, [contenteditable='true']")
+        target.closest("input, textarea, select, button, [role='button'], [contenteditable='true']")
       )
         return;
       const currentQuestion = questionsForAttempt(activeSession)[activeSession.currentIndex];
@@ -1780,6 +2038,7 @@ function CATSimulator() {
         event.preventDefault();
         const answer = event.key.toUpperCase();
         if (!currentQuestion.options.some((option) => option.label === answer)) return;
+        if ((eliminatedOptions[currentQuestion.id] ?? []).includes(answer)) return;
         setSession((current) =>
           current
             ? { ...current, answers: { ...current.answers, [currentQuestion.id]: answer } }
@@ -1792,12 +2051,18 @@ function CATSimulator() {
     }
     document.addEventListener("keydown", onExamKeyDown);
     return () => document.removeEventListener("keydown", onExamKeyDown);
-  }, [moveToQuestion, session]);
+  }, [eliminatedOptions, moveToQuestion, session]);
 
   useEffect(() => {
     const dialog = examDialogRef.current;
     if (session && dialog && !dialog.open) dialog.showModal();
   }, [session]);
+
+  useEffect(() => {
+    const dialog = packageConfirmRef.current;
+    if (showPackageConfirm && dialog && !dialog.open) dialog.showModal();
+    if (!showPackageConfirm && dialog?.open) dialog.close();
+  }, [showPackageConfirm]);
 
   useEffect(() => {
     if (!isExamActive) return;
@@ -1859,6 +2124,9 @@ function CATSimulator() {
     setSelectedTrack(null);
     setShowFinishReview(false);
     setShowMobileQuestionNav(false);
+    setQuestionFilter("all");
+    setShowPackageConfirm(false);
+    setEliminatedOptions({});
     setSession({
       track,
       packageId,
@@ -1878,6 +2146,24 @@ function CATSimulator() {
       ? session.flagged.filter((id) => id !== questionId)
       : [...session.flagged, questionId];
     setSession({ ...session, flagged });
+  }
+
+  function toggleElimination(questionId: string, label: string) {
+    if (session?.answers[questionId] === label) {
+      setSession((current) => {
+        if (!current || current.answers[questionId] !== label) return current;
+        const answers = { ...current.answers };
+        delete answers[questionId];
+        return { ...current, answers };
+      });
+    }
+    setEliminatedOptions((current) => {
+      const existing = current[questionId] ?? [];
+      const next = existing.includes(label)
+        ? existing.filter((item) => item !== label)
+        : [...existing, label];
+      return { ...current, [questionId]: next };
+    });
   }
 
   function downloadResult() {
@@ -1991,6 +2277,14 @@ function CATSimulator() {
       );
     const answered = Object.keys(session.answers).length;
     const unanswered = questions.length - answered;
+    const visibleQuestions = questions
+      .map((item, index) => ({ item, index }))
+      .filter(
+        ({ item }) =>
+          questionFilter === "all" ||
+          (questionFilter === "unanswered" && !session.answers[item.id]) ||
+          (questionFilter === "flagged" && session.flagged.includes(item.id)),
+      );
     const selected = session.answers[question.id];
     const isLast = session.currentIndex === questions.length - 1;
     const displayTime = `${String(Math.floor(remainingSeconds / 60)).padStart(2, "0")}:${String(remainingSeconds % 60).padStart(2, "0")}`;
@@ -2003,8 +2297,14 @@ function CATSimulator() {
         onCancel={(event) => event.preventDefault()}
         className="fixed inset-0 m-0 h-dvh w-full max-h-none max-w-none overflow-hidden border-0 bg-transparent p-0 text-slate-950 backdrop:bg-slate-950/45 dark:text-foreground"
       >
-        <div data-exam-display={classicDisplay ? "classic" : "modern"} className="exam-room flex h-full flex-col overflow-y-auto bg-slate-50 dark:bg-background">
+        <div
+          data-exam-display={classicDisplay ? "classic" : "modern"}
+          className="exam-room flex h-full flex-col overflow-y-auto bg-slate-50 dark:bg-background"
+        >
           <header className="sticky top-0 z-20 shrink-0 bg-primary text-primary-foreground shadow-md">
+            <div className="mx-auto max-w-[1440px] px-3 pt-2 sm:px-6">
+              <ExamControls target={examDialogRef} />
+            </div>
             <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2 px-3 py-2.5 sm:gap-3 sm:px-6 sm:py-3">
               <div className="flex min-w-0 items-center gap-3">
                 <img
@@ -2024,7 +2324,26 @@ function CATSimulator() {
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-3">
-                <Button type="button" variant="outline" aria-pressed={classicDisplay} className="min-h-11 border-white/30 bg-white/10 px-2 text-xs text-white hover:bg-white/20 sm:px-3 sm:text-sm" onClick={() => setClassicDisplay((current) => { const next = !current; try { window.localStorage.setItem("daftar-cpns:cat-display:v1", next ? "classic" : "modern"); } catch { /* Display choice lasts for this session. */ } return next; })}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  aria-pressed={classicDisplay}
+                  className="min-h-11 border-white/30 bg-white/10 px-2 text-xs text-white hover:bg-white/20 sm:px-3 sm:text-sm"
+                  onClick={() =>
+                    setClassicDisplay((current) => {
+                      const next = !current;
+                      try {
+                        window.localStorage.setItem(
+                          "daftar-cpns:cat-display:v1",
+                          next ? "classic" : "modern",
+                        );
+                      } catch {
+                        /* Display choice lasts for this session. */
+                      }
+                      return next;
+                    })
+                  }
+                >
                   {classicDisplay ? "Mode klasik" : "Mode modern"}
                 </Button>
                 <div className="hidden text-right sm:block">
@@ -2062,6 +2381,14 @@ function CATSimulator() {
               max={questions.length}
               className="block h-1.5 w-full accent-white"
             />
+            <div className="h-1 w-full bg-black/20" aria-hidden="true">
+              <div
+                className="h-full bg-amber-300 transition-[width] duration-1000"
+                style={{
+                  width: `${Math.max(0, Math.min(100, (remainingSeconds / Math.max(1, (session.deadline - session.startedAt) / 1000)) * 100))}%`,
+                }}
+              />
+            </div>
           </header>
 
           <div className="mx-auto grid w-full max-w-[1440px] flex-1 grid-cols-1 gap-4 px-3 py-4 pb-6 sm:gap-6 sm:px-6 sm:py-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-start">
@@ -2076,8 +2403,31 @@ function CATSimulator() {
                   {answered}/{questions.length}
                 </span>
               </div>
+              <div
+                className="mt-3 grid grid-cols-3 gap-1"
+                role="group"
+                aria-label="Filter nomor soal"
+              >
+                {(
+                  [
+                    ["all", `Semua ${questions.length}`],
+                    ["unanswered", `Belum ${unanswered}`],
+                    ["flagged", `Ragu ${session.flagged.length}`],
+                  ] as const
+                ).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={questionFilter === value}
+                    onClick={() => setQuestionFilter(value)}
+                    className={`min-h-10 rounded-md border px-1 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${questionFilter === value ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background"}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
               <div className="mt-4 grid grid-cols-5 gap-2 sm:grid-cols-8 lg:grid-cols-5">
-                {questions.map((item, index) => {
+                {visibleQuestions.map(({ item, index }) => {
                   const isCurrent = index === session.currentIndex;
                   const isAnswered = Boolean(session.answers[item.id]);
                   const isFlagged = session.flagged.includes(item.id);
@@ -2127,7 +2477,11 @@ function CATSimulator() {
             </aside>
 
             <section aria-labelledby="exam-heading" className="order-1 min-w-0 lg:order-2">
-              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-7 dark:border-border dark:bg-card">
+              <div
+                key={question.id}
+                className="question-transition rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-7 dark:border-border dark:bg-card"
+              >
+                <QuestionBookmark questionId={question.id} />
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4 dark:border-border">
                   <div>
                     <p className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
@@ -2177,30 +2531,51 @@ function CATSimulator() {
                 </h2>
                 <fieldset className="mt-5 grid gap-3">
                   <legend className="sr-only">Pilih jawaban</legend>
-                  {question.options.map((option) => (
-                    <label
-                      key={option.label}
-                      className={`flex min-h-12 cursor-pointer items-start gap-3 rounded-md border p-3.5 leading-6 transition-colors sm:p-4 ${selected === option.label ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "border-slate-200 hover:border-primary/40 hover:bg-slate-50 dark:border-border dark:hover:bg-secondary/50"}`}
-                    >
-                      <input
-                        type="radio"
-                        name={question.id}
-                        value={option.label}
-                        checked={selected === option.label}
-                        onChange={() =>
-                          setSession({
-                            ...session,
-                            answers: { ...session.answers, [question.id]: option.label },
-                          })
-                        }
-                        className="mt-1 size-4 shrink-0 accent-primary"
-                      />
-                      <span className="min-w-0 text-sm sm:text-base">
-                        <strong className="mr-2">{option.label}.</strong>
-                        {option.text}
-                      </span>
-                    </label>
-                  ))}
+                  {question.options.map((option) => {
+                    const crossed = (eliminatedOptions[question.id] ?? []).includes(option.label);
+                    return (
+                      <div
+                        key={option.label}
+                        className={`flex min-w-0 items-stretch rounded-md border transition-colors ${selected === option.label ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "border-slate-200 dark:border-border"}`}
+                      >
+                        <label
+                          className={`flex min-h-12 min-w-0 flex-1 cursor-pointer items-start gap-3 p-3.5 leading-6 sm:p-4 ${crossed ? "opacity-40" : "hover:bg-slate-50 dark:hover:bg-secondary/50"}`}
+                        >
+                          <input
+                            type="radio"
+                            name={question.id}
+                            value={option.label}
+                            checked={selected === option.label}
+                            disabled={crossed}
+                            onChange={() =>
+                              setSession({
+                                ...session,
+                                answers: { ...session.answers, [question.id]: option.label },
+                              })
+                            }
+                            className="mt-1 size-4 shrink-0 accent-primary"
+                          />
+                          <span
+                            className={`min-w-0 text-sm sm:text-base ${crossed ? "line-through" : ""}`}
+                          >
+                            <strong className="mr-2 rounded border border-border px-1.5 py-0.5 text-xs">
+                              {option.label}
+                            </strong>
+                            {option.text}
+                          </span>
+                        </label>
+                        <button
+                          type="button"
+                          aria-pressed={crossed}
+                          aria-label={`${crossed ? "Batalkan coret" : "Coret"} opsi ${option.label}`}
+                          onClick={() => toggleElimination(question.id, option.label)}
+                          className="min-h-11 min-w-12 self-center border-l border-border px-2 text-xs font-semibold text-muted-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        >
+                          {crossed ? "Pulihkan" : "Coret"}
+                        </button>
+                      </div>
+                    );
+                  })}
                 </fieldset>
 
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4 dark:border-border">
@@ -2301,8 +2676,31 @@ function CATSimulator() {
                   {answered} dijawab · {unanswered} belum
                 </p>
               </div>
+              <div
+                className="mb-3 grid grid-cols-3 gap-1"
+                role="group"
+                aria-label="Filter nomor soal"
+              >
+                {(
+                  [
+                    ["all", `Semua ${questions.length}`],
+                    ["unanswered", `Belum ${unanswered}`],
+                    ["flagged", `Ragu ${session.flagged.length}`],
+                  ] as const
+                ).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={questionFilter === value}
+                    onClick={() => setQuestionFilter(value)}
+                    className={`min-h-10 rounded-md border px-1 text-xs font-semibold ${questionFilter === value ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
               <div className="grid grid-cols-[repeat(5,minmax(0,1fr))] gap-2 sm:grid-cols-8">
-                {questions.map((item, index) => {
+                {visibleQuestions.map(({ item, index }) => {
                   const isCurrent = index === session.currentIndex;
                   const isAnswered = Boolean(session.answers[item.id]);
                   const isFlagged = session.flagged.includes(item.id);
@@ -2557,7 +2955,13 @@ function CATSimulator() {
                 aria-labelledby="skd-threshold-result-heading"
                 className="mt-6 border-t border-border pt-5"
               >
-                <h3 id="skd-threshold-result-heading" className="font-bold">
+                <VisualScorecard
+                  rows={score.breakdown}
+                  date={result.endedAt}
+                  alias={resultAlias}
+                  onAliasChange={setResultAlias}
+                />
+                <h3 id="skd-threshold-result-heading" className="mt-6 font-bold">
                   Perbandingan dengan ambang SKD umum 2024
                 </h3>
                 <p className="mt-1 text-sm leading-6 text-muted-foreground">
@@ -2714,6 +3118,7 @@ function CATSimulator() {
               DAFTAR CPNS · LATIHAN INDEPENDEN
             </p>
             <h1 className="mt-2 text-2xl font-bold">Lembar hasil simulasi CAT</h1>
+            <VisualScorecard rows={score.breakdown} date={result.endedAt} alias={resultAlias} />
             <p className="mt-1 text-sm">
               {TRACKS.find((track) => track.id === result.track)?.name} ·{" "}
               {result.packageId ? getExamPackage(result.packageId).title : "Latihan umum"}
@@ -2836,21 +3241,92 @@ function CATSimulator() {
     })) ?? [];
 
   return (
-    <section
-      aria-labelledby="simulator-heading"
-      className="rounded-lg border border-border bg-card p-4 sm:p-6"
-    >
+    <section aria-labelledby="simulator-heading" className="mx-auto max-w-7xl space-y-5">
       {storageNotice}
-      <p className="text-sm font-bold text-primary">Simulasi independen · Gratis · Tanpa akun</p>
-      <h2 id="simulator-heading" className="mt-1 text-2xl font-extrabold">
-        Pilih paket CAT Anda
-      </h2>
-      <p className="mt-2 leading-6 text-muted-foreground">
-        Pilih materi untuk melihat ringkasan sesi sebelum memulai. Semua soal merupakan latihan
-        orisinal dan jawaban tersimpan di browser perangkat ini.
-      </p>
-      <div className="mt-5 grid gap-3">
-        {TRACKS.map((track) => (
+      <header className="exam-hub-hero rounded-xl bg-primary p-6 text-primary-foreground sm:p-8">
+        <p className="text-sm font-semibold text-primary-foreground/80">
+          SIMULASI CAT MANDIRI · GRATIS · TANPA AKUN
+        </p>
+        <h2 id="simulator-heading" className="mt-2 text-3xl font-extrabold sm:text-4xl">
+          Pusat latihan CAT
+        </h2>
+        <p className="mt-3 max-w-2xl leading-7 text-primary-foreground/85">
+          Pilih jalur dan paket. Jawaban tersimpan di browser ini, bahkan saat koneksi terputus
+          setelah halaman terbuka.
+        </p>
+        <div className="mt-5 flex flex-wrap gap-2">
+          <span className="rounded-md border border-white/25 bg-white/10 px-3 py-2 text-sm font-semibold">
+            Siap digunakan offline setelah dimuat
+          </span>
+          <span className="rounded-md border border-white/25 bg-white/10 px-3 py-2 text-sm font-semibold">
+            Progres tersimpan di browser
+          </span>
+        </div>
+      </header>
+      <div
+        className="mt-7 flex gap-2 overflow-x-auto pb-2"
+        role="tablist"
+        aria-label="Jalur seleksi"
+      >
+        {(
+          [
+            ["cpns", "SKD CPNS"],
+            ["pppk", "PPPK"],
+            ["kedinasan", "Kedinasan"],
+            ["drill", "Drill Materi"],
+          ] as const
+        ).map(([tab, label]) => (
+          <button
+            type="button"
+            key={tab}
+            role="tab"
+            aria-selected={trackTab === tab}
+            onClick={() => {
+              setTrackTab(tab);
+              const track = tab === "drill" ? "twk" : tab;
+              setSelectedTrack(track);
+              setSelectedPackageNumber(1);
+              setReadyToStart(false);
+            }}
+            className={`min-h-11 shrink-0 border-b-2 px-4 text-sm font-bold ${trackTab === tab ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+          >
+            {label}
+            {tab === "cpns"
+              ? ` (${EXAM_PACKAGES.filter((p) => p.track === "cpns").length})`
+              : tab === "pppk"
+                ? ` (${EXAM_PACKAGES.filter((p) => p.track === "pppk").length})`
+                : ""}
+          </button>
+        ))}
+      </div>
+      {trackTab === "drill" && (
+        <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Pilih materi drill">
+          {(
+            [
+              ["twk", "TWK"],
+              ["tiu", "TIU"],
+              ["tkp", "TKP"],
+            ] as const
+          ).map(([track, label]) => (
+            <button
+              type="button"
+              key={track}
+              aria-pressed={selectedTrack === track}
+              onClick={() => {
+                setSelectedTrack(track);
+                setSelectedPackageNumber(1);
+              }}
+              className={`min-h-10 rounded-md border px-4 font-semibold ${selectedTrack === track ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background"}`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {TRACKS.filter((track) =>
+          trackTab === "drill" ? ["twk", "tiu", "tkp"].includes(track.id) : track.id === trackTab,
+        ).map((track) => (
           <div
             key={track.id}
             className={`flex flex-col justify-between gap-4 rounded-lg border p-4 transition-colors sm:flex-row sm:items-center ${selectedTrack === track.id ? "border-primary bg-primary/5" : "border-border bg-background"}`}
@@ -2894,44 +3370,51 @@ function CATSimulator() {
               : "Setiap paket berisi 110 soal."}{" "}
             Tanpa pengulangan dalam satu sesi. Beberapa soal dapat muncul di paket lain.
           </p>
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-2 sm:gap-3 xl:grid-cols-3">
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 xl:grid-cols-5">
             {EXAM_PACKAGES.filter((item) => item.track === selectedTrack).map((item) => (
-              <label
+              <article
                 key={item.id}
-                className={`flex min-h-28 cursor-pointer items-start gap-3 rounded-lg border p-4 text-sm ${selectedPackageNumber === item.number ? "border-primary bg-primary/5 text-primary" : "border-border bg-background hover:border-primary/50"}`}
+                className={`flex min-h-40 flex-col justify-between rounded-lg border p-4 text-sm ${selectedPackageNumber === item.number ? "border-primary bg-primary/5" : "border-border bg-background"}`}
               >
-                <input
-                  type="radio"
-                  name="exam-package"
-                  value={item.id}
-                  checked={selectedPackageNumber === item.number}
-                  onChange={() => {
-                    setSelectedPackageNumber(item.number);
-                    setReadyToStart(false);
-                  }}
-                  className="size-4 accent-primary"
-                />
-                <span className="min-w-0">
-                  <span className="block text-base font-bold">{item.title}</span>
+                <div className="min-w-0">
+                  <span className="block text-base font-bold text-foreground">{item.title}</span>
                   <span className="mt-1 block text-xs text-muted-foreground">
                     {Object.values(item.composition).reduce((sum, count) => sum + count, 0)} soal
                     {(["twk", "tiu", "tkp"] as string[]).includes(item.track) ? " HOTS" : ""} ·{" "}
                     {formatDuration(item.durationSeconds)}
                   </span>
-                  <span className="mt-2 block text-xs text-muted-foreground">
-                    {Object.entries(item.composition)
-                      .map(([subject, count]) => `${subject} ${count}`)
-                      .join(" · ")}
+                  <span className="mt-3 flex flex-wrap gap-1">
+                    {Object.entries(item.composition).map(([subject, count]) => (
+                      <span
+                        key={subject}
+                        className="rounded bg-secondary px-2 py-1 text-xs font-semibold text-secondary-foreground"
+                      >
+                        {subject} {count}
+                      </span>
+                    ))}
                   </span>
                   <span
-                    className={`mt-3 inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${item.id in packageHistory ? "bg-positive/10 text-positive" : "bg-muted text-muted-foreground"}`}
+                    className={`mt-3 inline-flex rounded-md px-2.5 py-1 text-xs font-semibold ${item.id in packageHistory ? "bg-positive/10 text-positive" : "bg-muted text-muted-foreground"}`}
                   >
                     {item.id in packageHistory
-                      ? `Terakhir dicoba: ${packageHistory[item.id]}% benar`
+                      ? `Terakhir ${packageHistory[item.id]}% benar`
                       : "Belum dikerjakan"}
                   </span>
-                </span>
-              </label>
+                </div>
+                <Button
+                  type="button"
+                  variant={selectedPackageNumber === item.number ? "default" : "outline"}
+                  className="mt-3 min-h-11 w-full"
+                  disabled={!packageReady}
+                  onClick={() => {
+                    setSelectedPackageNumber(item.number);
+                    setReadyToStart(true);
+                    setShowPackageConfirm(true);
+                  }}
+                >
+                  Mulai sekarang
+                </Button>
+              </article>
             ))}
           </div>
           {!packageReady && (
@@ -2942,6 +3425,64 @@ function CATSimulator() {
         </fieldset>
       )}
       {selectedTrack && activeTrack && (
+        <dialog
+          ref={packageConfirmRef}
+          aria-labelledby="package-confirm-heading"
+          onClose={() => setShowPackageConfirm(false)}
+          className="w-[min(92vw,34rem)] rounded-xl border border-border bg-card p-0 text-foreground shadow-xl backdrop:bg-black/55"
+        >
+          <div className="p-5 sm:p-6">
+            <p className="text-sm font-bold text-primary">Ringkasan sebelum mulai</p>
+            <h3 id="package-confirm-heading" className="mt-1 text-2xl font-extrabold">
+              {activePackage?.title ?? activeTrack.name}
+            </h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {activeTrack.name}. Sesi ini dinilai di perangkat dan berakhir saat waktu habis.
+            </p>
+            <dl className="mt-5 grid grid-cols-3 gap-2 text-sm">
+              <div className="rounded-md border border-border p-3">
+                <dt className="text-muted-foreground">Soal</dt>
+                <dd className="mt-1 font-bold">{questionCount}</dd>
+              </div>
+              <div className="rounded-md border border-border p-3">
+                <dt className="text-muted-foreground">Durasi</dt>
+                <dd className="mt-1 font-bold">
+                  {formatDuration(
+                    activePackage?.durationSeconds ?? rulesForTrack(activeTrack.id).durationSeconds,
+                  )}
+                </dd>
+              </div>
+              <div className="rounded-md border border-border p-3">
+                <dt className="text-muted-foreground">Skor</dt>
+                <dd className="mt-1 font-bold">1 poin benar</dd>
+              </div>
+            </dl>
+            <p className="mt-4 text-sm leading-6">
+              Jawaban tersimpan otomatis di browser ini. Paket berisi soal latihan, bukan ujian
+              resmi. Timer mulai saat Anda melanjutkan.
+            </p>
+            <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                className="min-h-11"
+                onClick={() => setShowPackageConfirm(false)}
+              >
+                Kembali ke paket
+              </Button>
+              <Button
+                type="button"
+                className="min-h-11"
+                disabled={!packageReady}
+                onClick={() => startExam(activeTrack.id, activePackage?.id)}
+              >
+                Mulai ujian
+              </Button>
+            </div>
+          </div>
+        </dialog>
+      )}
+      {selectedTrack && activeTrack && selectedTrack === "kedinasan" && (
         <section
           aria-labelledby="selected-track-heading"
           className="mt-5 overflow-hidden rounded-xl border border-border bg-background"
@@ -3043,7 +3584,7 @@ function CATSimulator() {
           </div>
         </section>
       )}
-      {selectedTrack && activeTrack && (
+      {selectedTrack && activeTrack && selectedTrack === "kedinasan" && (
         <div className="sticky bottom-24 z-30 mt-5 xl:bottom-4">
           <div className="flex flex-col gap-3 rounded-xl border border-primary/30 bg-card/95 p-3 shadow-lg backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:p-4">
             <div className="min-w-0">
@@ -3062,14 +3603,20 @@ function CATSimulator() {
               </p>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row">
-              <Button type="button" variant="outline" disabled={!packageReady || !activeQuestions.length} className="min-h-11" onClick={() => window.print()}>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={!packageReady || !activeQuestions.length}
+                className="min-h-11"
+                onClick={() => window.print()}
+              >
                 <Printer size={16} aria-hidden="true" /> Cetak paket / Simpan PDF
               </Button>
               <Button
                 size="lg"
                 disabled={!packageReady}
                 className="min-h-12 shrink-0 text-base font-bold"
-                onClick={() => startExam(selectedTrack, activePackage?.id)}
+                onClick={() => setShowPackageConfirm(true)}
               >
                 <PlayCircle aria-hidden="true" />
                 Mulai simulasi sekarang
@@ -3078,21 +3625,56 @@ function CATSimulator() {
           </div>
         </div>
       )}
-      {!result && selectedTrack && activeTrack && activeQuestions.length > 0 && createPortal(
-        <section id="exam-package-pdf" className="hidden" aria-label="Paket latihan untuk dicetak">
-          <p className="text-xs font-bold uppercase tracking-wide">DAFTAR CPNS · LATIHAN INDEPENDEN</p>
-          <h1 className="mt-2 text-2xl font-bold">{activePackage?.title ?? `Latihan ${activeTrack.name}`}</h1>
-          <p className="mt-1 text-sm">{activeTrack.name} · {activeQuestions.length} soal. Kunci dan pembahasan tersedia setelah setiap soal.</p>
-          <ol className="mt-5 space-y-5">{activeQuestions.map((question, index) => <li key={question.id} className="border-t border-slate-300 pt-3">
-            <p className="text-xs font-bold">{question.subject} · {index + 1}</p>
-            <p className="mt-1 font-semibold">{question.prompt}</p>
-            <ul className="mt-2 space-y-1">{question.options.map((option) => <li key={option.label}>{option.label}. {option.text}</li>)}</ul>
-            <p className="mt-2"><strong>Kunci latihan:</strong> {question.answer}</p>
-            <p className="mt-1"><strong>Pembahasan:</strong> {question.explanation}</p>
-          </li>)}</ol>
-          <p className="mt-6 border-t pt-3 text-xs">Bank soal latihan independen; bukan naskah resmi BKN. Verifikasi materi dan aturan seleksi melalui sumber resmi.</p>
-        </section>, document.body
-      )}
+      {!result &&
+        selectedTrack &&
+        activeTrack &&
+        activeQuestions.length > 0 &&
+        createPortal(
+          <section
+            id="exam-package-pdf"
+            className="hidden"
+            aria-label="Paket latihan untuk dicetak"
+          >
+            <p className="text-xs font-bold uppercase tracking-wide">
+              DAFTAR CPNS · LATIHAN INDEPENDEN
+            </p>
+            <h1 className="mt-2 text-2xl font-bold">
+              {activePackage?.title ?? `Latihan ${activeTrack.name}`}
+            </h1>
+            <p className="mt-1 text-sm">
+              {activeTrack.name} · {activeQuestions.length} soal. Kunci dan pembahasan tersedia
+              setelah setiap soal.
+            </p>
+            <ol className="mt-5 space-y-5">
+              {activeQuestions.map((question, index) => (
+                <li key={question.id} className="border-t border-slate-300 pt-3">
+                  <p className="text-xs font-bold">
+                    {question.subject} · {index + 1}
+                  </p>
+                  <p className="mt-1 font-semibold">{question.prompt}</p>
+                  <ul className="mt-2 space-y-1">
+                    {question.options.map((option) => (
+                      <li key={option.label}>
+                        {option.label}. {option.text}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-2">
+                    <strong>Kunci latihan:</strong> {question.answer}
+                  </p>
+                  <p className="mt-1">
+                    <strong>Pembahasan:</strong> {question.explanation}
+                  </p>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-6 border-t pt-3 text-xs">
+              Bank soal latihan independen; bukan naskah resmi BKN. Verifikasi materi dan aturan
+              seleksi melalui sumber resmi.
+            </p>
+          </section>,
+          document.body,
+        )}
       {result && !selectedTrack && (
         <p className="mt-4 text-sm text-muted-foreground">
           Hasil latihan terakhir tersedia di perangkat ini. Pilih materi untuk memulai sesi baru.
@@ -3121,7 +3703,9 @@ function ReviewQuestion({
     setSaved(readBookmarkedIds().includes(question.id));
   }, [question.id]);
   const reportSubject = encodeURIComponent(`Laporan soal ${question.id} — Daftar CPNS`);
-  const reportBody = encodeURIComponent(`ID soal: ${question.id}\nMateri: ${question.subject}\n\nTemuan / koreksi:\n${reportText}\n\nMohon periksa kembali soal dan kunci latihan ini.`);
+  const reportBody = encodeURIComponent(
+    `ID soal: ${question.id}\nMateri: ${question.subject}\n\nTemuan / koreksi:\n${reportText}\n\nMohon periksa kembali soal dan kunci latihan ini.`,
+  );
   return (
     <article className="border-l-2 border-border pl-4">
       <h4 className="font-semibold">
@@ -3144,24 +3728,94 @@ function ReviewQuestion({
         <strong className="text-foreground">Tips &amp; trik:</strong> {question.tip}
       </p>
       <div className="mt-3 flex flex-wrap gap-2 print:hidden">
-        <Button type="button" variant="outline" className="min-h-10" aria-pressed={saved} onClick={() => { const next = !saved; setQuestionBookmark(question.id, next); setSaved(next); }}>
+        <Button
+          type="button"
+          variant="outline"
+          className="min-h-10"
+          aria-pressed={saved}
+          onClick={() => {
+            const next = !saved;
+            setQuestionBookmark(question.id, next);
+            setSaved(next);
+          }}
+        >
           <Bookmark size={16} aria-hidden="true" /> {saved ? "Tersimpan" : "Simpan untuk diulang"}
         </Button>
-        <Button type="button" variant="outline" className="min-h-10" onClick={() => setReportOpen(true)}>
+        <Button
+          type="button"
+          variant="outline"
+          className="min-h-10"
+          onClick={() => setReportOpen(true)}
+        >
           <Flag size={16} aria-hidden="true" /> Laporkan koreksi
         </Button>
       </div>
-      {reportOpen && createPortal(
-        <div className="fixed inset-0 z-[100] grid place-items-center bg-slate-950/55 p-4" onMouseDown={(event) => { if (event.target === event.currentTarget) setReportOpen(false); }}>
-          <section role="dialog" aria-modal="true" aria-labelledby={`report-title-${question.id}`} className="w-full max-w-lg rounded-xl border border-border bg-background p-5 shadow-xl">
-            <div className="flex items-start justify-between gap-4"><div><h3 id={`report-title-${question.id}`} className="font-bold">Laporkan soal atau kunci</h3><p className="mt-1 text-sm text-muted-foreground">Laporan akan disiapkan sebagai draf email untuk ditinjau sebelum dikirim.</p></div><button type="button" className="min-h-11 min-w-11 rounded-md border border-border" aria-label="Tutup laporan" onClick={() => setReportOpen(false)}>×</button></div>
-            <label className="mt-4 block text-sm font-semibold">Jelaskan bagian yang perlu diperiksa
-              <textarea autoFocus value={reportText} onChange={(event) => setReportText(event.target.value)} rows={5} maxLength={2000} placeholder="Contoh: ada salah ketik pada opsi B…" className="mt-2 w-full rounded-md border border-input bg-card p-3 font-normal leading-6" />
-            </label>
-            <div className="mt-4 flex flex-wrap justify-end gap-2"><Button type="button" variant="outline" className="min-h-11" onClick={() => setReportOpen(false)}>Batal</Button><Button asChild className="min-h-11" disabled={!reportText.trim()}><a href={`mailto:${CONTACT_EMAIL}?subject=${reportSubject}&body=${reportBody}`} onClick={() => setReportOpen(false)}>Buat draf email</a></Button></div>
-          </section>
-        </div>, document.body
-      )}
+      {reportOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[100] grid place-items-center bg-slate-950/55 p-4"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setReportOpen(false);
+            }}
+          >
+            <section
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={`report-title-${question.id}`}
+              className="w-full max-w-lg rounded-xl border border-border bg-background p-5 shadow-xl"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 id={`report-title-${question.id}`} className="font-bold">
+                    Laporkan soal atau kunci
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Laporan akan disiapkan sebagai draf email untuk ditinjau sebelum dikirim.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="min-h-11 min-w-11 rounded-md border border-border"
+                  aria-label="Tutup laporan"
+                  onClick={() => setReportOpen(false)}
+                >
+                  ×
+                </button>
+              </div>
+              <label className="mt-4 block text-sm font-semibold">
+                Jelaskan bagian yang perlu diperiksa
+                <textarea
+                  autoFocus
+                  value={reportText}
+                  onChange={(event) => setReportText(event.target.value)}
+                  rows={5}
+                  maxLength={2000}
+                  placeholder="Contoh: ada salah ketik pada opsi B…"
+                  className="mt-2 w-full rounded-md border border-input bg-card p-3 font-normal leading-6"
+                />
+              </label>
+              <div className="mt-4 flex flex-wrap justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="min-h-11"
+                  onClick={() => setReportOpen(false)}
+                >
+                  Batal
+                </Button>
+                <Button asChild className="min-h-11" disabled={!reportText.trim()}>
+                  <a
+                    href={`mailto:${CONTACT_EMAIL}?subject=${reportSubject}&body=${reportBody}`}
+                    onClick={() => setReportOpen(false)}
+                  >
+                    Buat draf email
+                  </a>
+                </Button>
+              </div>
+            </section>
+          </div>,
+          document.body,
+        )}
     </article>
   );
 }

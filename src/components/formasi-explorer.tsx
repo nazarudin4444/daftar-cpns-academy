@@ -194,12 +194,26 @@ export function FormasiExplorer() {
           ? "CPNS"
           : row.procurementType;
       const level = educationLevel(`${row.educationGroup} ${row.educationName}`);
-      const educationDetail = `${row.educationGroup} ${row.educationName}`.toLocaleLowerCase("id-ID");
+      const educationDetail = `${row.educationGroup} ${row.educationName}`.toLocaleLowerCase(
+        "id-ID",
+      );
       const quickEducationMatches =
         !filters.educationPreset ||
-        (filters.educationPreset === "s1-all" && level === "S1" && /semua jurusan|segala jurusan/.test(educationDetail)) ||
-        (filters.educationPreset === "d3-management" && level === "Diploma" && /manajemen/.test(educationDetail)) ||
-        (filters.educationPreset === "sma" && level === "SMA/SMK");
+        (filters.educationPreset === "s1-all" &&
+          level === "S1" &&
+          /semua jurusan|segala jurusan/.test(educationDetail)) ||
+        (filters.educationPreset === "d3-management" &&
+          level === "Diploma" &&
+          /manajemen/.test(educationDetail)) ||
+        (filters.educationPreset === "sma" && level === "SMA/SMK") ||
+        (filters.educationPreset === "s1" && level === "S1") ||
+        (filters.educationPreset === "d3" && /D-?III|D3/i.test(educationDetail)) ||
+        (filters.educationPreset === "health" &&
+          /dokter|perawat|bidan|farmasi|kesehatan|medis/.test(row.position.toLowerCase())) ||
+        (filters.educationPreset === "technical" &&
+          /teknis|teknisi|pranata|analis|pengelola/.test(row.position.toLowerCase())) ||
+        (filters.educationPreset === "teaching" &&
+          /guru|dosen|pendidik/.test(row.position.toLowerCase()));
       return (
         (!term || recordText(row).includes(term)) &&
         (!filters.event || row.eventName === filters.event) &&
@@ -400,10 +414,39 @@ export function FormasiExplorer() {
                 </select>
               </label>
             </div>
-            <div className="mt-4 flex flex-wrap items-center gap-2" aria-label="Filter pendidikan populer">
-              <span className="mr-1 text-xs font-semibold text-muted-foreground">Pencarian cepat:</span>
-              {([["s1-all", "Semua jurusan · S1"], ["d3-management", "D-III Manajemen"], ["sma", "SLTA / sederajat"]] as const).map(([value, label]) => (
-                <button key={value} type="button" aria-pressed={filters.educationPreset === value} onClick={() => { setFilters((current) => ({ ...current, educationPreset: current.educationPreset === value ? "" : value })); setVisibleCount(PAGE_SIZE); }} className={`min-h-10 rounded-full border px-3 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${filters.educationPreset === value ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background hover:border-primary/50"}`}>
+            <div
+              className="mt-4 flex flex-wrap items-center gap-2"
+              aria-label="Filter pendidikan populer"
+            >
+              <span className="mr-1 text-xs font-semibold text-muted-foreground">
+                Pencarian cepat:
+              </span>
+              {(
+                [
+                  ["", "Semua Jenjang"],
+                  ["sma", "SLTA / Sederajat"],
+                  ["d3", "D-III"],
+                  ["s1", "S-1"],
+                  ["health", "Tenaga Kesehatan"],
+                  ["technical", "Tenaga Teknis"],
+                  ["teaching", "Pendidikan"],
+                  ["s1-all", "Semua jurusan · S1"],
+                  ["d3-management", "D-III Manajemen"],
+                ] as const
+              ).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={filters.educationPreset === value}
+                  onClick={() => {
+                    setFilters((current) => ({
+                      ...current,
+                      educationPreset: current.educationPreset === value ? "" : value,
+                    }));
+                    setVisibleCount(PAGE_SIZE);
+                  }}
+                  className={`min-h-10 rounded-full border px-3 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${filters.educationPreset === value ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background hover:border-primary/50"}`}
+                >
                   {label}
                 </button>
               ))}
@@ -559,6 +602,16 @@ function FormasiCard({ row }: { row: FormasiRecord }) {
         )}
       </div>
       <h2 className="mt-4 break-words text-lg font-bold leading-snug">{row.position}</h2>
+      <p className="mt-2 text-xs font-semibold text-muted-foreground">
+        {/provinsi|kabupaten|kota|pemprov|pemkab|pemkot/i.test(row.agency)
+          ? "Pemerintah daerah"
+          : /kementerian|badan |lembaga|komisi|kejaksaan/i.test(row.agency)
+            ? "Kementerian / Lembaga Pusat"
+            : "Jenis instansi: lihat pengumuman"}
+      </p>
+      <p className="mt-3 w-fit rounded-md bg-primary px-3 py-2 text-sm font-bold text-primary-foreground">
+        {row.openings === null ? "Kuota belum tersedia" : `Kuota: ${row.openings} kebutuhan`}
+      </p>
       {row.positionCode && (
         <p className="mt-1 text-xs text-muted-foreground">Kode jabatan: {row.positionCode}</p>
       )}

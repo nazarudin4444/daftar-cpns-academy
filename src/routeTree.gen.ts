@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SlugRouteImport } from './routes/$slug'
+import { Route as AlatBelajarRouteImport } from './routes/alat-belajar'
 import { Route as ArtikelRouteImport } from './routes/artikel'
 import { Route as CaraDaftarCpnsRouteImport } from './routes/cara-daftar-cpns'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -18,14 +19,17 @@ import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as FormasiCpnsRouteImport } from './routes/formasi-cpns'
 import { Route as JadwalCpnsRouteImport } from './routes/jadwal-cpns'
 import { Route as KebijakanPrivasiRouteImport } from './routes/kebijakan-privasi'
+import { Route as KisiKisiSkdRouteImport } from './routes/kisi-kisi-skd'
 import { Route as KontakRouteImport } from './routes/kontak'
 import { Route as LatihanSoalCpnsRouteImport } from './routes/latihan-soal-cpns'
 import { Route as PanduanRouteImport } from './routes/panduan'
 import { Route as PassingGradeCpnsRouteImport } from './routes/passing-grade-cpns'
+import { Route as PersiapanDokumenRouteImport } from './routes/persiapan-dokumen'
 import { Route as PppkRouteImport } from './routes/pppk'
 import { Route as SekolahKedinasanRouteImport } from './routes/sekolah-kedinasan'
 import { Route as SimulasiRouteImport } from './routes/simulasi'
 import { Route as SimulasiCatCpnsRouteImport } from './routes/simulasi-cat-cpns'
+import { Route as SitusRouteImport } from './routes/situs'
 import { Route as SoalTiuRouteImport } from './routes/soal-tiu'
 import { Route as SoalTkpRouteImport } from './routes/soal-tkp'
 import { Route as SoalTwkRouteImport } from './routes/soal-twk'
@@ -42,6 +46,11 @@ const IndexRoute = IndexRouteImport.update({
 const SlugRoute = SlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlatBelajarRoute = AlatBelajarRouteImport.update({
+  id: '/alat-belajar',
+  path: '/alat-belajar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArtikelRoute = ArtikelRouteImport.update({
@@ -79,6 +88,11 @@ const KebijakanPrivasiRoute = KebijakanPrivasiRouteImport.update({
   path: '/kebijakan-privasi',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KisiKisiSkdRoute = KisiKisiSkdRouteImport.update({
+  id: '/kisi-kisi-skd',
+  path: '/kisi-kisi-skd',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KontakRoute = KontakRouteImport.update({
   id: '/kontak',
   path: '/kontak',
@@ -99,6 +113,11 @@ const PassingGradeCpnsRoute = PassingGradeCpnsRouteImport.update({
   path: '/passing-grade-cpns',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PersiapanDokumenRoute = PersiapanDokumenRouteImport.update({
+  id: '/persiapan-dokumen',
+  path: '/persiapan-dokumen',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PppkRoute = PppkRouteImport.update({
   id: '/pppk',
   path: '/pppk',
@@ -117,6 +136,11 @@ const SimulasiRoute = SimulasiRouteImport.update({
 const SimulasiCatCpnsRoute = SimulasiCatCpnsRouteImport.update({
   id: '/simulasi-cat-cpns',
   path: '/simulasi-cat-cpns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitusRoute = SitusRouteImport.update({
+  id: '/situs',
+  path: '/situs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SoalTiuRoute = SoalTiuRouteImport.update({
@@ -158,6 +182,7 @@ const TryoutCpnsGratisRoute = TryoutCpnsGratisRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
+  '/alat-belajar': typeof AlatBelajarRoute
   '/artikel': typeof ArtikelRoute
   '/cara-daftar-cpns': typeof CaraDaftarCpnsRoute
   '/dashboard': typeof DashboardRoute
@@ -165,14 +190,17 @@ export interface FileRoutesByFullPath {
   '/formasi-cpns': typeof FormasiCpnsRoute
   '/jadwal-cpns': typeof JadwalCpnsRoute
   '/kebijakan-privasi': typeof KebijakanPrivasiRoute
+  '/kisi-kisi-skd': typeof KisiKisiSkdRoute
   '/kontak': typeof KontakRoute
   '/latihan-soal-cpns': typeof LatihanSoalCpnsRoute
   '/panduan': typeof PanduanRoute
   '/passing-grade-cpns': typeof PassingGradeCpnsRoute
+  '/persiapan-dokumen': typeof PersiapanDokumenRoute
   '/pppk': typeof PppkRoute
   '/sekolah-kedinasan': typeof SekolahKedinasanRoute
   '/simulasi': typeof SimulasiRoute
   '/simulasi-cat-cpns': typeof SimulasiCatCpnsRoute
+  '/situs': typeof SitusRoute
   '/soal-tiu': typeof SoalTiuRoute
   '/soal-tkp': typeof SoalTkpRoute
   '/soal-twk': typeof SoalTwkRoute
@@ -184,6 +212,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
+  '/alat-belajar': typeof AlatBelajarRoute
   '/artikel': typeof ArtikelRoute
   '/cara-daftar-cpns': typeof CaraDaftarCpnsRoute
   '/dashboard': typeof DashboardRoute
@@ -191,14 +220,17 @@ export interface FileRoutesByTo {
   '/formasi-cpns': typeof FormasiCpnsRoute
   '/jadwal-cpns': typeof JadwalCpnsRoute
   '/kebijakan-privasi': typeof KebijakanPrivasiRoute
+  '/kisi-kisi-skd': typeof KisiKisiSkdRoute
   '/kontak': typeof KontakRoute
   '/latihan-soal-cpns': typeof LatihanSoalCpnsRoute
   '/panduan': typeof PanduanRoute
   '/passing-grade-cpns': typeof PassingGradeCpnsRoute
+  '/persiapan-dokumen': typeof PersiapanDokumenRoute
   '/pppk': typeof PppkRoute
   '/sekolah-kedinasan': typeof SekolahKedinasanRoute
   '/simulasi': typeof SimulasiRoute
   '/simulasi-cat-cpns': typeof SimulasiCatCpnsRoute
+  '/situs': typeof SitusRoute
   '/soal-tiu': typeof SoalTiuRoute
   '/soal-tkp': typeof SoalTkpRoute
   '/soal-twk': typeof SoalTwkRoute
@@ -211,6 +243,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
+  '/alat-belajar': typeof AlatBelajarRoute
   '/artikel': typeof ArtikelRoute
   '/cara-daftar-cpns': typeof CaraDaftarCpnsRoute
   '/dashboard': typeof DashboardRoute
@@ -218,14 +251,17 @@ export interface FileRoutesById {
   '/formasi-cpns': typeof FormasiCpnsRoute
   '/jadwal-cpns': typeof JadwalCpnsRoute
   '/kebijakan-privasi': typeof KebijakanPrivasiRoute
+  '/kisi-kisi-skd': typeof KisiKisiSkdRoute
   '/kontak': typeof KontakRoute
   '/latihan-soal-cpns': typeof LatihanSoalCpnsRoute
   '/panduan': typeof PanduanRoute
   '/passing-grade-cpns': typeof PassingGradeCpnsRoute
+  '/persiapan-dokumen': typeof PersiapanDokumenRoute
   '/pppk': typeof PppkRoute
   '/sekolah-kedinasan': typeof SekolahKedinasanRoute
   '/simulasi': typeof SimulasiRoute
   '/simulasi-cat-cpns': typeof SimulasiCatCpnsRoute
+  '/situs': typeof SitusRoute
   '/soal-tiu': typeof SoalTiuRoute
   '/soal-tkp': typeof SoalTkpRoute
   '/soal-twk': typeof SoalTwkRoute
@@ -239,6 +275,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$slug'
+    | '/alat-belajar'
     | '/artikel'
     | '/cara-daftar-cpns'
     | '/dashboard'
@@ -246,14 +283,17 @@ export interface FileRouteTypes {
     | '/formasi-cpns'
     | '/jadwal-cpns'
     | '/kebijakan-privasi'
+    | '/kisi-kisi-skd'
     | '/kontak'
     | '/latihan-soal-cpns'
     | '/panduan'
     | '/passing-grade-cpns'
+    | '/persiapan-dokumen'
     | '/pppk'
     | '/sekolah-kedinasan'
     | '/simulasi'
     | '/simulasi-cat-cpns'
+    | '/situs'
     | '/soal-tiu'
     | '/soal-tkp'
     | '/soal-twk'
@@ -265,6 +305,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$slug'
+    | '/alat-belajar'
     | '/artikel'
     | '/cara-daftar-cpns'
     | '/dashboard'
@@ -272,14 +313,17 @@ export interface FileRouteTypes {
     | '/formasi-cpns'
     | '/jadwal-cpns'
     | '/kebijakan-privasi'
+    | '/kisi-kisi-skd'
     | '/kontak'
     | '/latihan-soal-cpns'
     | '/panduan'
     | '/passing-grade-cpns'
+    | '/persiapan-dokumen'
     | '/pppk'
     | '/sekolah-kedinasan'
     | '/simulasi'
     | '/simulasi-cat-cpns'
+    | '/situs'
     | '/soal-tiu'
     | '/soal-tkp'
     | '/soal-twk'
@@ -291,6 +335,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$slug'
+    | '/alat-belajar'
     | '/artikel'
     | '/cara-daftar-cpns'
     | '/dashboard'
@@ -298,14 +343,17 @@ export interface FileRouteTypes {
     | '/formasi-cpns'
     | '/jadwal-cpns'
     | '/kebijakan-privasi'
+    | '/kisi-kisi-skd'
     | '/kontak'
     | '/latihan-soal-cpns'
     | '/panduan'
     | '/passing-grade-cpns'
+    | '/persiapan-dokumen'
     | '/pppk'
     | '/sekolah-kedinasan'
     | '/simulasi'
     | '/simulasi-cat-cpns'
+    | '/situs'
     | '/soal-tiu'
     | '/soal-tkp'
     | '/soal-twk'
@@ -318,6 +366,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
+  AlatBelajarRoute: typeof AlatBelajarRoute
   ArtikelRoute: typeof ArtikelRoute
   CaraDaftarCpnsRoute: typeof CaraDaftarCpnsRoute
   DashboardRoute: typeof DashboardRoute
@@ -325,14 +374,17 @@ export interface RootRouteChildren {
   FormasiCpnsRoute: typeof FormasiCpnsRoute
   JadwalCpnsRoute: typeof JadwalCpnsRoute
   KebijakanPrivasiRoute: typeof KebijakanPrivasiRoute
+  KisiKisiSkdRoute: typeof KisiKisiSkdRoute
   KontakRoute: typeof KontakRoute
   LatihanSoalCpnsRoute: typeof LatihanSoalCpnsRoute
   PanduanRoute: typeof PanduanRoute
   PassingGradeCpnsRoute: typeof PassingGradeCpnsRoute
+  PersiapanDokumenRoute: typeof PersiapanDokumenRoute
   PppkRoute: typeof PppkRoute
   SekolahKedinasanRoute: typeof SekolahKedinasanRoute
   SimulasiRoute: typeof SimulasiRoute
   SimulasiCatCpnsRoute: typeof SimulasiCatCpnsRoute
+  SitusRoute: typeof SitusRoute
   SoalTiuRoute: typeof SoalTiuRoute
   SoalTkpRoute: typeof SoalTkpRoute
   SoalTwkRoute: typeof SoalTwkRoute
@@ -356,6 +408,13 @@ declare module '@tanstack/react-router' {
       path: '/$slug'
       fullPath: '/$slug'
       preLoaderRoute: typeof SlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alat-belajar': {
+      id: '/alat-belajar'
+      path: '/alat-belajar'
+      fullPath: '/alat-belajar'
+      preLoaderRoute: typeof AlatBelajarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/artikel': {
@@ -407,6 +466,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KebijakanPrivasiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kisi-kisi-skd': {
+      id: '/kisi-kisi-skd'
+      path: '/kisi-kisi-skd'
+      fullPath: '/kisi-kisi-skd'
+      preLoaderRoute: typeof KisiKisiSkdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kontak': {
       id: '/kontak'
       path: '/kontak'
@@ -435,6 +501,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PassingGradeCpnsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/persiapan-dokumen': {
+      id: '/persiapan-dokumen'
+      path: '/persiapan-dokumen'
+      fullPath: '/persiapan-dokumen'
+      preLoaderRoute: typeof PersiapanDokumenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pppk': {
       id: '/pppk'
       path: '/pppk'
@@ -461,6 +534,13 @@ declare module '@tanstack/react-router' {
       path: '/simulasi-cat-cpns'
       fullPath: '/simulasi-cat-cpns'
       preLoaderRoute: typeof SimulasiCatCpnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/situs': {
+      id: '/situs'
+      path: '/situs'
+      fullPath: '/situs'
+      preLoaderRoute: typeof SitusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/soal-tiu': {
@@ -518,6 +598,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
+  AlatBelajarRoute: AlatBelajarRoute,
   ArtikelRoute: ArtikelRoute,
   CaraDaftarCpnsRoute: CaraDaftarCpnsRoute,
   DashboardRoute: DashboardRoute,
@@ -525,14 +606,17 @@ const rootRouteChildren: RootRouteChildren = {
   FormasiCpnsRoute: FormasiCpnsRoute,
   JadwalCpnsRoute: JadwalCpnsRoute,
   KebijakanPrivasiRoute: KebijakanPrivasiRoute,
+  KisiKisiSkdRoute: KisiKisiSkdRoute,
   KontakRoute: KontakRoute,
   LatihanSoalCpnsRoute: LatihanSoalCpnsRoute,
   PanduanRoute: PanduanRoute,
   PassingGradeCpnsRoute: PassingGradeCpnsRoute,
+  PersiapanDokumenRoute: PersiapanDokumenRoute,
   PppkRoute: PppkRoute,
   SekolahKedinasanRoute: SekolahKedinasanRoute,
   SimulasiRoute: SimulasiRoute,
   SimulasiCatCpnsRoute: SimulasiCatCpnsRoute,
+  SitusRoute: SitusRoute,
   SoalTiuRoute: SoalTiuRoute,
   SoalTkpRoute: SoalTkpRoute,
   SoalTwkRoute: SoalTwkRoute,
