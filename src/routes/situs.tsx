@@ -1,34 +1,58 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight, ExternalLink, Search, ShieldAlert, ShieldCheck } from "lucide-react";
+import {
+  ArrowUpRight,
+  ExternalLink,
+  Search,
+  ShieldCheck,
+  BookOpen,
+  Landmark,
+  Play,
+  X,
+} from "lucide-react";
 import { SiteShell } from "@/components/site";
-import { PageHero } from "@/components/page-hero";
 
 type SourceCategory = "pemerintah" | "youtube" | "literasi";
 function SourceLogo({ source }: { source: Source }) {
   const [failed, setFailed] = useState(false);
+  const isChannel = source.category === "youtube";
   const host = new URL(source.url).hostname;
-  const initials = source.name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+  const handle = new URL(source.url).pathname.replace("/@", "").toLowerCase();
+  const initials = source.name
+    .split(/\s+/)
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2);
   return (
-    <span className="relative grid size-12 shrink-0 place-items-center overflow-hidden rounded-xl border border-border bg-background shadow-sm">
-      {failed || source.category === "youtube" ? (
-        <span className="text-sm font-bold text-primary">{initials}</span>
+    <span
+      className={
+        "grid size-14 shrink-0 place-items-center overflow-hidden border border-border bg-background " +
+        (isChannel ? "rounded-full" : "rounded-xl")
+      }
+    >
+      {failed ? (
+        <span
+          aria-label={"Logo " + source.name + " tidak tersedia"}
+          className="text-sm font-bold text-muted-foreground"
+        >
+          {initials}
+        </span>
       ) : (
         <img
-          src={`https://www.google.com/s2/favicons?domain=${host}&sz=128`}
-          alt={`Logo ${source.name}`}
-          width={32}
-          height={32}
+          src={
+            isChannel
+              ? "/brand/channels/" + handle + ".jpg"
+              : "https://www.google.com/s2/favicons?domain=" + host + "&sz=128"
+          }
+          alt={"Logo " + source.name}
+          width={56}
+          height={56}
           loading="lazy"
-          className="size-8 object-contain"
+          decoding="async"
+          className={isChannel ? "size-14 object-cover" : "size-8 object-contain"}
           onError={() => setFailed(true)}
         />
       )}
-      {source.category === "youtube" ? (
-        <span aria-hidden="true" className="absolute bottom-0.5 right-0.5 grid size-4 place-items-center rounded bg-destructive">
-          <span className="ml-px size-0 border-y-[3px] border-l-[5px] border-y-transparent border-l-destructive-foreground" />
-        </span>
-      ) : null}
     </span>
   );
 }
@@ -85,35 +109,33 @@ const sources: Source[] = [
     name: "Privat Al Faiz",
     category: "youtube",
     url: "https://www.youtube.com/@PrivatAlFaiz",
-    description:
-      "Kanal belajar pihak ketiga. Telusuri video dan playlist yang relevan, lalu cocokkan materi dengan kisi-kisi seleksi.",
+    description: "Pembahasan TIU, TWK, dan TKP untuk SKD, serta materi matematika, SNBT, dan PPPK.",
     tags: ["TIU", "Numerik", "Deret angka", "Silogisme"],
     action: "Buka kanal YouTube",
   },
   {
-    name: "Ping Lie",
+    name: "PING LIE",
     category: "youtube",
     url: "https://www.youtube.com/@PingLie",
     description:
-      "Kanal belajar pihak ketiga. Periksa langsung video yang tersedia untuk menemukan topik hitung dan penalaran.",
+      "Belajar matematika dan penalaran dengan fokus TIU, untuk persiapan CPNS dan sekolah kedinasan.",
     tags: ["TIU", "Hitung cepat", "Penalaran", "Figural"],
     action: "Buka kanal YouTube",
   },
   {
-    name: "Dosen Deso",
+    name: "doseNdeso",
     category: "youtube",
     url: "https://www.youtube.com/@DosenDeso",
     description:
-      "Kanal belajar pihak ketiga. Jadikan video sebagai bahan latihan dan verifikasi informasi seleksi melalui pengumuman resmi.",
+      "Persiapan CPNS dan PPPK, informasi seleksi, serta soal dan pembahasan TWK, TIU, dan TKP.",
     tags: ["TWK", "Integritas", "Pembahasan soal"],
     action: "Buka kanal YouTube",
   },
   {
-    name: "Viracun",
+    name: "VIRACUN",
     category: "youtube",
     url: "https://www.youtube.com/@viracun",
-    description:
-      "Kanal belajar pihak ketiga. Lihat konten terbaru dan gunakan pembahasan sebagai bahan latihan tambahan.",
+    description: "Telusuri video latihan dan pembahasan persiapan CPNS di kanal VIRACUN.",
     tags: ["TKP", "Strategi latihan", "CAT"],
     action: "Buka kanal YouTube",
   },
@@ -121,8 +143,7 @@ const sources: Source[] = [
     name: "Sahabat CPNS",
     category: "youtube",
     url: "https://www.youtube.com/@SahabatCPNS",
-    description:
-      "Kanal belajar pihak ketiga. Periksa isi kanal dan tanggal video sebelum mengandalkan informasi seleksi.",
+    description: "Kumpulan video latihan soal CPNS untuk menemani belajar mandiri.",
     tags: ["Latihan soal", "CPNS", "PPPK"],
     action: "Buka kanal YouTube",
   },
@@ -152,18 +173,6 @@ const filters: { id: CategoryFilter; label: string }[] = [
   { id: "youtube", label: "Kanal YouTube" },
   { id: "literasi", label: "Literasi & Bahasa" },
 ];
-
-const categoryLabels: Record<SourceCategory, string> = {
-  pemerintah: "Portal pemerintah",
-  youtube: "Kanal YouTube independen",
-  literasi: "Literasi & bahasa",
-};
-
-const categoryStyles: Record<SourceCategory, string> = {
-  pemerintah: "border-primary/20 bg-primary/10 text-primary",
-  youtube: "border-destructive/20 bg-destructive/10 text-destructive",
-  literasi: "border-positive/20 bg-positive/10 text-positive",
-};
 
 export const Route = createFileRoute("/situs")({
   component: DirectoryPage,
@@ -216,173 +225,296 @@ export const Route = createFileRoute("/situs")({
   }),
 });
 
-const categoryStrip: Record<SourceCategory, string> = {
-  pemerintah: "bg-primary",
-  youtube: "bg-destructive",
-  literasi: "bg-positive",
+const categoryDetails = {
+  pemerintah: {
+    icon: Landmark,
+    title: "Portal resmi pemerintah",
+    copy: "Rujukan utama untuk pendaftaran, jadwal, dan aturan seleksi.",
+  },
+  youtube: {
+    icon: Play,
+    title: "Belajar bersama pengajar",
+    copy: "Temukan gaya belajar yang cocok lewat kanal YouTube independen.",
+  },
+  literasi: {
+    icon: BookOpen,
+    title: "Literasi & bahasa",
+    copy: "Perluas wawasan dan periksa makna kata dari sumber rujukan.",
+  },
 };
 
 function DirectoryPage() {
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<CategoryFilter>("semua");
-
-  const visibleSources = useMemo(() => {
-    const normalizedQuery = query.trim().toLocaleLowerCase("id-ID");
+  const searchMatches = useMemo(() => {
+    const terms = query.trim().toLocaleLowerCase("id-ID").split(/\s+/).filter(Boolean);
     return sources.filter((source) => {
-      const matchesCategory = activeFilter === "semua" || source.category === activeFilter;
-      const searchableText = `${source.name} ${source.description} ${source.tags.join(" ")}`;
-      return (
-        matchesCategory &&
-        (!normalizedQuery || searchableText.toLocaleLowerCase("id-ID").includes(normalizedQuery))
-      );
+      const haystack = [source.name, source.description, ...source.tags]
+        .join(" ")
+        .toLocaleLowerCase("id-ID");
+      return terms.every((term) => haystack.includes(term));
     });
-  }, [activeFilter, query]);
+  }, [query]);
+  const visibleSources = searchMatches.filter(
+    (source) => activeFilter === "semua" || source.category === activeFilter,
+  );
+  const reset = () => {
+    setQuery("");
+    setActiveFilter("semua");
+  };
 
   return (
     <SiteShell>
-      <PageHero
-        eyebrow="Pustaka Rujukan Mandiri · Anti-Salah Info"
-        icon={ShieldCheck}
-        title="Direktori Portal Resmi & Kanal Belajar CASN"
-        description={
-          <>
-            <p>Satu tempat untuk menemukan portal pemerintah, bahan belajar mandiri, dan sumber literasi. Untuk jadwal, syarat, serta aturan seleksi, selalu cek pengumuman resmi.</p>
-          <label className="relative mt-7 block max-w-2xl text-left">
-              <span className="sr-only">Cari sumber atau materi</span>
-              <Search
-                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
-                size={19}
-                aria-hidden="true"
-              />
-              <input
-                type="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Cari BKN, TIU, TKP, Bahasa Indonesia…"
-                className="min-h-12 w-full rounded-xl border border-input bg-background text-base shadow-lg pl-11 pr-4 text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
-              />
-            </label>
-            </>
-        }
-        stats={[
-          { value: String(sources.filter((s) => s.category === "pemerintah").length), label: "Portal pemerintah" },
-          { value: String(sources.filter((s) => s.category === "youtube").length), label: "Kanal YouTube" },
-          { value: String(sources.filter((s) => s.category === "literasi").length), label: "Sumber literasi" },
-        ]}
-      />
-      <main className="mx-auto max-w-7xl px-4 py-12 pb-16 sm:px-6 lg:px-8">
-          <div className="mb-8 rounded-2xl border border-border bg-card p-4 text-left shadow-sm sm:p-5">
-            <div className="flex items-start gap-3">
-              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-positive/10 text-positive">
-                <ShieldAlert size={20} aria-hidden="true" />
-              </span>
-              <div>
-                <h2 className="font-bold text-foreground">Kenali rujukan dan jaga data Anda</h2>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                  Portal pemerintah Indonesia umumnya memakai domain <strong>.go.id</strong>.
-                  Waspadai calo berbayar dan tautan tiruan. Daftar CPNS tidak meminta NIK, nomor
-                  KK, atau kata sandi SSCASN.
-                </p>
-              </div>
-            </div>
+      <main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+        <header className="grid gap-8 border-b border-border py-8 sm:py-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-center">
+          <div className="min-w-0">
+            <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-positive">
+              <BookOpen size={17} aria-hidden="true" /> Pustaka belajar CASN
+            </p>
+            <h1 className="max-w-2xl text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+              Rujukan jelas.
+              <br />
+              <span className="text-primary">Belajar lebih terarah.</span>
+            </h1>
+            <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
+              Portal resmi, pengajar pilihan, dan bahan bacaan dalam satu direktori. Cari sumber
+              yang Anda perlukan, lalu lanjutkan belajar.
+            </p>
           </div>
-        <section aria-label="Daftar sumber belajar">
-          <div className="flex gap-2 overflow-x-auto pb-2" aria-label="Filter kategori sumber">
-            {filters.map(({ id, label }) => (
+          <aside className="rounded-xl border border-primary/15 bg-secondary/60 p-5">
+            <span className="flex items-center gap-2 text-sm font-bold text-primary">
+              <ShieldCheck size={19} aria-hidden="true" /> Sedang mencari info pendaftaran?
+            </span>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Mulai dari SSCASN. Cocokkan jadwal dan persyaratan dengan pengumuman instansi.
+            </p>
+            <a
+              href="https://sscasn.bkn.go.id/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"
+            >
+              Buka SSCASN BKN <ArrowUpRight size={16} aria-hidden="true" />
+              <span className="sr-only"> (tab baru)</span>
+            </a>
+          </aside>
+        </header>
+
+        <section aria-label="Pencarian direktori" className="py-7 sm:py-8">
+          <label htmlFor="directory-search" className="mb-2 block text-sm font-semibold">
+            Sumber atau materi apa yang Anda cari?
+          </label>
+          <div className="relative max-w-3xl">
+            <Search
+              size={21}
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <input
+              id="directory-search"
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") setQuery("");
+              }}
+              placeholder="Nama kanal, TIU, TWK, atau pendaftaran…"
+              className="min-h-14 w-full rounded-xl border border-input bg-card py-3 pl-12 pr-14 text-base text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/30"
+            />
+            {query && (
               <button
-                key={id}
                 type="button"
-                aria-pressed={activeFilter === id}
-                onClick={() => setActiveFilter(id)}
-                className={`min-h-11 shrink-0 rounded-full border px-4 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                  activeFilter === id
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                }`}
+                aria-label="Hapus pencarian"
+                onClick={() => setQuery("")}
+                className="absolute right-1 top-1/2 grid size-11 -translate-y-1/2 cursor-pointer place-items-center rounded-lg text-muted-foreground hover:bg-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"
               >
-                {label}
+                <X size={18} aria-hidden="true" />
+              </button>
+            )}
+          </div>
+          <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+            <span className="text-muted-foreground">Cari cepat:</span>
+            {["TIU", "TWK", "TKP", "Pendaftaran"].map((topic) => (
+              <button
+                type="button"
+                key={topic}
+                onClick={() => {
+                  setQuery(topic);
+                  setActiveFilter("semua");
+                }}
+                className="min-h-11 cursor-pointer rounded-lg px-3 font-semibold text-primary underline-offset-4 hover:bg-secondary hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"
+              >
+                {topic}
               </button>
             ))}
           </div>
-
-          <p className="mt-3 text-sm text-muted-foreground" aria-live="polite">
-            {visibleSources.length} sumber
-            {query.trim() ? ` cocok untuk “${query.trim()}”` : " tersedia"}
-          </p>
-
-          {visibleSources.length > 0 ? (
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {visibleSources.map((source) => (
-                <article
-                  key={source.url}
-                  className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-card p-5 pt-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg sm:p-6 sm:pt-7"
-                >
-                  <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-1 ${categoryStrip[source.category]}`} />
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex min-w-0 items-center gap-3">
-                      <SourceLogo source={source} />
-                      <div className="min-w-0">
-                        <h2 className="text-lg font-bold leading-snug text-foreground">{source.name}</h2>
-                        <p className="truncate text-xs font-medium text-muted-foreground">
-                          {new URL(source.url).hostname.replace(/^www\./, "")}
-                        </p>
-                      </div>
-                    </div>
-                    <span
-                      className={`shrink-0 rounded-full border px-2.5 py-1 text-xs font-semibold ${categoryStyles[source.category]}`}
-                    >
-                      {categoryLabels[source.category]}
-                    </span>
-                  </div>
-                  <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">
-                    {source.description}
-                  </p>
-                  <ul className="mt-4 flex flex-wrap gap-2" aria-label="Topik terkait">
-                    {source.tags.map((tag) => (
-                      <li
-                        key={tag}
-                        className="rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground"
-                      >
-                        {tag}
-                      </li>
-                    ))}
-                  </ul>
-                  <a
-                    href={source.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-5 inline-flex min-h-11 items-center justify-between gap-3 rounded-xl border border-border bg-secondary/50 px-3.5 text-sm font-bold text-primary transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    {source.action}
-                    <ExternalLink size={16} aria-hidden="true" />
-                  </a>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <p className="mt-4 rounded-2xl border border-dashed border-border p-8 text-center text-muted-foreground">
-              Tidak ada sumber yang cocok. Coba kata kunci atau kategori lain.
-            </p>
-          )}
         </section>
 
-        <aside className="mt-12 rounded-2xl border border-border bg-secondary/50 p-5 sm:p-6">
-          <h2 className="font-bold text-foreground">Tentang direktori ini</h2>
-          <p className="mt-2 max-w-4xl text-sm leading-6 text-muted-foreground">
-            Daftar CPNS adalah platform edukasi independen. Tautan kanal belajar pihak ketiga
-            dicantumkan sebagai referensi terbuka tanpa afiliasi komersial atau dukungan resmi.
-            Ketersediaan konten dapat berubah; nilai setiap materi secara mandiri dan gunakan
-            pengumuman instansi sebagai acuan aturan seleksi.
-          </p>
-          <a
-            href="https://sscasn.bkn.go.id/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-3 inline-flex min-h-11 items-center gap-2 font-semibold text-primary underline-offset-4 hover:underline"
-          >
-            Buka portal SSCASN <ArrowUpRight size={16} aria-hidden="true" />
-          </a>
-        </aside>
+        <div className="grid items-start gap-7 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-9">
+          <aside className="min-w-0">
+            <h2 className="mb-3 text-sm font-bold">Jelajahi kategori</h2>
+            <div
+              className="grid grid-cols-2 gap-2 lg:grid-cols-1"
+              role="group"
+              aria-label="Filter kategori sumber"
+            >
+              {filters.map(({ id, label }) => {
+                const count = searchMatches.filter(
+                  (source) => id === "semua" || source.category === id,
+                ).length;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    aria-pressed={activeFilter === id}
+                    onClick={() => setActiveFilter(id)}
+                    className={
+                      "flex min-h-12 cursor-pointer items-center justify-between gap-2 rounded-xl border px-3 py-3 text-left text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring " +
+                      (activeFilter === id
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border bg-card text-foreground hover:bg-secondary")
+                    }
+                  >
+                    <span>{label}</span>
+                    <span className="shrink-0 text-xs tabular-nums opacity-80">{count}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-4 text-xs leading-5 text-muted-foreground">
+              Tautan sumber dibuka di tab baru agar direktori tetap mudah diakses.
+            </p>
+          </aside>
+
+          <div className="min-w-0">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-2 border-b border-border pb-4">
+              <p role="status" aria-live="polite" className="text-sm text-muted-foreground">
+                <strong className="font-bold text-foreground">{visibleSources.length}</strong>{" "}
+                sumber ditemukan{query.trim() ? " untuk “" + query.trim() + "”" : ""}
+              </p>
+              {(query || activeFilter !== "semua") && (
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="min-h-11 cursor-pointer rounded-lg px-3 text-sm font-semibold text-primary hover:bg-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"
+                >
+                  Reset filter
+                </button>
+              )}
+            </div>
+            {visibleSources.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-border bg-card px-5 py-12 text-center">
+                <Search
+                  className="mx-auto mb-4 text-muted-foreground"
+                  size={28}
+                  aria-hidden="true"
+                />
+                <h2 className="text-lg font-bold">Belum ada sumber yang cocok</h2>
+                <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
+                  Coba nama kanal, kata kunci yang lebih singkat, atau pilih kategori lain.
+                </p>
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="mt-5 min-h-11 cursor-pointer rounded-lg bg-primary px-5 text-sm font-bold text-primary-foreground hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                >
+                  Tampilkan semua sumber
+                </button>
+              </div>
+            ) : (
+              (["pemerintah", "youtube", "literasi"] as const).map((category) => {
+                const items = visibleSources.filter((source) => source.category === category);
+                if (!items.length) return null;
+                const { icon: Icon, title, copy } = categoryDetails[category];
+                return (
+                  <section
+                    key={category}
+                    aria-labelledby={"category-" + category}
+                    className="mb-9 last:mb-0"
+                  >
+                    <div className="mb-4 flex items-start gap-3">
+                      <Icon size={20} className="mt-1 shrink-0 text-primary" aria-hidden="true" />
+                      <div>
+                        <h2
+                          id={"category-" + category}
+                          className="text-xl font-bold tracking-tight"
+                        >
+                          {title}
+                        </h2>
+                        <p className="mt-1 text-sm leading-6 text-muted-foreground">{copy}</p>
+                      </div>
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      {items.map((source) => (
+                        <article
+                          key={source.url}
+                          className="group flex min-w-0 flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/40 sm:p-6"
+                        >
+                          <div className="flex items-center gap-3">
+                            <SourceLogo source={source} />
+                            <div className="min-w-0">
+                              <h3 className="break-words text-lg font-bold leading-snug">
+                                {source.name}
+                              </h3>
+                              <p className="mt-1 break-all text-xs text-muted-foreground">
+                                {category === "youtube"
+                                  ? new URL(source.url).pathname.slice(1)
+                                  : new URL(source.url).hostname.replace(/^www\./, "")}
+                              </p>
+                            </div>
+                          </div>
+                          <p className="mt-4 flex-1 text-sm leading-6 text-muted-foreground">
+                            {source.description}
+                          </p>
+                          <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Topik terkait">
+                            {source.tags.map((tag) => (
+                              <li
+                                key={tag}
+                                className="rounded-md bg-secondary/60 px-2 py-1 text-xs font-medium text-secondary-foreground"
+                              >
+                                {tag}
+                              </li>
+                            ))}
+                          </ul>
+                          <a
+                            href={source.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-5 flex min-h-11 items-center justify-between gap-3 rounded-lg border border-border px-3 text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                          >
+                            {source.action}
+                            <ExternalLink size={16} className="shrink-0" aria-hidden="true" />
+                            <span className="sr-only"> (tab baru)</span>
+                          </a>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        <footer className="mt-12 grid gap-6 border-t border-border pt-7 sm:grid-cols-2 sm:gap-10">
+          <div className="flex items-start gap-3">
+            <ShieldCheck size={21} className="mt-1 shrink-0 text-positive" aria-hidden="true" />
+            <div>
+              <h2 className="text-sm font-bold">Jaga data pribadi Anda</h2>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                Periksa alamat domain pemerintah yang berakhiran .go.id. Waspadai calo dan tautan
+                tiruan. Daftar CPNS tidak meminta NIK, nomor KK, atau kata sandi SSCASN.
+              </p>
+            </div>
+          </div>
+          <div>
+            <h2 className="text-sm font-bold">Referensi belajar independen</h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Kanal YouTube tidak berafiliasi dengan Daftar CPNS. Nama dan logo milik masing-masing
+              pemilik kanal. Selalu cocokkan informasi seleksi dengan pengumuman instansi.
+            </p>
+          </div>
+        </footer>
       </main>
     </SiteShell>
   );
