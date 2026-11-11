@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { HomeCatPreview } from "@/components/home-cat-preview";
 import { SiteShell } from "@/components/site";
+import { FormasiQuickSearch, SelectionTimeline } from "@/components/home-portal";
 import { canonicalUrl, CONTACT_EMAIL, OPERATOR_NAME, SITE_ORIGIN } from "@/lib/site-config";
 
 export const Route = createFileRoute("/")({
@@ -149,11 +150,13 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
       aria-label="Ringkasan paket demo SKD"
       className={
         compact
-          ? "mt-5 rounded-xl border border-primary-foreground/20 bg-primary-foreground/10 p-2 backdrop-blur-md md:hidden"
-          : "hidden rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-5 backdrop-blur-md md:block md:p-6"
+          ? "bg-metrics-card relative mt-6 overflow-hidden rounded-2xl border border-primary-foreground/20 p-4 shadow-xl backdrop-blur-xl md:hidden"
+          : "bg-metrics-card relative hidden overflow-hidden rounded-3xl border border-primary-foreground/20 p-6 shadow-2xl backdrop-blur-xl md:block lg:p-7"
       }
     >
-      <div className={compact ? "flex items-center gap-2 px-1" : "flex items-center gap-2"}>
+      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-brand/40 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-20 -left-12 size-44 rounded-full bg-positive/25 blur-3xl" />
+      <div className={compact ? "relative flex items-center gap-2 px-1" : "relative inline-flex items-center gap-2 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-3 py-1"}>
         <span className="relative grid size-2 place-items-center" aria-hidden="true">
           <span className="absolute size-2 rounded-full bg-emerald-300/40 motion-safe:animate-[ping_1.6s_cubic-bezier(0,0,0.2,1)_2]" />
           <span className="relative size-1.5 rounded-full bg-emerald-300" />
@@ -163,26 +166,26 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
       <h2
         className={
           compact
-            ? "px-1 pb-2 pt-1 text-xs font-bold text-primary-foreground"
-            : "mt-3 text-base font-bold text-primary-foreground"
+            ? "relative mt-2 text-base font-bold tracking-tight text-primary-foreground"
+            : "relative mt-4 text-xl font-bold tracking-tight text-primary-foreground"
         }
       >
         Format paket demo SKD
       </h2>
-      <dl className={compact ? "grid grid-cols-4 gap-1.5" : "mt-4 grid grid-cols-2 gap-3"}>
+      <dl className={compact ? "relative mt-3 grid grid-cols-2 gap-2" : "relative mt-5 grid grid-cols-2 gap-3"}>
         {demoMetrics.map(({ value, label, compactLabel, icon: Icon }, index) => (
           <div
             key={value}
             className={
               compact
-                ? "min-w-0 rounded-lg bg-primary-foreground/10 px-0.5 py-2 text-center"
-                : "group min-w-0 rounded-xl bg-primary-foreground/10 p-4 transition duration-200 hover:-translate-y-0.5 hover:bg-primary-foreground/15"
+                ? "min-w-0 rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 p-3"
+                : "group min-w-0 rounded-2xl border border-primary-foreground/10 bg-gradient-to-b from-primary-foreground/15 to-primary-foreground/5 p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-primary-foreground/25"
             }
           >
             <dt
               className={
                 compact
-                  ? "flex flex-col items-center gap-0.5"
+                  ? "flex items-center gap-2"
                   : "flex items-center gap-3"
               }
             >
@@ -190,10 +193,10 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
                 className={
                   index === 3
                     ? compact
-                      ? "grid size-6 place-items-center rounded-md bg-emerald-300/15 text-emerald-200"
+                      ? "grid size-7 shrink-0 place-items-center rounded-md bg-emerald-300/15 text-emerald-200"
                       : "grid size-9 shrink-0 place-items-center rounded-lg bg-emerald-300/15 text-emerald-200"
                     : compact
-                      ? "grid size-6 place-items-center rounded-md bg-primary-foreground/10 text-primary-foreground/80"
+                      ? "grid size-7 shrink-0 place-items-center rounded-md bg-primary-foreground/10 text-primary-foreground/80"
                       : "grid size-9 shrink-0 place-items-center rounded-lg bg-primary-foreground/10 text-primary-foreground/80"
                 }
               >
@@ -202,7 +205,7 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
               <span
                 className={
                   compact
-                    ? "text-lg font-extrabold leading-none tabular-nums"
+                    ? "text-xl font-extrabold leading-none tabular-nums"
                     : "text-3xl font-extrabold leading-none tabular-nums"
                 }
               >
@@ -212,25 +215,21 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
             <dd
               className={
                 compact
-                  ? "mt-1 text-[11px] font-medium leading-3 text-primary-foreground/75"
+                  ? "mt-2 text-xs font-medium leading-4 text-primary-foreground/75"
                   : "mt-2 text-sm leading-5 text-primary-foreground/75"
               }
             >
               {index === 2 ? (
-                compact ? (
-                  compactLabel
-                ) : (
-                  <span className="flex gap-1.5">
+                  <span className="flex flex-wrap gap-1">
                     {materialTags.map((subject) => (
                       <span
                         key={subject}
-                        className="rounded-md border border-primary-foreground/20 px-2 py-0.5 text-xs font-semibold text-primary-foreground"
+                        className="rounded-md border border-primary-foreground/20 px-1.5 py-0.5 text-[11px] font-semibold sm:px-2 sm:text-xs text-primary-foreground"
                       >
                         {subject}
                       </span>
                     ))}
                   </span>
-                )
               ) : index === 3 ? (
                 <span
                   className={
@@ -252,13 +251,13 @@ function HeroMetrics({ compact = false }: { compact?: boolean }) {
         to="/passing-grade-cpns"
         className={
           compact
-            ? "mt-1 inline-flex min-h-11 items-center gap-1 px-1 text-xs font-semibold text-primary-foreground/85 underline underline-offset-4 hover:text-primary-foreground"
-            : "mt-3 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-primary-foreground/85 underline underline-offset-4 hover:text-primary-foreground"
+            ? "group/link relative mt-3 flex min-h-11 w-full items-center justify-between gap-2 rounded-xl bg-primary-foreground px-4 text-sm font-bold text-primary shadow-lg transition hover:bg-primary-foreground/90"
+            : "group/link relative mt-5 flex min-h-11 w-full items-center justify-between rounded-xl bg-primary-foreground px-4 text-sm font-bold text-primary shadow-lg transition hover:bg-primary-foreground/90"
         }
       >
-        Pelajari kisi-kisi dan passing grade <ArrowRight size={14} aria-hidden="true" />
+        Pelajari kisi-kisi dan passing grade <ArrowRight size={16} aria-hidden="true" className="transition group-hover/link:translate-x-0.5" />
       </Link>
-      <p className="mt-1 text-xs leading-5 text-primary-foreground/60">
+      <p className={compact ? "relative mt-2 text-center text-xs leading-5 text-primary-foreground/65" : "relative mt-3 text-center text-xs leading-5 text-primary-foreground/60"}>
         Konfigurasi latihan situs, bukan ketentuan resmi seleksi.
       </p>
     </aside>
@@ -314,12 +313,22 @@ function HomePage() {
           }}
         />
         <section className="bg-hero relative overflow-hidden text-primary-foreground">
-          <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 pb-20 pt-14 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:pb-28 md:pt-20 lg:px-8">
+          <div aria-hidden="true" className="bg-hero-grid pointer-events-none absolute inset-0" />
+          <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 pb-20 pt-14 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:pb-28 md:pt-20 lg:px-8">
             <div className="max-w-2xl">
-              <p className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3.5 py-1.5 text-sm font-semibold backdrop-blur-md">
-                <ShieldCheck size={16} aria-hidden="true" />
-                Platform Edukasi &amp; Simulasi CAT Independen
-              </p>
+              <Link
+                to="/jadwal-cpns"
+                className="group inline-flex max-w-full items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 py-1 pl-1 pr-3.5 text-sm backdrop-blur-md transition-colors hover:bg-primary-foreground/15"
+              >
+                <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary-foreground px-2.5 py-0.5 text-xs font-bold text-primary">
+                  <span className="size-1.5 rounded-full bg-positive motion-safe:animate-pulse" aria-hidden="true" />
+                  Info seleksi
+                </span>
+                <span className="truncate font-medium text-primary-foreground/90">
+                  Pantau tahapan CASN dari sumber resmi
+                </span>
+                <ArrowRight size={14} aria-hidden="true" className="shrink-0 transition group-hover:translate-x-0.5" />
+              </Link>
               <h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
                 Belajar &amp; Latihan CAT CPNS
               </h1>
@@ -359,9 +368,10 @@ function HomePage() {
           </div>
         </section>
         <section className="relative z-10 mx-auto -mt-12 max-w-7xl px-4 sm:px-6 lg:px-8">
+          <FormasiQuickSearch />
           <nav
             aria-label="Informasi CPNS yang sering dicari"
-            className="grid gap-2 rounded-2xl border border-border bg-card p-2 shadow-xl sm:grid-cols-2 lg:grid-cols-4"
+            className="mt-4 grid gap-2 rounded-2xl border border-border bg-card p-2 sm:grid-cols-2 lg:grid-cols-4"
           >
             {cpnsInfoLinks.map(({ label, copy, href, icon: Icon }) => (
               <Link
@@ -457,6 +467,9 @@ function HomePage() {
             ))}
           </div>
         </section>
+        <div className="border-t border-border">
+          <SelectionTimeline />
+        </div>
         <section className="bg-card">
           <div className="mx-auto grid max-w-7xl gap-8 px-4 py-20 sm:px-6 md:grid-cols-[1.15fr_0.85fr] md:gap-12 lg:px-8">
             <div>

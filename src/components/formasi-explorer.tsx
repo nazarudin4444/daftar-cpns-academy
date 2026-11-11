@@ -126,6 +126,10 @@ function saveBrowserCache(feed: FormasiFeed) {
 export function FormasiExplorer() {
   const [feed, setFeed] = useState<FormasiFeed | null>(null);
   const [filters, setFilters] = useState(initialFilters);
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q) setFilters((current) => ({ ...current, query: q.slice(0, 80) }));
+  }, []);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
