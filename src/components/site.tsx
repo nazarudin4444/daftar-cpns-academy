@@ -73,6 +73,7 @@ const nav = [
   ["PPPK", "/pppk"],
   ["Panduan", "/panduan"],
   ["Alat belajar", "/alat-belajar"],
+  ["Direktori Situs", "/situs"],
   ["Dashboard", "/dashboard"],
 ] as const;
 

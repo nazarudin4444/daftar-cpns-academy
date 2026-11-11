@@ -314,8 +314,8 @@ function HomePage() {
         />
         <section className="bg-hero relative overflow-hidden text-primary-foreground">
           <div aria-hidden="true" className="bg-hero-grid pointer-events-none absolute inset-0" />
-          <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 pb-20 pt-14 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:pb-28 md:pt-20 lg:px-8">
-            <div className="max-w-2xl">
+          <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 pb-20 pt-14 sm:px-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:pb-28 md:pt-20 lg:px-8">
+            <div className="min-w-0 w-full max-w-2xl">
               <Link
                 to="/jadwal-cpns"
                 className="group inline-flex max-w-full items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 py-1 pl-1 pr-3.5 text-sm backdrop-blur-md transition-colors hover:bg-primary-foreground/15"

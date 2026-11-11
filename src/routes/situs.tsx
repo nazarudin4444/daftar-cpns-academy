@@ -5,6 +5,34 @@ import { SiteShell } from "@/components/site";
 import { PageHero } from "@/components/page-hero";
 
 type SourceCategory = "pemerintah" | "youtube" | "literasi";
+function SourceLogo({ source }: { source: Source }) {
+  const [failed, setFailed] = useState(false);
+  const host = new URL(source.url).hostname;
+  const initials = source.name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+  return (
+    <span className="relative grid size-12 shrink-0 place-items-center overflow-hidden rounded-xl border border-border bg-background shadow-sm">
+      {failed || source.category === "youtube" ? (
+        <span className="text-sm font-bold text-primary">{initials}</span>
+      ) : (
+        <img
+          src={`https://www.google.com/s2/favicons?domain=${host}&sz=128`}
+          alt={`Logo ${source.name}`}
+          width={32}
+          height={32}
+          loading="lazy"
+          className="size-8 object-contain"
+          onError={() => setFailed(true)}
+        />
+      )}
+      {source.category === "youtube" ? (
+        <span aria-hidden="true" className="absolute bottom-0.5 right-0.5 grid size-4 place-items-center rounded bg-destructive">
+          <span className="ml-px size-0 border-y-[3px] border-l-[5px] border-y-transparent border-l-destructive-foreground" />
+        </span>
+      ) : null}
+    </span>
+  );
+}
+
 type CategoryFilter = "semua" | SourceCategory;
 
 type Source = {
@@ -291,9 +319,15 @@ function DirectoryPage() {
                 >
                   <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-1 ${categoryStrip[source.category]}`} />
                   <div className="flex items-start justify-between gap-3">
-                    <h2 className="min-w-0 text-lg font-bold leading-snug text-foreground">
-                      {source.name}
-                    </h2>
+                    <div className="flex min-w-0 items-center gap-3">
+                      <SourceLogo source={source} />
+                      <div className="min-w-0">
+                        <h2 className="text-lg font-bold leading-snug text-foreground">{source.name}</h2>
+                        <p className="truncate text-xs font-medium text-muted-foreground">
+                          {new URL(source.url).hostname.replace(/^www\./, "")}
+                        </p>
+                      </div>
+                    </div>
                     <span
                       className={`shrink-0 rounded-full border px-2.5 py-1 text-xs font-semibold ${categoryStyles[source.category]}`}
                     >
