@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowUpRight, ExternalLink, Search, ShieldAlert, ShieldCheck } from "lucide-react";
 import { SiteShell } from "@/components/site";
+import { PageHero } from "@/components/page-hero";
 
 type SourceCategory = "pemerintah" | "youtube" | "literasi";
 type CategoryFilter = "semua" | SourceCategory;
@@ -187,6 +188,12 @@ export const Route = createFileRoute("/situs")({
   }),
 });
 
+const categoryStrip: Record<SourceCategory, string> = {
+  pemerintah: "bg-primary",
+  youtube: "bg-destructive",
+  literasi: "bg-positive",
+};
+
 function DirectoryPage() {
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<CategoryFilter>("semua");
@@ -205,20 +212,38 @@ function DirectoryPage() {
 
   return (
     <SiteShell>
-      <main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-        <header className="mx-auto max-w-3xl py-10 text-center sm:py-16">
-          <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-sm font-semibold text-primary">
-            <ShieldCheck size={16} aria-hidden="true" />
-            Pustaka Rujukan Mandiri · Anti-Salah Info
-          </p>
-          <h1 className="mt-5 text-3xl font-extrabold tracking-tight text-foreground sm:text-5xl">
-            Direktori Portal Resmi &amp; Kanal Belajar CASN
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-            Satu tempat untuk menemukan portal pemerintah, bahan belajar mandiri, dan sumber
-            literasi. Untuk jadwal, syarat, serta aturan seleksi, selalu cek pengumuman resmi.
-          </p>
-          <div className="mx-auto mt-7 max-w-2xl rounded-2xl border border-border bg-card p-4 text-left shadow-sm sm:p-5">
+      <PageHero
+        eyebrow="Pustaka Rujukan Mandiri · Anti-Salah Info"
+        icon={ShieldCheck}
+        title="Direktori Portal Resmi & Kanal Belajar CASN"
+        description={
+          <>
+            <p>Satu tempat untuk menemukan portal pemerintah, bahan belajar mandiri, dan sumber literasi. Untuk jadwal, syarat, serta aturan seleksi, selalu cek pengumuman resmi.</p>
+          <label className="relative mt-7 block max-w-2xl text-left">
+              <span className="sr-only">Cari sumber atau materi</span>
+              <Search
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+                size={19}
+                aria-hidden="true"
+              />
+              <input
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Cari BKN, TIU, TKP, Bahasa Indonesia…"
+                className="min-h-12 w-full rounded-xl border border-input bg-background text-base shadow-lg pl-11 pr-4 text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+              />
+            </label>
+            </>
+        }
+        stats={[
+          { value: String(sources.filter((s) => s.category === "pemerintah").length), label: "Portal pemerintah" },
+          { value: String(sources.filter((s) => s.category === "youtube").length), label: "Kanal YouTube" },
+          { value: String(sources.filter((s) => s.category === "literasi").length), label: "Sumber literasi" },
+        ]}
+      />
+      <main className="mx-auto max-w-7xl px-4 py-12 pb-16 sm:px-6 lg:px-8">
+          <div className="mb-8 rounded-2xl border border-border bg-card p-4 text-left shadow-sm sm:p-5">
             <div className="flex items-start gap-3">
               <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-positive/10 text-positive">
                 <ShieldAlert size={20} aria-hidden="true" />
@@ -233,23 +258,6 @@ function DirectoryPage() {
               </div>
             </div>
           </div>
-          <label className="relative mx-auto mt-7 block max-w-2xl text-left">
-            <span className="sr-only">Cari sumber atau materi</span>
-            <Search
-              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
-              size={19}
-              aria-hidden="true"
-            />
-            <input
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Cari BKN, TIU, TKP, Bahasa Indonesia…"
-              className="min-h-12 w-full rounded-xl border border-input bg-background pl-11 pr-4 text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
-            />
-          </label>
-        </header>
-
         <section aria-label="Daftar sumber belajar">
           <div className="flex gap-2 overflow-x-auto pb-2" aria-label="Filter kategori sumber">
             {filters.map(({ id, label }) => (
@@ -279,8 +287,9 @@ function DirectoryPage() {
               {visibleSources.map((source) => (
                 <article
                   key={source.url}
-                  className="flex min-w-0 flex-col rounded-2xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6"
+                  className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-card p-5 pt-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg sm:p-6 sm:pt-7"
                 >
+                  <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-1 ${categoryStrip[source.category]}`} />
                   <div className="flex items-start justify-between gap-3">
                     <h2 className="min-w-0 text-lg font-bold leading-snug text-foreground">
                       {source.name}
@@ -308,7 +317,7 @@ function DirectoryPage() {
                     href={source.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-5 inline-flex min-h-11 items-center justify-between gap-3 rounded-lg border border-border px-3.5 text-sm font-bold text-primary transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="mt-5 inline-flex min-h-11 items-center justify-between gap-3 rounded-xl border border-border bg-secondary/50 px-3.5 text-sm font-bold text-primary transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     {source.action}
                     <ExternalLink size={16} aria-hidden="true" />

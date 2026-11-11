@@ -1,3 +1,5 @@
+import { ListTree } from "lucide-react";
+import { PageHero, heroGhostLink, heroPrimaryLink } from "@/components/page-hero";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site";
@@ -40,23 +42,29 @@ function Syllabus() {
   const [submitted, setSubmitted] = useState(false);
   return (
     <SiteShell>
-      <main className="mx-auto max-w-5xl space-y-8 px-4 py-10 sm:px-6">
-        <header>
-          <p className="font-semibold text-primary">Peta belajar SKD</p>
-          <h1 className="mt-2 text-3xl font-bold">Kisi-kisi dan latihan per submateri</h1>
-          <p className="mt-4 leading-7 text-muted-foreground">
-            Ruang lingkup acuan seleksi 2024. Latihan disusun untuk belajar mandiri dan bukan
-            bocoran soal BKN. Bank soal belum mencakup seluruh rincian, termasuk figural bergambar.
-          </p>
-          <a
-            className="mt-3 inline-flex min-h-11 items-center font-semibold underline"
-            href="https://apps-denpasar.bkn.go.id/kms/law%3Apermenpanrb_6_tahun_2024"
-          >
-            Baca rujukan pengadaan ASN dari BKN
-          </a>
-        </header>
+      <PageHero
+        eyebrow="Peta belajar SKD"
+        icon={ListTree}
+        title="Kisi-kisi dan latihan per submateri"
+        description="Ruang lingkup acuan seleksi 2024. Latihan disusun untuk belajar mandiri dan bukan bocoran soal BKN. Bank soal belum mencakup seluruh rincian, termasuk figural bergambar."
+      >
         {CPNS_SUBJECT_CATALOG.map((subject) => (
-          <section className="study-panel" key={subject.subject}>
+          <a key={subject.subject} href={`#materi-${subject.subject}`} className={heroGhostLink}>
+            {subject.subject}
+          </a>
+        ))}
+        <a
+          className={heroPrimaryLink}
+          href="https://apps-denpasar.bkn.go.id/kms/law%3Apermenpanrb_6_tahun_2024"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Rujukan pengadaan ASN dari BKN
+        </a>
+      </PageHero>
+      <main className="mx-auto max-w-5xl space-y-8 px-4 py-12 sm:px-6">
+        {CPNS_SUBJECT_CATALOG.map((subject) => (
+          <section className="study-panel scroll-mt-28" id={`materi-${subject.subject}`} key={subject.subject}>
             <h2 className="text-2xl font-bold">{subject.subject}</h2>
             <ul className="my-4 list-disc space-y-1 pl-5 text-muted-foreground">
               {(scope[subject.subject] ?? []).map((item) => (
@@ -67,7 +75,7 @@ function Syllabus() {
             <div className="divide-y divide-border">
               {subject.chapters.map((chapter) => (
                 <details key={chapter.id} className="py-3">
-                  <summary className="cursor-pointer py-2 font-semibold">{chapter.title}</summary>
+                  <summary className="flex min-h-11 cursor-pointer items-center rounded-lg px-2 py-2 font-semibold transition-colors hover:bg-secondary">{chapter.title}</summary>
                   {chapter.subchapters.map((sub) => {
                     const questions = questionsForSubchapter(sub.id).slice(0, 10);
                     return (

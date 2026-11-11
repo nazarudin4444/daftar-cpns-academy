@@ -1,3 +1,5 @@
+import { FileCheck } from "lucide-react";
+import { PageHero, heroGhostLink, heroPrimaryLink } from "@/components/page-hero";
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site";
 import { DocumentPreparation, LetterGenerator } from "@/components/document-preparation";
@@ -16,25 +18,25 @@ export const Route = createFileRoute("/persiapan-dokumen")({
   }),
   component: () => (
     <SiteShell>
-      <main className="mx-auto max-w-6xl space-y-10 px-4 py-10 sm:px-6">
-        <header className="border-b border-border pb-8">
-          <p className="font-semibold text-primary">Persiapan administrasi</p>
-          <h1 className="mt-2 max-w-3xl text-3xl font-bold sm:text-4xl">
-            Siapkan berkas. Periksa sebelum dikirim.
-          </h1>
-          <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
-            Pemeriksaan ukuran dan penyusunan draf surat langsung di perangkat Anda. Verifikasi
-            akhir tetap mengikuti pengumuman instansi.
-          </p>
-          <nav aria-label="Alat dokumen" className="mt-5 flex flex-wrap gap-3">
-            <a className="study-control" href="#documents-heading">
-              Cek dan kompres berkas
-            </a>
-            <a className="study-control" href="#letter-heading">
-              Buat draf surat
-            </a>
-          </nav>
-        </header>
+      <PageHero
+        eyebrow="Persiapan administrasi"
+        icon={FileCheck}
+        title="Siapkan berkas. Periksa sebelum dikirim."
+        description="Pemeriksaan ukuran dan penyusunan draf surat langsung di perangkat Anda. Verifikasi akhir tetap mengikuti pengumuman instansi."
+        stats={[
+          { value: "Lokal", label: "Diproses di browser" },
+          { value: "0", label: "Berkas dikirim ke server" },
+          { value: "Rp0", label: "Tanpa akun" },
+        ]}
+      >
+        <a className={heroPrimaryLink} href="#documents-heading">
+          Cek dan kompres berkas
+        </a>
+        <a className={heroGhostLink} href="#letter-heading">
+          Buat draf surat
+        </a>
+      </PageHero>
+      <main className="mx-auto max-w-6xl space-y-10 px-4 py-12 sm:px-6">
         <DocumentPreparation />
         <LetterGenerator />
       </main>

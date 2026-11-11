@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site";
 import { CASNGlossary, SelectionCalculators } from "@/components/study-tools";
 import { Link } from "@tanstack/react-router";
+import { ArrowRight, Calculator } from "lucide-react";
+import { PageHero, heroGhostLink, heroPrimaryLink } from "@/components/page-hero";
 export const Route = createFileRoute("/alat-belajar")({
   head: () => ({
     meta: [
@@ -15,22 +17,20 @@ export const Route = createFileRoute("/alat-belajar")({
   }),
   component: () => (
     <SiteShell>
-      <main className="mx-auto max-w-6xl space-y-10 px-4 py-10 sm:px-6">
-        <header className="border-b border-border pb-8">
-          <p className="font-semibold text-primary">Persiapan seleksi</p>
-          <h1 className="mt-2 text-3xl font-bold sm:text-4xl">
-            Pahami peluang. Susun target latihan.
-          </h1>
-          <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
-            Bandingkan skenario nilai Anda dan pahami istilah dalam pengumuman seleksi.
-          </p>
-          <Link to="/kisi-kisi-skd" className="study-control mt-4">
-            Buka kisi-kisi dan latihan topik
-          </Link>
-          <Link to="/persiapan-dokumen" className="study-control mt-4 sm:ml-3">
-            Cek dokumen dan buat draf surat
-          </Link>
-        </header>
+      <PageHero
+        eyebrow="Persiapan seleksi"
+        icon={Calculator}
+        title="Pahami peluang. Susun target latihan."
+        description="Bandingkan skenario nilai Anda dan pahami istilah dalam pengumuman seleksi."
+      >
+        <Link to="/kisi-kisi-skd" className={heroPrimaryLink}>
+          Kisi-kisi dan latihan topik <ArrowRight size={16} aria-hidden="true" />
+        </Link>
+        <Link to="/persiapan-dokumen" className={heroGhostLink}>
+          Cek dokumen dan draf surat
+        </Link>
+      </PageHero>
+      <main className="mx-auto max-w-6xl space-y-10 px-4 py-12 sm:px-6">
         <SelectionCalculators />
         <CASNGlossary />
       </main>
