@@ -185,7 +185,7 @@ export function ScheduleTracker() {
     <SiteShell>
       <main>
         <section className="bg-hero relative overflow-hidden text-primary-foreground">
-          <div className="mx-auto max-w-7xl px-4 pb-14 pt-10 sm:px-6 md:pb-16 md:pt-14 lg:px-8">
+          <div className="mx-auto max-w-7xl px-4 pb-8 pt-6 sm:px-6 md:pb-10 md:pt-8 lg:px-8">
             <nav aria-label="Breadcrumb" className="mb-5 text-sm text-primary-foreground/70">
               <ol className="flex flex-wrap items-center gap-2">
                 <li>
@@ -203,7 +203,7 @@ export function ScheduleTracker() {
               <CalendarDays size={16} aria-hidden="true" />
               Pemantau informasi seleksi
             </p>
-            <h1 className="mt-5 max-w-3xl text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
+            <h1 className="mt-4 max-w-3xl text-xl font-bold leading-tight tracking-tight text-white sm:text-2xl">
               Jadwal dan tahapan seleksi CPNS
             </h1>
             <p className="mt-4 max-w-3xl text-base leading-7 text-primary-foreground/80">
@@ -211,8 +211,8 @@ export function ScheduleTracker() {
               tanggal atau formasi yang belum diumumkan instansi.
             </p>
 
-            <div className="mt-7 grid max-w-5xl gap-3 md:grid-cols-[1.2fr_0.8fr]">
-              <div className="rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-5 backdrop-blur-md sm:p-6">
+            <div className="mt-5 grid max-w-5xl gap-2.5 md:grid-cols-[1.2fr_0.8fr]">
+              <div className="rounded-xl border border-primary-foreground/20 bg-primary-foreground/10 p-3.5 backdrop-blur-md">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="relative grid size-2 place-items-center" aria-hidden="true">
                     <span className="absolute size-2 rounded-full bg-emerald-300/40 motion-safe:animate-[ping_1.6s_cubic-bezier(0,0,0.2,1)_2]" />
@@ -222,12 +222,12 @@ export function ScheduleTracker() {
                     Status seleksi: Menunggu pengumuman resmi BKN
                   </p>
                 </div>
-                <p className="mt-3 text-sm leading-6 text-primary-foreground/75">
+                <p className="mt-1 text-xs leading-relaxed text-primary-foreground/75">
                   Saat diperiksa, beranda SSCASN menampilkan “Data tahapan belum tersedia” pada
                   linimasa seleksi yang tampil.
                 </p>
               </div>
-              <div className="flex flex-col items-start justify-between gap-3 rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-5 backdrop-blur-md sm:p-6">
+              <div className="flex flex-col items-start justify-between gap-2 rounded-xl border border-primary-foreground/20 bg-primary-foreground/10 p-3.5 backdrop-blur-md">
                 <div>
                   <p className="text-xs font-semibold text-primary-foreground/65">
                     Data terakhir diperiksa di portal SSCASN
@@ -275,9 +275,9 @@ export function ScheduleTracker() {
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <details className="group overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-shadow open:shadow-md">
-                    <summary className="flex min-h-[76px] cursor-pointer list-none items-center gap-3 p-3 marker:hidden hover:bg-secondary/50 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary sm:gap-4 sm:p-4">
-                      <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-secondary text-primary sm:size-11">
-                        <Icon size={20} aria-hidden="true" />
+                    <summary className="flex min-h-[52px] cursor-pointer list-none items-center gap-2.5 p-2.5 marker:hidden hover:bg-secondary/40 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary sm:p-3">
+                      <span className="grid size-8 shrink-0 place-items-center rounded-md bg-secondary text-primary">
+                        <Icon size={15} aria-hidden="true" />
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block text-xs font-semibold text-primary">
@@ -286,7 +286,7 @@ export function ScheduleTracker() {
                         <span className="mt-0.5 block font-bold text-foreground">
                           {stage.title}
                         </span>
-                        <span className="mt-1 block text-sm leading-5 text-muted-foreground">
+                        <span className="mt-1 block text-xs leading-5 text-muted-foreground sm:text-sm">
                           {stage.summary}
                         </span>
                       </span>
@@ -295,22 +295,22 @@ export function ScheduleTracker() {
                         aria-hidden="true"
                       />
                     </summary>
-                    <div className="grid gap-4 border-t border-border bg-background/70 p-4 sm:grid-cols-3 sm:p-5">
+                    <div className="grid gap-3 border-t border-border bg-background/50 p-3 sm:grid-cols-3">
                       <div>
-                        <h3 className="text-sm font-bold text-foreground">Yang disiapkan</h3>
-                        <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm leading-6 text-muted-foreground">
+                        <h3 className="text-xs font-bold text-foreground">Yang disiapkan</h3>
+                        <ul className="mt-1 list-disc space-y-1 pl-3.5 text-xs leading-5 text-muted-foreground">
                           {stage.documents.map((document) => (
                             <li key={document}>{document}</li>
                           ))}
                         </ul>
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-foreground">Panduan</h3>
-                        <p className="mt-2 text-sm leading-6 text-muted-foreground">{stage.tip}</p>
+                        <h3 className="text-xs font-bold text-foreground">Panduan</h3>
+                        <p className="mt-1 text-xs leading-5 text-muted-foreground">{stage.tip}</p>
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-foreground">Hindari</h3>
-                        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                        <h3 className="text-xs font-bold text-foreground">Hindari</h3>
+                        <p className="mt-1 text-xs leading-5 text-muted-foreground">
                           {stage.avoid}
                         </p>
                       </div>
@@ -349,18 +349,18 @@ export function ScheduleTracker() {
                 return (
                   <li
                     key={step.title}
-                    className="relative rounded-xl border border-border bg-background p-4 sm:p-5"
+                    className="relative rounded-lg border border-border bg-background p-3"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="grid size-10 place-items-center rounded-lg bg-secondary text-primary">
-                        <Icon size={19} aria-hidden="true" />
+                      <span className="grid size-8 place-items-center rounded-md bg-secondary text-primary">
+                        <Icon size={16} aria-hidden="true" />
                       </span>
                       <span className="text-xs font-bold tabular-nums text-muted-foreground">
                         0{index + 1}
                       </span>
                     </div>
-                    <h3 className="mt-4 font-bold text-foreground">{step.title}</h3>
-                    <p className="mt-1 text-sm leading-6 text-muted-foreground">{step.copy}</p>
+                    <h3 className="mt-2 text-sm font-bold text-foreground">{step.title}</h3>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{step.copy}</p>
                     {index < formasiSteps.length - 1 && (
                       <ArrowRight
                         className="absolute -right-3 top-1/2 z-10 hidden size-5 -translate-y-1/2 rounded-full bg-card p-0.5 text-primary lg:block"
@@ -445,9 +445,9 @@ export function ScheduleTracker() {
             })}
           </ol>
 
-          <div className="mt-5 flex flex-col gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-            <p className="flex items-start gap-2 text-sm leading-6 text-foreground">
-              <ShieldCheck className="mt-0.5 size-5 shrink-0 text-destructive" aria-hidden="true" />
+          <div className="mt-4 flex flex-col gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="flex items-start gap-2 text-xs leading-5 text-foreground">
+              <ShieldCheck className="mt-0.5 size-4 shrink-0 text-destructive" aria-hidden="true" />
               BKN telah mengklarifikasi poster pembukaan CPNS 2026 yang beredar sebagai hoaks.
             </p>
             <a
