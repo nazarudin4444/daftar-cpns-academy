@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ArrowUpRight,
+  BadgeCheck,
   ExternalLink,
   Search,
   ShieldCheck,
@@ -530,6 +531,19 @@ function DirectoryPage() {
                                   ? new URL(source.url).pathname.slice(1)
                                   : new URL(source.url).hostname.replace(/^www\./, "")}
                               </p>
+                              {(category === "pemerintah" &&
+                                new URL(source.url).hostname.endsWith(".go.id")) ||
+                              [
+                                "https://e-meterai.co.id/",
+                                "https://posind.e-meterai.co.id/",
+                              ].includes(source.url) ? (
+                                <span className="mt-2 inline-flex min-h-6 items-center gap-1 rounded-full border border-positive/30 bg-positive/10 px-2 py-1 text-[11px] font-bold text-positive">
+                                  <BadgeCheck size={13} aria-hidden="true" />
+                                  {category === "pemerintah"
+                                    ? "Domain Resmi Pemerintah RI · .go.id"
+                                    : "Terdaftar Resmi PERURI"}
+                                </span>
+                              ) : null}
                             </div>
                           </div>
                           <p className="mt-4 flex-1 text-sm leading-6 text-muted-foreground">
