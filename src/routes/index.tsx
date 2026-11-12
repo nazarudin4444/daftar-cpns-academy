@@ -89,6 +89,39 @@ const category = [
   },
 ];
 
+const trackTone = {
+  primary: {
+    card: "border-primary/20 from-primary/10 via-card hover:border-primary/50 hover:shadow-primary/15",
+    strip: "bg-gradient-to-r from-primary to-brand",
+    glow: "bg-brand/25",
+    icon: "bg-primary text-primary-foreground",
+    badge: "bg-primary/10 text-primary",
+    tag: "border-primary/20 bg-primary/5 text-primary",
+    footer: "border-primary/15 text-primary",
+    arrow: "bg-primary text-primary-foreground",
+  },
+  positive: {
+    card: "border-positive/20 from-positive/10 via-card hover:border-positive/50 hover:shadow-positive/15",
+    strip: "bg-gradient-to-r from-positive to-chart-2",
+    glow: "bg-positive/25",
+    icon: "bg-positive text-primary-foreground",
+    badge: "bg-positive/10 text-positive",
+    tag: "border-positive/25 bg-positive/5 text-positive",
+    footer: "border-positive/15 text-positive",
+    arrow: "bg-positive text-primary-foreground",
+  },
+  brand: {
+    card: "border-chart-5/30 from-chart-4/15 via-card hover:border-chart-5/60 hover:shadow-chart-5/20",
+    strip: "bg-gradient-to-r from-chart-5 to-chart-4",
+    glow: "bg-chart-4/35",
+    icon: "bg-chart-5 text-foreground",
+    badge: "bg-chart-4/20 text-foreground",
+    tag: "border-chart-5/30 bg-chart-4/10 text-foreground",
+    footer: "border-chart-5/20 text-foreground",
+    arrow: "bg-chart-5 text-foreground",
+  },
+} as const;
+
 const questions = [
   [
     "Apa itu CAT CPNS?",
@@ -411,60 +444,61 @@ function HomePage() {
             </span>
           </Link>
         </section>
-        <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <section className="bg-tracks relative overflow-hidden border-y border-border">
+          <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
             <div>
-              <p className="text-sm font-bold text-primary">Pilih fokus belajar</p>
-              <h2 className="mt-2 text-2xl font-extrabold">Mulai dari jalur seleksi Anda</h2>
+              <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card px-3 py-1 text-xs font-bold text-primary">
+                <span className="size-1.5 rounded-full bg-positive" aria-hidden="true" />
+                Pilih fokus belajar
+              </p>
+              <h2 className="mt-3 text-2xl font-extrabold sm:text-3xl">Mulai dari jalur seleksi Anda</h2>
             </div>
             <Link
               to="/panduan"
-              className="min-h-11 self-start py-3 text-sm font-bold text-primary hover:underline sm:self-auto"
+              className="inline-flex min-h-11 items-center self-start rounded-full border border-primary/25 bg-card px-4 text-sm font-bold text-primary transition hover:bg-primary hover:text-primary-foreground sm:self-auto"
             >
-              Buka panduan <ArrowRight className="ml-1 inline" size={16} />
+              Buka panduan <ArrowRight className="ml-1" size={16} />
             </Link>
           </div>
-          <div className="mt-7 grid gap-4 md:grid-cols-3">
-            {category.map((item, index) => (
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
+            {category.map((item, index) => {
+              const t = trackTone[item.tone as keyof typeof trackTone];
+              return (
               <Link
                 key={item.title}
                 to={item.href}
-                className="group relative flex min-h-60 flex-col overflow-hidden rounded-2xl border border-border bg-card p-6 transition duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg focus-visible:-translate-y-1"
+                className={`group relative flex min-h-64 flex-col overflow-hidden rounded-2xl border-2 bg-gradient-to-br to-card p-6 shadow-sm transition duration-200 hover:-translate-y-1.5 hover:shadow-xl focus-visible:-translate-y-1 ${t.card}`}
               >
-                <span
-                  aria-hidden="true"
-                  className={`absolute inset-x-0 top-0 h-1 ${item.tone === "primary" ? "bg-primary" : item.tone === "positive" ? "bg-positive" : "bg-accent"}`}
-                />
-                <div className="flex items-start justify-between">
-                  <span
-                    className={`grid size-12 place-items-center rounded-xl ${item.tone === "primary" ? "bg-primary/10 text-primary" : item.tone === "positive" ? "bg-positive/10 text-positive" : "bg-accent/15 text-accent-foreground"}`}
-                  >
+                <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-1.5 ${t.strip}`} />
+                <span aria-hidden="true" className={`pointer-events-none absolute -right-12 -top-12 size-40 rounded-full blur-3xl transition-opacity group-hover:opacity-100 opacity-70 ${t.glow}`} />
+                <div className="relative flex items-start justify-between">
+                  <span className={`grid size-12 place-items-center rounded-xl shadow-sm ${t.icon}`}>
                     <item.icon size={24} aria-hidden="true" />
                   </span>
-                  <span className="rounded-full bg-secondary px-3 py-1 text-xs font-bold tabular-nums text-muted-foreground">
+                  <span className={`rounded-full px-3 py-1 text-xs font-bold tabular-nums ${t.badge}`}>
                     Jalur 0{index + 1}
                   </span>
                 </div>
-                <h3 className="mt-5 text-xl font-extrabold">{item.title}</h3>
-                <p className="mt-2 leading-6 text-muted-foreground">{item.copy}</p>
-                <ul className="mt-4 flex flex-wrap gap-2" aria-label="Materi">
+                <h3 className="relative mt-5 text-xl font-extrabold">{item.title}</h3>
+                <p className="relative mt-2 leading-6 text-muted-foreground">{item.copy}</p>
+                <ul className="relative mt-4 flex flex-wrap gap-2" aria-label="Materi">
                   {item.tags.map((tag) => (
-                    <li
-                      key={tag}
-                      className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-semibold"
-                    >
+                    <li key={tag} className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${t.tag}`}>
                       {tag}
                     </li>
                   ))}
                 </ul>
-                <span className="mt-auto flex min-h-11 items-center justify-between gap-2 border-t border-border pt-4 font-bold text-primary">
+                <span className={`relative mt-auto flex min-h-11 items-center justify-between gap-2 border-t pt-4 font-bold ${t.footer}`}>
                   {item.label}
-                  <span className="grid size-9 place-items-center rounded-full bg-primary/10 transition group-hover:bg-primary group-hover:text-primary-foreground">
+                  <span className={`grid size-9 place-items-center rounded-full transition group-hover:scale-110 ${t.arrow}`}>
                     <ArrowRight size={16} aria-hidden="true" />
                   </span>
                 </span>
               </Link>
-            ))}
+              );
+            })}
+          </div>
           </div>
         </section>
         <div className="border-t border-border">
