@@ -1924,6 +1924,7 @@ function CATSimulator() {
   const [result, setResult] = useState<ExamResult | null>(null);
   const [selectedTrack, setSelectedTrack] = useState<Track | null>("cpns");
   const [trackTab, setTrackTab] = useState<"cpns" | "pppk" | "kedinasan" | "drill">("cpns");
+  const [packageFilter, setPackageFilter] = useState<"all" | "new" | "done">("all");
   const [showPackageConfirm, setShowPackageConfirm] = useState(false);
   const [questionFilter, setQuestionFilter] = useState<"all" | "unanswered" | "flagged">("all");
   const [eliminatedOptions, setEliminatedOptions] = useState<Record<string, string[]>>({});
@@ -2543,7 +2544,7 @@ function CATSimulator() {
                     return (
                       <div
                         key={option.label}
-                        className={`flex min-w-0 items-stretch rounded-md border transition-colors ${selected === option.label ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "border-slate-200 dark:border-border"}`}
+                        className={`flex min-w-0 items-stretch rounded-md border transition-colors ${session.mode === "study" && selected && option.label === question.answer ? "border-emerald-600 bg-emerald-50 ring-1 ring-emerald-600/30 dark:bg-emerald-950/30" : session.mode === "study" && selected === option.label && selected !== question.answer ? "border-rose-500 bg-rose-50 dark:bg-rose-950/30" : selected === option.label ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "border-slate-200 dark:border-border"}`}
                       >
                         <label
                           className={`flex min-h-12 min-w-0 flex-1 cursor-pointer items-start gap-3 p-3.5 leading-6 sm:p-4 ${crossed ? "opacity-40" : "hover:bg-slate-50 dark:hover:bg-secondary/50"}`}
@@ -2569,6 +2570,13 @@ function CATSimulator() {
                               {option.label}
                             </strong>
                             {option.text}
+                            {session.mode === "study" &&
+                              selected &&
+                              option.label === question.answer && (
+                                <span className="ml-2 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                                  ✓ Kunci
+                                </span>
+                              )}
                           </span>
                         </label>
                         <button
@@ -2585,16 +2593,22 @@ function CATSimulator() {
                   })}
                 </fieldset>
                 {session.mode === "study" && selected && (
-                  <div className="mt-5 rounded-lg border border-primary/20 bg-primary/5 p-4">
-                    <p className="text-sm font-bold text-primary">
-                      {selected === question.answer ? "Jawaban benar" : "Mari pelajari jawabannya"}
+                  <div className="mt-5 rounded-xl border border-border bg-card p-4 sm:p-5">
+                    <p
+                      className={`rounded-lg px-3 py-2 text-sm font-bold ${selected === question.answer ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200" : "bg-amber-50 text-amber-900 dark:bg-amber-950/40 dark:text-amber-200"}`}
+                    >
+                      {selected === question.answer
+                        ? "✓ Jawaban Anda tepat!"
+                        : `Belum tepat · Kunci jawaban ${question.answer}`}
                     </p>
-                    <p className="mt-2 text-sm font-semibold">Kunci latihan: {question.answer}</p>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    <p className="mt-4 text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                      Dasar teori & pembahasan
+                    </p>
+                    <p className="mt-1 text-sm leading-7 text-muted-foreground">
                       {question.explanation}
                     </p>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                      <strong className="text-foreground">Tips:</strong> {question.tip}
+                    <p className="mt-4 rounded-lg border border-amber-300 bg-amber-50/70 p-3 text-sm leading-6 text-amber-950 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-100">
+                      <strong>⚡ Trik cepat:</strong> {question.tip}
                     </p>
                   </div>
                 )}
@@ -3264,7 +3278,7 @@ function CATSimulator() {
   return (
     <section aria-labelledby="simulator-heading" className="mx-auto max-w-7xl space-y-5">
       {storageNotice}
-      <header className="exam-hub-hero rounded-xl bg-primary p-6 text-primary-foreground sm:p-8">
+      <header className="exam-hub-hero rounded-xl bg-primary p-5 text-primary-foreground sm:p-6">
         <p className="text-sm font-semibold text-primary-foreground/80">
           SIMULASI CAT MANDIRI · GRATIS · TANPA AKUN
         </p>
@@ -3275,7 +3289,7 @@ function CATSimulator() {
           Pilih jalur dan paket. Jawaban tersimpan di browser ini, bahkan saat koneksi terputus
           setelah halaman terbuka.
         </p>
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           <span className="rounded-md border border-white/25 bg-white/10 px-3 py-2 text-sm font-semibold">
             Siap digunakan offline setelah dimuat
           </span>
@@ -3285,7 +3299,7 @@ function CATSimulator() {
         </div>
       </header>
       <div
-        className="mt-7 flex gap-2 overflow-x-auto pb-2"
+        className="mt-4 flex w-fit max-w-full gap-1 overflow-x-auto rounded-xl bg-muted p-1.5"
         role="tablist"
         aria-label="Jalur seleksi"
       >
@@ -3309,13 +3323,13 @@ function CATSimulator() {
               setSelectedPackageNumber(1);
               setReadyToStart(false);
             }}
-            className={`min-h-11 shrink-0 border-b-2 px-4 text-sm font-bold ${trackTab === tab ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+            className={`min-h-11 shrink-0 rounded-lg px-4 text-sm font-bold transition-colors ${trackTab === tab ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
           >
             {label}
             {tab === "cpns"
-              ? ` (${EXAM_PACKAGES.filter((p) => p.track === "cpns").length})`
+              ? ` · ${EXAM_PACKAGES.filter((p) => p.track === "cpns").length} paket`
               : tab === "pppk"
-                ? ` (${EXAM_PACKAGES.filter((p) => p.track === "pppk").length})`
+                ? ` · ${EXAM_PACKAGES.filter((p) => p.track === "pppk").length} paket`
                 : ""}
           </button>
         ))}
@@ -3391,12 +3405,40 @@ function CATSimulator() {
               : "Setiap paket berisi 110 soal."}{" "}
             Tanpa pengulangan dalam satu sesi. Beberapa soal dapat muncul di paket lain.
           </p>
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 xl:grid-cols-5">
-            {EXAM_PACKAGES.filter((item) => item.track === selectedTrack).map((item) => (
+          <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter paket">
+            {(["all", "new", "done"] as const).map((filter) => (
+              <button
+                type="button"
+                key={filter}
+                aria-pressed={packageFilter === filter}
+                onClick={() => setPackageFilter(filter)}
+                className={`min-h-10 rounded-full border px-4 text-sm font-semibold ${packageFilter === filter ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-muted-foreground hover:text-foreground"}`}
+              >
+                {filter === "all"
+                  ? "Semua Paket"
+                  : filter === "new"
+                    ? "Belum Dikerjakan"
+                    : "Selesai"}
+              </button>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {EXAM_PACKAGES.filter(
+              (item) =>
+                item.track === selectedTrack &&
+                (packageFilter === "all" ||
+                  (packageFilter === "done"
+                    ? item.id in packageHistory
+                    : !(item.id in packageHistory))),
+            ).map((item) => (
               <article
                 key={item.id}
-                className={`flex min-h-40 flex-col justify-between rounded-lg border p-4 text-sm ${selectedPackageNumber === item.number ? "border-primary bg-primary/5" : "border-border bg-background"}`}
+                className={`relative flex min-h-48 flex-col justify-between overflow-hidden rounded-xl border p-4 text-sm shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md ${selectedPackageNumber === item.number ? "border-primary bg-primary/5" : "border-border bg-card"}`}
               >
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-x-0 top-0 h-1 ${item.track === "cpns" ? "bg-blue-600" : item.track === "pppk" ? "bg-emerald-600" : ["twk", "tiu", "tkp"].includes(item.track) ? "bg-indigo-500" : "bg-amber-600"}`}
+                />
                 <div className="min-w-0">
                   <span className="block text-base font-bold text-foreground">{item.title}</span>
                   <span className="mt-1 block text-xs text-muted-foreground">
@@ -3415,11 +3457,11 @@ function CATSimulator() {
                     ))}
                   </span>
                   <span
-                    className={`mt-3 inline-flex rounded-md px-2.5 py-1 text-xs font-semibold ${item.id in packageHistory ? "bg-positive/10 text-positive" : "bg-muted text-muted-foreground"}`}
+                    className={`mt-3 inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${item.id in packageHistory ? "bg-positive/10 text-positive" : "bg-muted text-muted-foreground"}`}
                   >
                     {item.id in packageHistory
-                      ? `Terakhir ${packageHistory[item.id]}% benar`
-                      : "Belum dikerjakan"}
+                      ? `🏆 Skor: ${packageHistory[item.id]}%`
+                      : "Belum dicoba"}
                   </span>
                 </div>
                 <div className="mt-3 grid gap-2">
