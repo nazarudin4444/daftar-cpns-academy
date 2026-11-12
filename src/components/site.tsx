@@ -449,14 +449,18 @@ function CPNSQuestionBank() {
                 type="button"
                 aria-pressed={active}
                 onClick={() => selectSubject(item.subject)}
-                className={`min-h-16 rounded-lg border px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                className={`relative min-h-24 overflow-hidden rounded-xl border-2 px-4 pt-4 pb-3 text-left transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   active
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-background text-foreground hover:bg-secondary"
+                    ? "border-primary bg-primary text-primary-foreground shadow-md"
+                    : "border-border bg-background text-foreground hover:border-primary/50"
                 }`}
               >
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-x-0 top-0 h-1 ${item.subject === "TWK" ? "bg-primary" : item.subject === "TIU" ? "bg-chart-2" : "bg-chart-4"}`}
+                />
                 <span className="flex items-center justify-between gap-3">
-                  <span className="font-bold">{item.subject}</span>
+                  <span className="text-lg font-extrabold">{item.subject}</span>
                   <span
                     className={`text-xs ${active ? "text-primary-foreground/80" : "text-muted-foreground"}`}
                   >
@@ -834,7 +838,7 @@ export function ContentPage({ page }: { page: ContentPageData }) {
           </div>
         </div>
         <div
-          className={`mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10 ${isSimulator ? "" : "grid gap-6 md:grid-cols-[minmax(0,1fr)_250px] md:gap-8"}`}
+          className={`mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10 ${isSimulator || isQuestionBank ? "" : "grid gap-6 md:grid-cols-[minmax(0,1fr)_250px] md:gap-8"}`}
         >
           <article
             className={`min-w-0 ${isSimulator ? "" : "space-y-9 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-8"}`}
