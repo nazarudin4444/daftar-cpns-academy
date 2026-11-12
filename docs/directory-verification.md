@@ -23,3 +23,19 @@ Lima avatar diambil dari metadata og:image halaman kanal YouTube yang ditautkan.
 - Screenshot desktop terang dan ponsel gelap ditinjau secara visual.
 
 Pemeriksaan ini dilakukan pada server lokal. Keberhasilan deployment Cloudflare belum diverifikasi.
+
+## Penambahan 12 November 2026
+
+Ditambahkan kategori e-Meterai & Dokumen (4 sumber), JDIH PANRB, pustaka KPK, dan database peraturan BPK. Direktori kini berisi 18 sumber. Kanal pembelian mengacu publikasi PERURI:
+https://www.peruri.co.id/press-release/dukung-administrasi-digital-gunakan-meterai-elektronik-resmi-peruri
+
+Rujukan verifikasi:
+https://lldikti16.kemdiktisaintek.go.id/2025/02/ketentuan-penggunaan-meterai-elektronik/
+
+Rujukan belajar:
+https://aclc.kpk.go.id/pendidikan/pustaka
+https://peraturan.bpk.go.id/
+https://jdih.menpan.go.id/
+
+Build produksi berhasil. Rujukan diperiksa untuk deskripsi dan pengelola; transaksi pembelian dan unggah dokumen tidak diuji.
+Pemeriksaan Chrome: 18 sumber, filter 4 sumber e-Meterai, URL PDS, pencarian Integritas, dan tanpa overflow pada lebar 390 piksel berhasil.

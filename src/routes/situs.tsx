@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { SiteShell } from "@/components/site";
 
-type SourceCategory = "pemerintah" | "youtube" | "literasi";
+type SourceCategory = "pemerintah" | "youtube" | "literasi" | "meterai";
 function SourceLogo({ source }: { source: Source }) {
   const [failed, setFailed] = useState(false);
   const isChannel = source.category === "youtube";
@@ -69,6 +69,69 @@ type Source = {
 };
 
 const sources: Source[] = [
+  {
+    name: "e-Meterai PDS",
+    category: "meterai",
+    url: "https://e-meterai.co.id/",
+    description:
+      "Portal PT Peruri Digital Security untuk membeli dan membubuhkan e-Meterai. Tercantum sebagai kanal resmi dalam publikasi PERURI. Periksa biaya layanan sebelum transaksi.",
+    tags: ["e-Meterai", "Administrasi", "Surat lamaran"],
+    action: "Buka e-Meterai PDS",
+  },
+  {
+    name: "e-Meterai Pos Indonesia",
+    category: "meterai",
+    url: "https://posind.e-meterai.co.id/",
+    description:
+      "Alternatif kanal pembelian e-Meterai dari PT Pos Indonesia yang tercantum dalam publikasi PERURI. Baca petunjuk pembubuhan dan ketentuan layanan.",
+    tags: ["e-Meterai", "Administrasi", "Pos Indonesia"],
+    action: "Buka e-Meterai Pos",
+  },
+  {
+    name: "Verifikasi Dokumen PERURI",
+    category: "meterai",
+    url: "https://verification.peruri.co.id/",
+    description:
+      "Periksa dokumen yang telah dibubuhi e-Meterai melalui layanan verifikasi PERURI. Pemeriksaan dilakukan di situs tujuan; baca ketentuan privasinya sebelum mengunggah dokumen.",
+    tags: ["e-Meterai", "Verifikasi", "Dokumen PDF"],
+    action: "Buka verifikasi PERURI",
+  },
+  {
+    name: "Daftar Kanal Resmi PERURI",
+    category: "meterai",
+    url: "https://www.peruri.co.id/press-release/dukung-administrasi-digital-gunakan-meterai-elektronik-resmi-peruri",
+    description:
+      "Baca daftar kanal e-Meterai yang dipublikasikan PERURI, termasuk PDS, Pajakku, Mitracomm, dan Pos Indonesia. Periksa penyedia sebelum membeli.",
+    tags: ["e-Meterai", "Distributor resmi", "PERURI"],
+    action: "Lihat rujukan PERURI",
+  },
+  {
+    name: "Pustaka Antikorupsi KPK",
+    category: "literasi",
+    url: "https://aclc.kpk.go.id/pendidikan/pustaka",
+    description:
+      "Jelajahi bahan pendidikan antikorupsi KPK untuk memahami integritas. Gunakan sebagai bacaan pendamping topik TWK dan sikap profesional dalam TKP.",
+    tags: ["TWK", "TKP", "Integritas", "Antikorupsi"],
+    action: "Jelajahi pustaka KPK",
+  },
+  {
+    name: "Database Peraturan BPK",
+    category: "literasi",
+    url: "https://peraturan.bpk.go.id/",
+    description:
+      "Baca UUD 1945 beserta amandemen dan telusuri peraturan untuk memperkuat pemahaman pilar negara pada TWK. Periksa status berlaku dan perubahan setiap peraturan.",
+    tags: ["TWK", "UUD 1945", "Pilar negara"],
+    action: "Cari peraturan di BPK",
+  },
+  {
+    name: "JDIH Kementerian PANRB",
+    category: "pemerintah",
+    url: "https://jdih.menpan.go.id/",
+    description:
+      "Telusuri aturan pengadaan ASN, kisi-kisi, dan keputusan nilai ambang batas. Pilih dokumen sesuai tahun seleksi dan pengumuman instansi Anda.",
+    tags: ["Kisi-kisi", "Passing grade", "Regulasi", "SKD"],
+    action: "Buka JDIH PANRB",
+  },
   {
     name: "SSCASN BKN",
     category: "pemerintah",
@@ -172,6 +235,7 @@ const filters: { id: CategoryFilter; label: string }[] = [
   { id: "pemerintah", label: "Portal Resmi Pemerintah" },
   { id: "youtube", label: "Kanal YouTube" },
   { id: "literasi", label: "Literasi & Bahasa" },
+  { id: "meterai", label: "e-Meterai & Dokumen" },
 ];
 
 export const Route = createFileRoute("/situs")({
@@ -226,6 +290,11 @@ export const Route = createFileRoute("/situs")({
 });
 
 const categoryDetails = {
+  meterai: {
+    icon: ShieldCheck,
+    title: "e-Meterai & dokumen pendaftaran",
+    copy: "Kanal pembelian merujuk publikasi PERURI; rujukan diperiksa 12 November 2026. Ikuti ketentuan meterai pada pengumuman instansi yang Anda lamar.",
+  },
   pemerintah: {
     icon: Landmark,
     title: "Portal resmi pemerintah",
@@ -277,8 +346,8 @@ function DirectoryPage() {
               <span className="text-primary">Belajar lebih terarah.</span>
             </h1>
             <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
-              Portal resmi, pengajar pilihan, dan bahan bacaan dalam satu direktori. Cari sumber
-              yang Anda perlukan, lalu lanjutkan belajar.
+              Portal resmi, e-Meterai, pengajar pilihan, dan bahan bacaan dalam satu direktori. Cari
+              sumber yang Anda perlukan, lalu lanjutkan belajar.
             </p>
           </div>
           <aside className="rounded-xl border border-primary/15 bg-secondary/60 p-5">
@@ -318,7 +387,7 @@ function DirectoryPage() {
               onKeyDown={(event) => {
                 if (event.key === "Escape") setQuery("");
               }}
-              placeholder="Nama kanal, TIU, TWK, atau pendaftaran…"
+              placeholder="Nama situs, TIU, TWK, atau e-Meterai…"
               className="min-h-14 w-full rounded-xl border border-input bg-card py-3 pl-12 pr-14 text-base text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/30"
             />
             {query && (
@@ -334,7 +403,7 @@ function DirectoryPage() {
           </div>
           <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
             <span className="text-muted-foreground">Cari cepat:</span>
-            {["TIU", "TWK", "TKP", "Pendaftaran"].map((topic) => (
+            {["TIU", "TWK", "TKP", "Pendaftaran", "e-Meterai", "Integritas"].map((topic) => (
               <button
                 type="button"
                 key={topic}
@@ -422,7 +491,7 @@ function DirectoryPage() {
                 </button>
               </div>
             ) : (
-              (["pemerintah", "youtube", "literasi"] as const).map((category) => {
+              (["pemerintah", "meterai", "youtube", "literasi"] as const).map((category) => {
                 const items = visibleSources.filter((source) => source.category === category);
                 if (!items.length) return null;
                 const { icon: Icon, title, copy } = categoryDetails[category];
