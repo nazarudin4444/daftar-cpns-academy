@@ -2012,6 +2012,7 @@ function CATSimulator() {
 
   useEffect(() => {
     if (!session) return;
+    if (session.mode === "study") return;
     const updateClock = () => {
       const next = Math.max(0, Math.ceil((session.deadline - Date.now()) / 1000));
       setRemainingSeconds(next);
@@ -2116,7 +2117,7 @@ function CATSimulator() {
     }
   }
 
-  function startExam(track: Track, packageId?: string) {
+  function startExam(track: Track, packageId?: string, mode: "exam" | "study" = "exam") {
     const selected = packageId ? getExamPackage(packageId) : undefined;
     if (selected && selected.track !== track) return;
     questionsForAttempt({ track, packageId });
@@ -2131,6 +2132,7 @@ function CATSimulator() {
     setSession({
       track,
       packageId,
+      mode,
       answers: {},
       currentIndex: 0,
       flagged: [],
@@ -2354,13 +2356,17 @@ function CATSimulator() {
                   </p>
                 </div>
                 <div
-                  role="timer"
+                  role={session.mode === "study" ? "status" : "timer"}
                   aria-label={`Waktu tersisa ${displayTime}${timerState === "urgent" ? ", tiga menit atau kurang" : timerState === "warning" ? ", sepuluh menit atau kurang" : ""}`}
                   aria-live="off"
                   className={`flex min-h-11 items-center gap-1.5 rounded-md border px-2.5 text-sm font-bold tabular-nums sm:min-h-12 sm:gap-2 sm:px-3 sm:text-base ${timerState === "urgent" ? "border-red-200 bg-red-50 text-red-900 motion-safe:animate-pulse dark:border-red-800 dark:bg-red-950 dark:text-red-100" : timerState === "warning" ? "border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100" : "border-white/25 bg-white/15 text-white"}`}
                 >
                   <Clock3 size={17} aria-hidden="true" />
-                  <span>{displayTime}</span>
+                  {session.mode !== "study" ? (
+                    <span>{displayTime}</span>
+                  ) : (
+                    <span>Mode Belajar</span>
+                  )}
                   {timerState !== "normal" && (
                     <span className="hidden text-xs font-semibold sm:inline">
                       {timerState === "urgent" ? "Waktu hampir habis" : "Waktu menipis"}
@@ -2578,6 +2584,20 @@ function CATSimulator() {
                     );
                   })}
                 </fieldset>
+                {session.mode === "study" && selected && (
+                  <div className="mt-5 rounded-lg border border-primary/20 bg-primary/5 p-4">
+                    <p className="text-sm font-bold text-primary">
+                      {selected === question.answer ? "Jawaban benar" : "Mari pelajari jawabannya"}
+                    </p>
+                    <p className="mt-2 text-sm font-semibold">Kunci latihan: {question.answer}</p>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {question.explanation}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      <strong className="text-foreground">Tips:</strong> {question.tip}
+                    </p>
+                  </div>
+                )}
 
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4 dark:border-border">
                   <button
@@ -3402,19 +3422,32 @@ function CATSimulator() {
                       : "Belum dikerjakan"}
                   </span>
                 </div>
-                <Button
-                  type="button"
-                  variant={selectedPackageNumber === item.number ? "default" : "outline"}
-                  className="mt-3 min-h-11 w-full"
-                  disabled={!packageReady}
-                  onClick={() => {
-                    setSelectedPackageNumber(item.number);
-                    setReadyToStart(true);
-                    setShowPackageConfirm(true);
-                  }}
-                >
-                  Mulai sekarang
-                </Button>
+                <div className="mt-3 grid gap-2">
+                  <Button
+                    type="button"
+                    className="min-h-11 w-full"
+                    disabled={!packageReady}
+                    onClick={() => {
+                      setSelectedPackageNumber(item.number);
+                      setReadyToStart(true);
+                      setShowPackageConfirm(true);
+                    }}
+                  >
+                    ⚡ Mode Tryout
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="min-h-11 w-full"
+                    disabled={!packageReady}
+                    onClick={() => {
+                      setSelectedPackageNumber(item.number);
+                      startExam(item.track, item.id, "study");
+                    }}
+                  >
+                    📖 Mode Belajar
+                  </Button>
+                </div>
               </article>
             ))}
           </div>
@@ -3460,7 +3493,8 @@ function CATSimulator() {
             </dl>
             <p className="mt-4 text-sm leading-6">
               Jawaban tersimpan otomatis di browser ini. Paket berisi soal latihan, bukan ujian
-              resmi. Timer mulai saat Anda melanjutkan.
+              resmi. Mode tryout memakai timer; mode belajar menampilkan pembahasan setelah memilih
+              jawaban.
             </p>
             <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
               <Button

@@ -2,6 +2,7 @@ import { rulesForTrack, TRACKS, type Track } from "@/lib/exam";
 import { EXAM_PACKAGES } from "@/lib/exam-packages";
 
 export type ExamSession = {
+  mode?: "exam" | "study";
   track: Track;
   packageId?: string | undefined;
   answers: Record<string, string>;
