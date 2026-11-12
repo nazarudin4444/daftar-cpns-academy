@@ -3467,7 +3467,7 @@ function CATSimulator() {
                 <div className="mt-3 grid gap-2">
                   <Button
                     type="button"
-                    className="min-h-11 w-full"
+                    className="min-h-11 w-full font-semibold"
                     disabled={!packageReady}
                     onClick={() => {
                       setSelectedPackageNumber(item.number);
@@ -3480,7 +3480,7 @@ function CATSimulator() {
                   <Button
                     type="button"
                     variant="outline"
-                    className="min-h-11 w-full"
+                    className="min-h-11 w-full border-positive bg-positive/10 font-semibold text-positive hover:bg-positive/20 hover:text-positive"
                     disabled={!packageReady}
                     onClick={() => {
                       setSelectedPackageNumber(item.number);

@@ -242,6 +242,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    font-size: 93.75%;
   }
   body {
     font-family: "Plus Jakarta Sans", "Inter", sans-serif;
