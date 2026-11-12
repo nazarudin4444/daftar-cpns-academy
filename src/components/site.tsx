@@ -1926,6 +1926,7 @@ function CATSimulator() {
   const [session, setSession] = useState<ExamSession | null>(null);
   const [pendingResume, setPendingResume] = useState<ExamSession | null>(null);
   const [result, setResult] = useState<ExamResult | null>(null);
+  const [resultChartsReady, setResultChartsReady] = useState(false);
   const [selectedTrack, setSelectedTrack] = useState<Track | null>("cpns");
   const [trackTab, setTrackTab] = useState<"cpns" | "pppk" | "kedinasan" | "drill">("cpns");
   const [packageFilter, setPackageFilter] = useState<"all" | "new" | "done">("all");
@@ -1950,6 +1951,24 @@ function CATSimulator() {
     enableBeforeUnload: () => isExamActive,
     withResolver: true,
   });
+
+  useEffect(() => {
+    if (!result) {
+      setResultChartsReady(false);
+      return;
+    }
+    const showCharts = () => setResultChartsReady(true);
+    const idleWindow = window as Window & {
+      requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    if (idleWindow.requestIdleCallback) {
+      const id = idleWindow.requestIdleCallback(showCharts, { timeout: 500 });
+      return () => idleWindow.cancelIdleCallback?.(id);
+    }
+    const id = window.setTimeout(showCharts, 160);
+    return () => window.clearTimeout(id);
+  }, [result]);
 
   const moveToQuestion = useCallback(
     (nextIndex: number) => {
@@ -2063,6 +2082,7 @@ function CATSimulator() {
   useEffect(() => {
     const dialog = examDialogRef.current;
     if (session && dialog && !dialog.open) dialog.showModal();
+    if (!session && dialog?.open) dialog.close();
   }, [session]);
 
   useEffect(() => {
@@ -2082,6 +2102,25 @@ function CATSimulator() {
       document.body.style.overflow = previousOverflow;
     };
   }, [isExamActive]);
+
+  function closeExamSurface(afterClose: () => void) {
+    const dialog = examDialogRef.current;
+    const close = () => {
+      if (dialog?.open) dialog.close();
+      if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      window.requestAnimationFrame(afterClose);
+    };
+    if (document.fullscreenElement) {
+      void document
+        .exitFullscreen()
+        .catch(() => undefined)
+        .finally(close);
+    } else {
+      close();
+    }
+  }
 
   function finishExam(finalSession: ExamSession) {
     const endedAt = Math.min(Date.now(), finalSession.deadline);
@@ -2108,7 +2147,6 @@ function CATSimulator() {
       packageId: finalSession.packageId,
     };
     setResult(completed);
-    setSession(null);
     setShowReview(false);
     setReviewFilter("all");
     try {
@@ -2120,6 +2158,7 @@ function CATSimulator() {
     } catch {
       setStorageError(true);
     }
+    closeExamSurface(() => setSession(null));
   }
 
   function startExam(track: Track, packageId?: string, mode: "exam" | "study" = "exam") {
@@ -2833,7 +2872,10 @@ function CATSimulator() {
                   <Button variant="outline" className="min-h-11" onClick={navigationBlocker.reset}>
                     Lanjutkan ujian
                   </Button>
-                  <Button className="min-h-11" onClick={navigationBlocker.proceed}>
+                  <Button
+                    className="min-h-11"
+                    onClick={() => closeExamSurface(navigationBlocker.proceed)}
+                  >
                     Keluar dari ujian
                   </Button>
                 </div>
@@ -2955,25 +2997,31 @@ function CATSimulator() {
                 .join(". ")}
               className="mt-3 h-56 w-full"
             >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 8, right: 12, left: -18, bottom: 0 }}>
-                  <CartesianGrid vertical={false} stroke="var(--border)" />
-                  <XAxis dataKey="subject" tickLine={false} axisLine={false} />
-                  <YAxis
-                    domain={[0, 100]}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) => `${value}%`}
-                  />
-                  <Tooltip formatter={(value) => [`${value}%`, "Jawaban benar"]} />
-                  <Bar
-                    dataKey="benar"
-                    fill="var(--primary)"
-                    radius={[4, 4, 0, 0]}
-                    maxBarSize={56}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
+              {resultChartsReady ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData} margin={{ top: 8, right: 12, left: -18, bottom: 0 }}>
+                    <CartesianGrid vertical={false} stroke="var(--border)" />
+                    <XAxis dataKey="subject" tickLine={false} axisLine={false} />
+                    <YAxis
+                      domain={[0, 100]}
+                      tickLine={false}
+                      axisLine={false}
+                      tickFormatter={(value) => `${value}%`}
+                    />
+                    <Tooltip formatter={(value) => [`${value}%`, "Jawaban benar"]} />
+                    <Bar
+                      dataKey="benar"
+                      fill="var(--primary)"
+                      radius={[4, 4, 0, 0]}
+                      maxBarSize={56}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <p className="pt-16 text-center text-sm text-muted-foreground">
+                  Grafik dimuat setelah ringkasan skor.
+                </p>
+              )}
             </div>
             <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6">
               <p className="font-bold text-primary">Saran belajar berikutnya</p>
@@ -3021,36 +3069,42 @@ function CATSimulator() {
                       .join(". ")}
                     className="mt-3 h-60 w-full"
                   >
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart
-                        data={thresholdData}
-                        margin={{ top: 12, right: 12, left: -18, bottom: 0 }}
-                      >
-                        <CartesianGrid vertical={false} stroke="var(--border)" />
-                        <XAxis dataKey="subject" tickLine={false} axisLine={false} />
-                        <YAxis domain={[0, 175]} tickLine={false} axisLine={false} />
-                        <Tooltip
-                          formatter={(value, name) => [
-                            `${value}`,
-                            name === "peserta" ? "Skor peserta" : "Ambang batas",
-                          ]}
-                        />
-                        <Bar
-                          dataKey="peserta"
-                          name="Skor peserta"
-                          fill="var(--primary)"
-                          radius={[4, 4, 0, 0]}
-                          maxBarSize={42}
-                        />
-                        <Bar
-                          dataKey="ambang"
-                          name="Ambang batas"
-                          fill="var(--chart-4)"
-                          radius={[4, 4, 0, 0]}
-                          maxBarSize={42}
-                        />
-                      </BarChart>
-                    </ResponsiveContainer>
+                    {resultChartsReady ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          data={thresholdData}
+                          margin={{ top: 12, right: 12, left: -18, bottom: 0 }}
+                        >
+                          <CartesianGrid vertical={false} stroke="var(--border)" />
+                          <XAxis dataKey="subject" tickLine={false} axisLine={false} />
+                          <YAxis domain={[0, 175]} tickLine={false} axisLine={false} />
+                          <Tooltip
+                            formatter={(value, name) => [
+                              `${value}`,
+                              name === "peserta" ? "Skor peserta" : "Ambang batas",
+                            ]}
+                          />
+                          <Bar
+                            dataKey="peserta"
+                            name="Skor peserta"
+                            fill="var(--primary)"
+                            radius={[4, 4, 0, 0]}
+                            maxBarSize={42}
+                          />
+                          <Bar
+                            dataKey="ambang"
+                            name="Ambang batas"
+                            fill="var(--chart-4)"
+                            radius={[4, 4, 0, 0]}
+                            maxBarSize={42}
+                          />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <p className="pt-20 text-center text-sm text-muted-foreground">
+                        Grafik ambang dimuat sebentar lagi.
+                      </p>
+                    )}
                   </div>
                 )}
                 <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -3102,7 +3156,21 @@ function CATSimulator() {
               <RotateCcw size={17} aria-hidden="true" />
               Ulangi latihan
             </Button>
-            <Button variant="outline" className="min-h-11" onClick={() => setResult(null)}>
+            <Button
+              variant="outline"
+              className="min-h-11"
+              onClick={() => {
+                setShowReview(false);
+                setReviewFilter("all");
+                setResult(null);
+                window.scrollTo({
+                  top: 0,
+                  behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                    ? "auto"
+                    : "smooth",
+                });
+              }}
+            >
               Pilih jalur lain
             </Button>
           </div>
