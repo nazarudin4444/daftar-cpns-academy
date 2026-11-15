@@ -1929,7 +1929,7 @@ function CATSimulator() {
   const [resultChartsReady, setResultChartsReady] = useState(false);
   const [selectedTrack, setSelectedTrack] = useState<Track | null>("cpns");
   const [trackTab, setTrackTab] = useState<"cpns" | "pppk" | "kedinasan" | "drill">("cpns");
-  const [packageFilter, setPackageFilter] = useState<"all" | "new" | "done">("all");
+  const [packageFilter, setPackageFilter] = useState<"all" | "new" | "active" | "done">("all");
   const [showPackageConfirm, setShowPackageConfirm] = useState(false);
   const [questionFilter, setQuestionFilter] = useState<"all" | "unanswered" | "flagged">("all");
   const [eliminatedOptions, setEliminatedOptions] = useState<Record<string, string[]>>({});
@@ -2146,6 +2146,15 @@ function CATSimulator() {
       startedAt: finalSession.startedAt,
       packageId: finalSession.packageId,
     };
+    if (completed.packageId) {
+      const summary = scoreAttempt(completed, completed.answers);
+      setPackageHistory((previous) => ({
+        ...previous,
+        [completed.packageId!]: summary.total
+          ? Math.round((summary.correct / summary.total) * 100)
+          : 0,
+      }));
+    }
     setResult(completed);
     setShowReview(false);
     setReviewFilter("all");
@@ -2162,6 +2171,12 @@ function CATSimulator() {
   }
 
   function startExam(track: Track, packageId?: string, mode: "exam" | "study" = "exam") {
+    if (
+      pendingResume &&
+      !window.confirm("Memulai sesi baru akan mengganti progres yang tersimpan. Lanjutkan?")
+    )
+      return;
+    setPendingResume(null);
     const selected = packageId ? getExamPackage(packageId) : undefined;
     if (selected && selected.track !== track) return;
     questionsForAttempt({ track, packageId });
@@ -2252,52 +2267,78 @@ function CATSimulator() {
       </section>
     );
 
-  if (pendingResume) {
-    const resumeTrack = TRACKS.find((track) => track.id === pendingResume.track);
-    const resumeQuestions = questionsForAttempt(pendingResume);
-    return (
-      <section
-        aria-labelledby="resume-session-heading"
-        className="rounded-xl border border-border bg-card p-5 sm:p-6"
-      >
-        <p className="text-sm font-bold text-primary">Sesi latihan tersimpan</p>
-        <h2 id="resume-session-heading" className="mt-1 text-2xl font-extrabold">
-          {resumeTrack?.name}
-        </h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Ada sesi {pendingResume.currentIndex + 1} dari {resumeQuestions.length} yang belum
-          selesai. Lanjutkan sesi ini atau akhiri untuk memilih paket soal lain. Jika dilanjutkan,
-          timer tetap berjalan.
-        </p>
-        <div className="mt-5 flex flex-wrap gap-3">
-          <Button
-            className="min-h-11"
-            onClick={() => {
-              setSession(pendingResume);
-              setPendingResume(null);
-            }}
+  const resumeCard = pendingResume
+    ? (() => {
+        const resumeTrack = TRACKS.find((track) => track.id === pendingResume.track);
+        const resumeQuestions = questionsForAttempt(pendingResume);
+        return (
+          <section
+            aria-labelledby="resume-session-heading"
+            className="rounded-xl border border-border bg-card p-5 sm:p-6"
           >
-            Lanjutkan {resumeTrack?.name}
-          </Button>
-          <Button
-            variant="outline"
-            className="min-h-11"
-            onClick={() => {
-              setPendingResume(null);
-              setSelectedTrack(null);
-              try {
-                saveExamSession(window.localStorage, null);
-              } catch {
-                setStorageError(true);
-              }
-            }}
-          >
-            Akhiri sesi dan pilih paket lain
-          </Button>
-        </div>
-      </section>
-    );
-  }
+            <p className="text-sm font-bold text-primary">Lanjutkan latihan</p>
+            <h2 id="resume-session-heading" className="mt-1 text-2xl font-extrabold">
+              {pendingResume.packageId
+                ? getExamPackage(pendingResume.packageId).title
+                : resumeTrack?.name}
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {resumeTrack?.name} · Posisi terakhir: soal {pendingResume.currentIndex + 1} dari{" "}
+              {resumeQuestions.length}. {Object.keys(pendingResume.answers).length} soal terjawab.
+              {pendingResume.mode === "study"
+                ? " Mode belajar · tanpa timer."
+                : " Mode tryout · waktu tetap berjalan sejak sesi dimulai."}
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Button
+                className="min-h-11"
+                onClick={() => {
+                  setResult(null);
+                  setSession(pendingResume);
+                  setPendingResume(null);
+                }}
+              >
+                Lanjutkan {resumeTrack?.name}
+              </Button>
+              <Button
+                variant="outline"
+                className="min-h-11"
+                onClick={() => {
+                  if (
+                    !window.confirm(
+                      "Hapus progres sesi tersimpan? Tindakan ini tidak dapat dibatalkan.",
+                    )
+                  )
+                    return;
+                  setPendingResume(null);
+                  setResult(null);
+                  try {
+                    saveExamSession(window.localStorage, null);
+                  } catch {
+                    setStorageError(true);
+                  }
+                }}
+              >
+                Hapus sesi tersimpan
+              </Button>
+              <Button
+                variant="outline"
+                className="min-h-11"
+                onClick={() =>
+                  startExam(
+                    pendingResume.track,
+                    pendingResume.packageId,
+                    pendingResume.mode ?? "exam",
+                  )
+                }
+              >
+                Mulai ulang sesi
+              </Button>
+            </div>
+          </section>
+        );
+      })()
+    : null;
 
   const storageNotice = storageError ? (
     <p role="alert" className="mb-4 border-l-4 border-destructive bg-card p-3 text-sm leading-6">
@@ -2888,7 +2929,7 @@ function CATSimulator() {
     );
   }
 
-  if (result) {
+  if (result && !pendingResume) {
     const questions = questionsForAttempt(result);
     const score = scoreAttempt(result, result.answers);
     const timedQuestions = Object.values(result.questionTimes);
@@ -3140,6 +3181,19 @@ function CATSimulator() {
             <Button className="min-h-11" onClick={() => setShowReview(!showReview)}>
               {showReview ? "Tutup pembahasan" : "Tinjau pembahasan"}
             </Button>
+            {weakestSubject && ["TWK", "TIU", "TKP"].includes(weakestSubject.subject) && (
+              <Button
+                variant="outline"
+                className="min-h-11"
+                onClick={() => {
+                  const track = weakestSubject.subject.toLowerCase() as Track;
+                  const pack = EXAM_PACKAGES.find((item) => item.track === track);
+                  startExam(track, pack?.id, "study");
+                }}
+              >
+                Latihan materi terlemah · {weakestSubject.subject}
+              </Button>
+            )}
             <Button variant="outline" className="min-h-11" onClick={downloadResult}>
               <Download size={17} aria-hidden="true" />
               Unduh pembahasan (.txt)
@@ -3314,6 +3368,16 @@ function CATSimulator() {
     );
   }
 
+  const visiblePackages = EXAM_PACKAGES.filter(
+    (item) =>
+      item.track === selectedTrack &&
+      (packageFilter === "all" ||
+        (packageFilter === "active"
+          ? pendingResume?.packageId === item.id
+          : packageFilter === "done"
+            ? item.id in packageHistory && pendingResume?.packageId !== item.id
+            : !(item.id in packageHistory) && pendingResume?.packageId !== item.id)),
+  );
   const activeTrack = TRACKS.find((track) => track.id === selectedTrack);
   const activePackage = EXAM_PACKAGES.find(
     (item) => item.track === selectedTrack && item.number === selectedPackageNumber,
@@ -3350,6 +3414,7 @@ function CATSimulator() {
   return (
     <section aria-labelledby="simulator-heading" className="mx-auto max-w-7xl space-y-5">
       {storageNotice}
+      {resumeCard}
       <header className="exam-hub-hero rounded-xl bg-primary p-5 text-primary-foreground sm:p-6">
         <p className="text-sm font-semibold text-primary-foreground/80">
           SIMULASI CAT MANDIRI · GRATIS · TANPA AKUN
@@ -3431,42 +3496,42 @@ function CATSimulator() {
         </div>
       )}
       <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {TRACKS.filter((track) =>
-          trackTab === "drill" ? ["twk", "tiu", "tkp"].includes(track.id) : track.id === trackTab,
-        ).map((track) => (
-          <div
-            key={track.id}
-            className={`flex flex-col justify-between gap-4 rounded-lg border p-4 transition-colors sm:flex-row sm:items-center ${selectedTrack === track.id ? "border-primary bg-primary/5" : "border-border bg-background"}`}
-          >
-            <div className="min-w-0">
-              <h3 className="font-bold text-foreground">{track.name}</h3>
-              <p className="mt-1 text-sm leading-6 text-muted-foreground">{track.description}</p>
-              <p className="mt-2 text-xs font-semibold text-foreground">
-                {track.id === "kedinasan"
-                  ? `${rulesForTrack(track.id).questionsPerTrack} soal latihan`
-                  : `${EXAM_PACKAGES.filter((item) => item.track === track.id).length} pilihan paket · ${rulesForTrack(track.id).questionsPerTrack} soal per paket`}{" "}
-                ·{" "}
-                {formatDuration(
-                  track.id === "kedinasan"
-                    ? rulesForTrack(track.id).durationSeconds
-                    : (activePackage?.durationSeconds ?? rulesForTrack(track.id).durationSeconds),
-                )}
-              </p>
-            </div>
-            <Button
-              variant={selectedTrack === track.id ? "default" : "outline"}
-              className="min-h-11 shrink-0"
-              aria-pressed={selectedTrack === track.id}
-              onClick={() => {
-                setSelectedTrack(track.id);
-                setSelectedPackageNumber(1);
-                setReadyToStart(false);
-              }}
+        {TRACKS.filter((track) => trackTab === "kedinasan" && track.id === "kedinasan").map(
+          (track) => (
+            <div
+              key={track.id}
+              className={`flex flex-col justify-between gap-4 rounded-lg border p-4 transition-colors sm:flex-row sm:items-center ${selectedTrack === track.id ? "border-primary bg-primary/5" : "border-border bg-background"}`}
             >
-              Pilih paket
-            </Button>
-          </div>
-        ))}
+              <div className="min-w-0">
+                <h3 className="font-bold text-foreground">{track.name}</h3>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">{track.description}</p>
+                <p className="mt-2 text-xs font-semibold text-foreground">
+                  {track.id === "kedinasan"
+                    ? `${rulesForTrack(track.id).questionsPerTrack} soal latihan`
+                    : `${EXAM_PACKAGES.filter((item) => item.track === track.id).length} pilihan paket · ${rulesForTrack(track.id).questionsPerTrack} soal per paket`}{" "}
+                  ·{" "}
+                  {formatDuration(
+                    track.id === "kedinasan"
+                      ? rulesForTrack(track.id).durationSeconds
+                      : (activePackage?.durationSeconds ?? rulesForTrack(track.id).durationSeconds),
+                  )}
+                </p>
+              </div>
+              <Button
+                variant={selectedTrack === track.id ? "default" : "outline"}
+                className="min-h-11 shrink-0"
+                aria-pressed={selectedTrack === track.id}
+                onClick={() => {
+                  setSelectedTrack(track.id);
+                  setSelectedPackageNumber(1);
+                  setReadyToStart(false);
+                }}
+              >
+                Pilih paket
+              </Button>
+            </div>
+          ),
+        )}
       </div>
       {selectedTrack && selectedTrack !== "kedinasan" && (
         <fieldset className="mt-6">
@@ -3478,7 +3543,7 @@ function CATSimulator() {
             Tanpa pengulangan dalam satu sesi. Beberapa soal dapat muncul di paket lain.
           </p>
           <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter paket">
-            {(["all", "new", "done"] as const).map((filter) => (
+            {(["all", "new", "active", "done"] as const).map((filter) => (
               <button
                 type="button"
                 key={filter}
@@ -3490,19 +3555,29 @@ function CATSimulator() {
                   ? "Semua Paket"
                   : filter === "new"
                     ? "Belum Dikerjakan"
-                    : "Selesai"}
+                    : filter === "active"
+                      ? "Sedang dikerjakan"
+                      : "Selesai"}
               </button>
             ))}
           </div>
+          {visiblePackages.length === 0 && (
+            <div
+              role="status"
+              className="rounded-xl border border-dashed border-border p-6 text-sm text-muted-foreground"
+            >
+              Belum ada paket pada filter ini.{" "}
+              <button
+                type="button"
+                onClick={() => setPackageFilter("all")}
+                className="min-h-11 font-semibold text-primary underline"
+              >
+                Tampilkan semua paket
+              </button>
+            </div>
+          )}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {EXAM_PACKAGES.filter(
-              (item) =>
-                item.track === selectedTrack &&
-                (packageFilter === "all" ||
-                  (packageFilter === "done"
-                    ? item.id in packageHistory
-                    : !(item.id in packageHistory))),
-            ).map((item) => (
+            {visiblePackages.map((item) => (
               <article
                 key={item.id}
                 className={`relative flex min-h-48 flex-col justify-between overflow-hidden rounded-xl border p-4 text-sm shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md ${selectedPackageNumber === item.number ? "border-primary bg-primary/5" : "border-border bg-card"}`}
@@ -3516,7 +3591,7 @@ function CATSimulator() {
                   <span className="mt-1 block text-xs text-muted-foreground">
                     {Object.values(item.composition).reduce((sum, count) => sum + count, 0)} soal
                     {(["twk", "tiu", "tkp"] as string[]).includes(item.track) ? " HOTS" : ""} ·{" "}
-                    {formatDuration(item.durationSeconds)}
+                    Tryout {formatDuration(item.durationSeconds)}
                   </span>
                   <span className="mt-3 flex flex-wrap gap-1">
                     {Object.entries(item.composition).map(([subject, count]) => (
@@ -3531,9 +3606,11 @@ function CATSimulator() {
                   <span
                     className={`mt-3 inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${item.id in packageHistory ? "bg-positive/10 text-positive" : "bg-muted text-muted-foreground"}`}
                   >
-                    {item.id in packageHistory
-                      ? `🏆 Skor: ${packageHistory[item.id]}%`
-                      : "Belum dicoba"}
+                    {pendingResume?.packageId === item.id
+                      ? "Sedang dikerjakan"
+                      : item.id in packageHistory
+                        ? `Selesai · ${packageHistory[item.id]}%`
+                        : "Belum dicoba"}
                   </span>
                 </div>
                 <div className="mt-3 grid gap-2">
@@ -3549,6 +3626,9 @@ function CATSimulator() {
                   >
                     ⚡ Mode Tryout
                   </Button>
+                  <p className="text-xs leading-5 text-muted-foreground">
+                    Timer aktif · pembahasan di akhir.
+                  </p>
                   <Button
                     type="button"
                     variant="outline"
@@ -3561,6 +3641,9 @@ function CATSimulator() {
                   >
                     📖 Mode Belajar
                   </Button>
+                  <p className="text-xs leading-5 text-muted-foreground">
+                    Tanpa timer · pembahasan setelah menjawab.
+                  </p>
                 </div>
               </article>
             ))}
