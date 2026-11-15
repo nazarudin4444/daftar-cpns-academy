@@ -118,14 +118,17 @@ export function DirectoryTips() {
   return (
     <section
       aria-labelledby="directory-tips-heading"
-      className="mt-6 rounded-xl border border-border bg-card p-4 sm:p-5"
+      className="mt-6 rounded-xl border border-blue-200 border-t-4 border-t-blue-600 bg-blue-50 p-4 dark:border-blue-900 dark:border-t-blue-400 dark:bg-blue-950/30 sm:p-5"
     >
       <div className="grid gap-5 lg:grid-cols-[220px_minmax(0,1fr)]">
         <div>
-          <p className="flex items-center gap-2 text-xs font-bold text-positive">
+          <p className="inline-flex items-center gap-2 rounded-md bg-amber-100 px-2.5 py-2 text-xs font-bold text-amber-900 dark:bg-amber-900/40 dark:text-amber-200">
             <Lightbulb size={17} aria-hidden="true" /> Tips Hari Ini
           </p>
-          <h2 id="directory-tips-heading" className="mt-2 text-xl font-bold">
+          <h2
+            id="directory-tips-heading"
+            className="mt-3 text-xl font-bold text-blue-950 dark:text-blue-100"
+          >
             Satu langkah untuk belajar lebih terarah
           </h2>
           <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -133,11 +136,11 @@ export function DirectoryTips() {
             sebagai panduan latihan.
           </p>
         </div>
-        <div className="min-w-0 border-l-2 border-primary/30 pl-4">
+        <div className="min-w-0 rounded-lg border border-blue-200 bg-card p-4 dark:border-blue-800 sm:p-5">
           <TipContent tip={tips[featured]} />
         </div>
       </div>
-      <details className="group mt-3 border-t border-border pt-2">
+      <details className="group mt-3 border-t border-blue-200 pt-2 dark:border-blue-900">
         <summary className="flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-2 text-sm font-bold marker:hidden">
           Jelajahi semua tips · {tips.length} bacaan
           <ChevronDown
