@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { SiteShell } from "@/components/site";
+import { DirectoryTips } from "@/components/directory-tips";
 
 type SourceCategory = "pemerintah" | "youtube" | "literasi" | "meterai";
 function SourceLogo({ source }: { source: Source }) {
@@ -370,6 +371,7 @@ function DirectoryPage() {
           </aside>
         </header>
 
+        <DirectoryTips />
         <section aria-label="Pencarian direktori" className="py-7 sm:py-8">
           <label htmlFor="directory-search" className="mb-2 block text-sm font-semibold">
             Sumber atau materi apa yang Anda cari?

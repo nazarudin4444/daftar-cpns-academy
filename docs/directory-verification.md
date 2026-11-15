@@ -39,3 +39,9 @@ https://jdih.menpan.go.id/
 
 Build produksi berhasil. Rujukan diperiksa untuk deskripsi dan pengelola; transaksi pembelian dan unggah dokumen tidak diuji.
 Pemeriksaan Chrome: 18 sumber, filter 4 sumber e-Meterai, URL PDS, pencarian Integritas, dan tanpa overflow pada lebar 390 piksel berhasil.
+
+## Tips direktori — 15 November 2026
+
+Ditambahkan enam tips editorial: deret, silogisme, nilai TWK, analisis TKP, pemeriksaan dokumen, dan evaluasi latihan. Tips harian memakai tanggal Jakarta dan tidak menimbulkan perbedaan render awal server/browser. Koleksi lengkap serta contoh memakai details/summary agar direktori tetap mudah dijangkau. Warna mengikuti token situs dan tombol memiliki tinggi minimum 44 px.
+
+Build produksi berhasil. Chrome pada lebar 390 piksel: koleksi awal tertutup, filter TIU menampilkan dua tips, contoh dapat dibuka, pencarian e-Meterai tetap menghasilkan empat sumber, tanpa overflow horizontal dan pageerror. Screenshot ponsel ditinjau. Tidak ada perubahan pada data sumber direktori atau logo.
