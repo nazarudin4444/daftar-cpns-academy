@@ -802,7 +802,9 @@ export function ContentPage({ page }: { page: ContentPageData }) {
             __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
           }}
         />
-        <div className="bg-hero relative overflow-hidden text-primary-foreground">
+        <div
+          className={`bg-hero relative overflow-hidden text-primary-foreground ${isSimulator ? "hidden" : ""}`}
+        >
           <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-14 lg:px-8">
             <nav aria-label="Breadcrumb" className="mb-5 text-sm text-primary-foreground/70">
               <ol className="flex flex-wrap items-center gap-2">
@@ -3243,29 +3245,43 @@ function CATSimulator() {
   return (
     <section aria-labelledby="simulator-heading" className="mx-auto max-w-7xl space-y-5">
       {storageNotice}
-      <header className="exam-hub-hero rounded-xl bg-primary p-6 text-primary-foreground sm:p-8">
-        <p className="text-sm font-semibold text-primary-foreground/80">
-          SIMULASI CAT MANDIRI · GRATIS · TANPA AKUN
-        </p>
-        <h2 id="simulator-heading" className="mt-2 text-3xl font-extrabold sm:text-4xl">
-          Pusat latihan CAT
-        </h2>
-        <p className="mt-3 max-w-2xl leading-7 text-primary-foreground/85">
-          Pilih jalur dan paket. Jawaban tersimpan di browser ini, bahkan saat koneksi terputus
-          setelah halaman terbuka.
-        </p>
-        <div className="mt-5 flex flex-wrap gap-2">
-          <span className="rounded-md border border-white/25 bg-white/10 px-3 py-2 text-sm font-semibold">
-            Siap digunakan offline setelah dimuat
-          </span>
-          <span className="rounded-md border border-white/25 bg-white/10 px-3 py-2 text-sm font-semibold">
-            Progres tersimpan di browser
-          </span>
+      <header className="grid gap-6 rounded-xl border border-border bg-card p-5 sm:p-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-10">
+        <div>
+          <p className="text-sm font-semibold text-primary">Ruang latihan · Gratis tanpa akun</p>
+          <h1
+            id="simulator-heading"
+            className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl"
+          >
+            Bangun ritme latihan CAT Anda.
+          </h1>
+          <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
+            Pilih paket, latih pengaturan waktu, lalu pelajari pembahasan setelah sesi selesai.
+            Mulai dari simulasi lengkap atau fokus pada satu materi.
+          </p>
+          <p className="mt-5 flex items-start gap-2 text-sm leading-6 text-muted-foreground">
+            <Bookmark size={18} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
+            Jawaban dan progres tersimpan di browser perangkat ini.
+          </p>
         </div>
+        <ol className="space-y-4 rounded-lg bg-secondary/60 p-5" aria-label="Alur latihan">
+          {[
+            ["01", "Pilih latihan", "Tentukan jalur dan paket soal."],
+            ["02", "Kerjakan dengan fokus", "Timer dimulai setelah konfirmasi."],
+            ["03", "Tinjau hasil", "Baca pembahasan untuk belajar lagi."],
+          ].map(([number, title, description]) => (
+            <li key={number} className="flex gap-3">
+              <span className="pt-0.5 text-sm font-bold tabular-nums text-primary">{number}</span>
+              <div>
+                <p className="text-sm font-bold">{title}</p>
+                <p className="mt-1 text-sm leading-5 text-muted-foreground">{description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </header>
       <div
-        className="mt-7 flex gap-2 overflow-x-auto pb-2"
-        role="tablist"
+        className="mt-7 grid grid-cols-2 gap-2 rounded-xl border border-border bg-secondary/40 p-2 sm:grid-cols-4"
+        role="group"
         aria-label="Jalur seleksi"
       >
         {(
@@ -3279,8 +3295,7 @@ function CATSimulator() {
           <button
             type="button"
             key={tab}
-            role="tab"
-            aria-selected={trackTab === tab}
+            aria-pressed={trackTab === tab}
             onClick={() => {
               setTrackTab(tab);
               const track = tab === "drill" ? "twk" : tab;
@@ -3288,7 +3303,7 @@ function CATSimulator() {
               setSelectedPackageNumber(1);
               setReadyToStart(false);
             }}
-            className={`min-h-11 shrink-0 border-b-2 px-4 text-sm font-bold ${trackTab === tab ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+            className={`min-h-12 rounded-lg border px-3 py-2 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${trackTab === tab ? "border-primary bg-primary text-primary-foreground" : "border-transparent text-muted-foreground hover:bg-card hover:text-foreground"}`}
           >
             {label}
             {tab === "cpns"
@@ -3323,7 +3338,9 @@ function CATSimulator() {
           ))}
         </div>
       )}
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      <div
+        className={`mt-5 grid gap-3 ${trackTab === "drill" ? "sm:grid-cols-2 xl:grid-cols-3" : ""}`}
+      >
         {TRACKS.filter((track) =>
           trackTab === "drill" ? ["twk", "tiu", "tkp"].includes(track.id) : track.id === trackTab,
         ).map((track) => (
@@ -3346,38 +3363,48 @@ function CATSimulator() {
                 )}
               </p>
             </div>
-            <Button
-              variant={selectedTrack === track.id ? "default" : "outline"}
-              className="min-h-11 shrink-0"
-              aria-pressed={selectedTrack === track.id}
-              onClick={() => {
-                setSelectedTrack(track.id);
-                setSelectedPackageNumber(1);
-                setReadyToStart(false);
-              }}
-            >
-              Pilih paket
-            </Button>
+            {trackTab === "drill" && (
+              <Button
+                variant={selectedTrack === track.id ? "default" : "outline"}
+                className="min-h-11 shrink-0"
+                aria-pressed={selectedTrack === track.id}
+                onClick={() => {
+                  setSelectedTrack(track.id);
+                  setSelectedPackageNumber(1);
+                  setReadyToStart(false);
+                }}
+              >
+                Pilih paket
+              </Button>
+            )}
           </div>
         ))}
       </div>
       {selectedTrack && selectedTrack !== "kedinasan" && (
         <fieldset className="mt-6">
-          <legend className="font-bold">Pilih paket latihan</legend>
+          <legend className="text-xl font-bold tracking-tight">Pilih paket latihan</legend>
           <p className="mt-1 text-sm leading-6 text-muted-foreground">
             {(["twk", "tiu", "tkp"] as string[]).includes(selectedTrack)
               ? "Setiap paket fokus berisi 50 soal HOTS."
               : "Setiap paket berisi 110 soal."}{" "}
             Tanpa pengulangan dalam satu sesi. Beberapa soal dapat muncul di paket lain.
           </p>
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 xl:grid-cols-5">
+          <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {EXAM_PACKAGES.filter((item) => item.track === selectedTrack).map((item) => (
               <article
                 key={item.id}
-                className={`flex min-h-40 flex-col justify-between rounded-lg border p-4 text-sm ${selectedPackageNumber === item.number ? "border-primary bg-primary/5" : "border-border bg-background"}`}
+                className={`flex min-w-0 flex-col justify-between rounded-xl border p-5 text-sm transition-colors ${selectedPackageNumber === item.number ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/40"}`}
               >
                 <div className="min-w-0">
-                  <span className="block text-base font-bold text-foreground">{item.title}</span>
+                  <div className="mb-4 flex items-center justify-between gap-3">
+                    <span className="grid size-10 place-items-center rounded-lg border border-border bg-background font-bold tabular-nums text-primary">
+                      {String(item.number).padStart(2, "0")}
+                    </span>
+                    {selectedPackageNumber === item.number && (
+                      <span className="text-xs font-semibold text-primary">Paket terpilih</span>
+                    )}
+                  </div>
+                  <span className="block text-lg font-bold text-foreground">{item.title}</span>
                   <span className="mt-1 block text-xs text-muted-foreground">
                     {Object.values(item.composition).reduce((sum, count) => sum + count, 0)} soal
                     {(["twk", "tiu", "tkp"] as string[]).includes(item.track) ? " HOTS" : ""} ·{" "}
@@ -3404,7 +3431,7 @@ function CATSimulator() {
                 <Button
                   type="button"
                   variant={selectedPackageNumber === item.number ? "default" : "outline"}
-                  className="mt-3 min-h-11 w-full"
+                  className="mt-5 min-h-12 w-full gap-2"
                   disabled={!packageReady}
                   onClick={() => {
                     setSelectedPackageNumber(item.number);
@@ -3412,7 +3439,7 @@ function CATSimulator() {
                     setShowPackageConfirm(true);
                   }}
                 >
-                  Mulai sekarang
+                  Lihat ringkasan <ArrowUpRight size={16} aria-hidden="true" />
                 </Button>
               </article>
             ))}
