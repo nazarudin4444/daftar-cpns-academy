@@ -807,7 +807,7 @@ export function ContentPage({ page }: { page: ContentPageData }) {
             __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
           }}
         />
-        <div className="bg-hero relative overflow-hidden text-primary-foreground">
+        <div className={`bg-hero relative overflow-hidden text-primary-foreground ${isSimulator ? "hidden" : ""}`}>
           <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-14 lg:px-8">
             <nav aria-label="Breadcrumb" className="mb-5 text-sm text-primary-foreground/70">
               <ol className="flex flex-wrap items-center gap-2">
@@ -3415,25 +3415,15 @@ function CATSimulator() {
     <section aria-labelledby="simulator-heading" className="mx-auto max-w-7xl space-y-5">
       {storageNotice}
       {resumeCard}
-      <header className="exam-hub-hero rounded-xl bg-primary p-5 text-primary-foreground sm:p-6">
-        <p className="text-sm font-semibold text-primary-foreground/80">
-          SIMULASI CAT MANDIRI · GRATIS · TANPA AKUN
+      <header className="rounded-xl border border-border bg-card p-5 sm:p-7">
+        <p className="text-sm font-semibold text-primary">Ruang latihan · Gratis tanpa akun</p>
+        <h1 id="simulator-heading" className="mt-2 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+          Bangun ritme latihan CAT Anda.
+        </h1>
+        <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
+          Pilih jalur dan paket, kerjakan dengan timer, lalu pelajari pembahasan setelah sesi selesai.
         </p>
-        <h2 id="simulator-heading" className="mt-2 text-3xl font-extrabold sm:text-4xl">
-          Pusat latihan CAT
-        </h2>
-        <p className="mt-3 max-w-2xl leading-7 text-primary-foreground/85">
-          Pilih jalur dan paket. Jawaban tersimpan di browser ini, bahkan saat koneksi terputus
-          setelah halaman terbuka.
-        </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <span className="rounded-md border border-white/25 bg-white/10 px-3 py-2 text-sm font-semibold">
-            Siap digunakan offline setelah dimuat
-          </span>
-          <span className="rounded-md border border-white/25 bg-white/10 px-3 py-2 text-sm font-semibold">
-            Progres tersimpan di browser
-          </span>
-        </div>
+        <p className="mt-4 text-sm text-muted-foreground">Jawaban dan progres tersimpan di browser perangkat ini.</p>
       </header>
       <div
         className="mt-4 flex w-fit max-w-full gap-1 overflow-x-auto rounded-xl bg-muted p-1.5"
