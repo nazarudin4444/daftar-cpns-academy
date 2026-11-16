@@ -14,7 +14,7 @@ import {
 import { SiteShell } from "@/components/site";
 import { DirectoryTips } from "@/components/directory-tips";
 
-type SourceCategory = "pemerintah" | "youtube" | "literasi" | "meterai";
+type SourceCategory = "pemerintah" | "youtube" | "literasi" | "meterai" | "aplikasi";
 function SourceLogo({ source }: { source: Source }) {
   const [failed, setFailed] = useState(false);
   const isChannel = source.category === "youtube";
@@ -41,11 +41,9 @@ function SourceLogo({ source }: { source: Source }) {
         </span>
       ) : (
         <img
-          src={
-            isChannel
-              ? "/brand/channels/" + handle + ".jpg"
-              : "https://www.google.com/s2/favicons?domain=" + host + "&sz=128"
-          }
+          src={source.icon ?? (isChannel
+            ? "/brand/channels/" + handle + ".jpg"
+            : "https://www.google.com/s2/favicons?domain=" + host + "&sz=128")}
           alt={"Logo " + source.name}
           width={56}
           height={56}
@@ -68,6 +66,7 @@ type Source = {
   description: string;
   tags: string[];
   action: string;
+  icon?: string;
 };
 
 const sources: Source[] = [
@@ -170,6 +169,11 @@ const sources: Source[] = [
     tags: ["CAT", "Simulasi", "Antarmuka ujian"],
     action: "Buka portal CAT BKN",
   },
+  { name: "Siap SKD", category: "aplikasi", url: "https://play.google.com/store/apps/details?id=com.perawatcenter.siapskd", icon: "/apps/siapskd.png", description: "Aplikasi untuk latihan Seleksi Kompetensi Dasar CPNS.", tags: ["Android", "CPNS", "SKD"], action: "Lihat di Google Play" },
+  { name: "Siap SKB", category: "aplikasi", url: "https://play.google.com/store/apps/details?id=com.perawatcenter.siapskb", icon: "/apps/siapskb.png", description: "Aplikasi untuk belajar Seleksi Kompetensi Bidang CPNS.", tags: ["Android", "CPNS", "SKB"], action: "Lihat di Google Play" },
+  { name: "CPNS Gratis", category: "aplikasi", url: "https://play.google.com/store/apps/details?id=com.perawatcenter.cpnsgratis", icon: "/apps/cpnsgratis.png", description: "Aplikasi belajar dan latihan CPNS dari Perawat Center.", tags: ["Android", "CPNS", "Latihan soal"], action: "Lihat di Google Play" },
+  { name: "Siap CPNS", category: "aplikasi", url: "https://play.google.com/store/apps/details?id=com.perawatcenter.siapcpns", icon: "/apps/siapcpns.png", description: "Aplikasi untuk persiapan dan latihan CPNS.", tags: ["Android", "CPNS", "Persiapan"], action: "Lihat di Google Play" },
+  { name: "Lolos ASN", category: "aplikasi", url: "https://play.google.com/store/apps/details?id=com.perawatcenter.lolosasn", icon: "/apps/lolosasn.png", description: "Aplikasi persiapan seleksi ASN dari Perawat Center.", tags: ["Android", "ASN", "CPNS"], action: "Lihat di Google Play" },
   {
     name: "Privat Al Faiz",
     category: "youtube",
@@ -238,6 +242,7 @@ const filters: { id: CategoryFilter; label: string }[] = [
   { id: "youtube", label: "Kanal YouTube" },
   { id: "literasi", label: "Literasi & Bahasa" },
   { id: "meterai", label: "e-Meterai & Dokumen" },
+  { id: "aplikasi", label: "Aplikasi Belajar CPNS" },
 ];
 
 export const Route = createFileRoute("/situs")({
@@ -292,6 +297,7 @@ export const Route = createFileRoute("/situs")({
 });
 
 const categoryDetails = {
+  aplikasi: { icon: Play, title: "Aplikasi belajar CPNS", copy: "Aplikasi Perawat Center untuk mendampingi persiapan seleksi." },
   meterai: {
     icon: ShieldCheck,
     title: "e-Meterai & dokumen pendaftaran",
@@ -348,7 +354,7 @@ function DirectoryPage() {
               <span className="text-primary">Belajar lebih terarah.</span>
             </h1>
             <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
-              Portal resmi, e-Meterai, pengajar pilihan, dan bahan bacaan dalam satu direktori. Cari
+              Aplikasi CPNS, portal resmi, e-Meterai, pengajar pilihan, dan bahan bacaan dalam satu direktori. Cari
               sumber yang Anda perlukan, lalu lanjutkan belajar.
             </p>
           </div>
@@ -390,7 +396,7 @@ function DirectoryPage() {
               onKeyDown={(event) => {
                 if (event.key === "Escape") setQuery("");
               }}
-              placeholder="Nama situs, TIU, TWK, atau e-Meterai…"
+              placeholder="Nama aplikasi, TIU, TWK, atau e-Meterai…"
               className="min-h-14 w-full rounded-xl border border-input bg-card py-3 pl-12 pr-14 text-base text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/30"
             />
             {query && (
@@ -494,7 +500,7 @@ function DirectoryPage() {
                 </button>
               </div>
             ) : (
-              (["pemerintah", "meterai", "youtube", "literasi"] as const).map((category) => {
+              (["aplikasi", "pemerintah", "meterai", "youtube", "literasi"] as const).map((category) => {
                 const items = visibleSources.filter((source) => source.category === category);
                 if (!items.length) return null;
                 const { icon: Icon, title, copy } = categoryDetails[category];
