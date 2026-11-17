@@ -257,16 +257,16 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
   },
   pppk: {
     title: "Panduan Belajar PPPK",
-    metaTitle: "Panduan Belajar PPPK dan Sumber Seleksi Resmi | Daftar CPNS",
+    metaTitle: "Latihan PPPK, Soal HOTS dan 20 Paket Simulasi | Daftar CPNS",
     description:
-      "Pelajari kelompok kompetensi PPPK dan cara memeriksa pengumuman resmi. Paket simulasi PPPK 110 soal di Daftar CPNS masih dilengkapi.",
+      "Latih kompetensi manajerial, sosial kultural, dan teknis umum melalui soal interaktif, filter HOTS, pembahasan, serta 20 paket simulasi PPPK.",
     intro:
-      "Halaman ini mengenalkan kelompok kompetensi PPPK dan sumber pengumuman pemerintah. Paket simulasi 110 soal belum tersedia karena bank demo masih dilengkapi. Ketentuan seleksi, jabatan, dan materi mengikuti pengumuman resmi yang berlaku.",
+      "Pelajari tiga kelompok kompetensi dan coba 20 paket simulasi latihan PPPK. Setiap paket latihan berisi 110 soal. Materi teknis bersifat umum; kebutuhan khusus jabatan mengikuti pengumuman instansi.",
     sections: [
       {
         heading: "Status simulasi PPPK",
         paragraphs: [
-          "Paket simulasi PPPK 110 soal belum dapat dikerjakan. Halaman ini tidak menyajikan sesi ujian PPPK aktif atau skor latihan PPPK.",
+          "Tersedia 20 paket simulasi PPPK, masing-masing berisi 110 soal latihan dalam 100 menit. Mode belajar menyediakan pembahasan tanpa timer. Konfigurasi ini untuk latihan independen.",
           "Sebelum menggunakan materi seleksi, cocokkan persyaratan, jabatan, jadwal, dan kompetensi dengan pengumuman resmi instansi. Kategori pengenalan pada panduan ini bukan kisi-kisi resmi.",
         ],
       },

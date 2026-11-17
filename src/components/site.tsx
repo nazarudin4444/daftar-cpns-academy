@@ -1937,7 +1937,7 @@ function QuickPractice({ subject }: { subject: "TWK" | "TIU" | "TKP" }) {
   );
 }
 
-function CATSimulator() {
+export function CATSimulator({ initialTrack = "cpns" }: { initialTrack?: "cpns" | "pppk" }) {
   const [resultAlias, setResultAlias] = useState("");
   const examDialogRef = useRef<HTMLDialogElement>(null);
   const packageConfirmRef = useRef<HTMLDialogElement>(null);
@@ -1945,8 +1945,8 @@ function CATSimulator() {
   const [pendingResume, setPendingResume] = useState<ExamSession | null>(null);
   const [result, setResult] = useState<ExamResult | null>(null);
   const [resultChartsReady, setResultChartsReady] = useState(false);
-  const [selectedTrack, setSelectedTrack] = useState<Track | null>("cpns");
-  const [trackTab, setTrackTab] = useState<"cpns" | "pppk" | "kedinasan" | "drill">("cpns");
+  const [selectedTrack, setSelectedTrack] = useState<Track | null>(initialTrack);
+  const [trackTab, setTrackTab] = useState<"cpns" | "pppk" | "kedinasan" | "drill">(initialTrack);
   const [packageFilter, setPackageFilter] = useState<"all" | "new" | "active" | "done">("all");
   const [packageSearch, setPackageSearch] = useState("");
   const [packageLimit, setPackageLimit] = useState(24);
@@ -3463,10 +3463,13 @@ function CATSimulator() {
               Jawaban dan progres tersimpan di browser perangkat ini.
             </p>
           </div>
-          <div className="grid grid-cols-3 gap-2 sm:gap-3" aria-label="Ringkasan simulasi CPNS">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3" aria-label="Ringkasan paket latihan">
             {[
-              ["200", "paket CPNS"],
-              ["110", "soal HOTS"],
+              [
+                trackTab === "pppk" ? "20" : "200",
+                trackTab === "pppk" ? "paket PPPK" : "paket CPNS",
+              ],
+              ["110", trackTab === "pppk" ? "soal per paket" : "soal HOTS"],
               ["100 mnt", "durasi tryout"],
             ].map(([value, label]) => (
               <div
