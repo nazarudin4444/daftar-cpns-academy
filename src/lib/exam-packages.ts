@@ -1,7 +1,7 @@
 import {
   QUESTION_BANK,
+  LEGACY_QUESTION_BANK,
   questionsForTrack,
-  scoreExam,
   type Track,
   type Question,
   type Subject,
@@ -20,7 +20,7 @@ export type ExamPackage = {
 // These are practice configurations, not official selection rules.
 export const EXAM_PACKAGES: ExamPackage[] = [
   ...(["cpns", "pppk"] as const).flatMap((track) =>
-    Array.from({ length: 20 }, (_, index) => ({
+    Array.from({ length: track === "cpns" ? 100 : 20 }, (_, index) => ({
       id: `${track}-paket-${index + 1}`,
       track,
       number: index + 1,
@@ -60,9 +60,19 @@ export function questionsForPackage(
   id: string,
   bank: readonly Question[] = QUESTION_BANK,
 ): Question[] {
+  return selectPackageQuestions(id, bank, true);
+}
+
+function selectPackageQuestions(
+  id: string,
+  bank: readonly Question[],
+  hotsCPNS: boolean,
+): Question[] {
   const examPackage = getExamPackage(id);
   const questions = Object.entries(examPackage.composition).flatMap(([subject, count]) => {
-    const focusedTrack = ["twk", "tiu", "tkp"].includes(examPackage.track);
+    const focusedTrack =
+      ["twk", "tiu", "tkp"].includes(examPackage.track) ||
+      (hotsCPNS && examPackage.track === "cpns");
     const candidates = bank.filter(
       (question) =>
         question.subject === subject && (!focusedTrack || question.difficulty === "HOTS"),
@@ -92,17 +102,29 @@ export function questionsForPackage(
   return questions;
 }
 
-type AttemptIdentity = { track: Track; packageId?: string | undefined; startedAt?: number };
+type AttemptIdentity = {
+  track: Track;
+  packageId?: string | undefined;
+  startedAt?: number;
+  questionSet?: "hots-v1" | undefined;
+};
 
 export function questionsForAttempt(attempt: AttemptIdentity): Question[] {
-  if (!attempt.packageId) return questionsForTrack(attempt.track, attempt.startedAt);
+  const legacy = !attempt.questionSet && (attempt.startedAt !== undefined || "answers" in attempt);
+  if (!attempt.packageId)
+    return questionsForTrack(
+      attempt.track,
+      attempt.startedAt,
+      legacy ? LEGACY_QUESTION_BANK : QUESTION_BANK,
+    );
   const item = getExamPackage(attempt.packageId);
   if (item.track !== attempt.track) throw new Error("Paket tidak sesuai dengan jalur ujian.");
-  return questionsForPackage(item.id);
+  return legacy
+    ? selectPackageQuestions(item.id, LEGACY_QUESTION_BANK, false)
+    : questionsForPackage(item.id);
 }
 
 export function scoreAttempt(attempt: AttemptIdentity, answers: Record<string, string>) {
-  if (!attempt.packageId) return scoreExam(attempt.track, answers, attempt.startedAt);
   const questions = questionsForAttempt(attempt);
   const subjects = [...new Set(questions.map((question) => question.subject))];
   const breakdown = subjects.map((subject) => {

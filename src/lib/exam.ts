@@ -1,4 +1,5 @@
 import { QUESTION_TIPS } from "@/lib/exam-tips";
+import { CPNS_HOTS_QUESTIONS } from "@/lib/exam-cpns-hots";
 import { EXTENSION_QUESTIONS } from "@/lib/exam-extension";
 import { CHAPTER_QUESTIONS } from "@/lib/exam-chapter-extension";
 import { PPPK_HOTS_QUESTIONS } from "@/lib/exam-pppk-hots";
@@ -1787,7 +1788,7 @@ const QUESTION_DRAFTS: QuestionDraft[] = [
   },
 ];
 
-export const QUESTION_BANK: Question[] = [
+export const LEGACY_QUESTION_BANK: Question[] = [
   ...QUESTION_DRAFTS.map((question) => {
     const tip = QUESTION_TIPS[question.id];
     if (!tip) throw new Error(`Tips belajar belum tersedia untuk ${question.id}`);
@@ -1807,6 +1808,8 @@ export const QUESTION_BANK: Question[] = [
   ...PPPK_TECHNICAL_EXTENSION_QUESTIONS,
 ];
 
+export const QUESTION_BANK: Question[] = [...LEGACY_QUESTION_BANK, ...CPNS_HOTS_QUESTIONS];
+
 function questionHash(value: string): number {
   let hash = 2166136261;
   for (let index = 0; index < value.length; index += 1)
@@ -1814,15 +1817,17 @@ function questionHash(value: string): number {
   return hash >>> 0;
 }
 
-export function questionsForTrack(track: Track, seed = 0): Question[] {
+export function questionsForTrack(track: Track, seed = 0, bank = QUESTION_BANK): Question[] {
   const config = TRACKS.find((item) => item.id === track);
   if (!config) return [];
   const bySubject = config.subjects.map((subject) =>
-    QUESTION_BANK.filter((question) => question.subject === subject).sort(
-      (left, right) =>
-        questionHash(`${seed}:${left.id}`) - questionHash(`${seed}:${right.id}`) ||
-        left.id.localeCompare(right.id),
-    ),
+    bank
+      .filter((question) => question.subject === subject)
+      .sort(
+        (left, right) =>
+          questionHash(`${seed}:${left.id}`) - questionHash(`${seed}:${right.id}`) ||
+          left.id.localeCompare(right.id),
+      ),
   );
   if (track === "cpns")
     return bySubject.flatMap((questions, index) => questions.slice(0, [30, 35, 45][index]));

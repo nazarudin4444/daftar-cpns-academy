@@ -1,4 +1,5 @@
 import { QUESTION_BANK, type Question, type Subject } from "@/lib/exam";
+import { CPNS_HOTS_QUESTIONS } from "@/lib/exam-cpns-hots";
 
 export type CPNSSubject = Extract<Subject, "TWK" | "TIU" | "TKP">;
 
@@ -559,6 +560,30 @@ export const CPNS_SUBJECT_CATALOG: {
     ],
   },
 ];
+
+for (const category of CPNS_SUBJECT_CATALOG) {
+  const subject = category.subject.toLowerCase();
+  category.chapters.push({
+    id: `${subject}-cat-hots`,
+    title: "Pendalaman HOTS untuk Simulasi CAT",
+    subchapters: [
+      {
+        id: `${subject}-cat-hots-cases`,
+        title:
+          category.subject === "TIU"
+            ? "Analisis data dan pemodelan numerik"
+            : "Evaluasi kasus dan pengambilan keputusan",
+        description:
+          category.subject === "TIU"
+            ? "Menganalisis kapasitas, rata-rata berbobot, beban kerja, himpunan, dan target kumulatif."
+            : "Membandingkan pilihan dengan mempertimbangkan tujuan, dampak, dan batas kewenangan.",
+        questionIds: CPNS_HOTS_QUESTIONS.filter(
+          (question) => question.subject === category.subject,
+        ).map((question) => question.id),
+      },
+    ],
+  });
+}
 
 export function questionsForSubchapter(subchapterId: string) {
   const subchapter = CPNS_SUBJECT_CATALOG.flatMap((category) => category.chapters)

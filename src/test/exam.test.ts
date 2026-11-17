@@ -13,10 +13,11 @@ import {
 } from "@/lib/exam-storage";
 
 describe("Bank soal dan penilaian", () => {
-  it("memuat sedikitnya 80 soal untuk tiap materi CPNS", () => {
-    expect(QUESTION_BANK.filter((question) => question.subject === "TWK")).toHaveLength(85);
-    expect(QUESTION_BANK.filter((question) => question.subject === "TIU")).toHaveLength(85);
-    expect(QUESTION_BANK.filter((question) => question.subject === "TKP")).toHaveLength(88);
+  it("memuat sedikitnya 100 soal untuk tiap materi CPNS", () => {
+    for (const subject of ["TWK", "TIU", "TKP"])
+      expect(
+        QUESTION_BANK.filter((question) => question.subject === subject).length,
+      ).toBeGreaterThanOrEqual(100);
   });
   it("memiliki ID unik dan kunci yang tersedia pada opsi", () => {
     expect(new Set(QUESTION_BANK.map((q) => q.id)).size).toBe(QUESTION_BANK.length);
@@ -81,7 +82,7 @@ describe("Katalog kelompok soal CPNS", () => {
       ["TWK", "TIU", "TKP"].includes(question.subject),
     ).map((question) => question.id);
 
-    expect(categorizedIds).toHaveLength(258);
+    expect(categorizedIds).toHaveLength(cpnsQuestionIds.length);
     expect(new Set(categorizedIds).size).toBe(categorizedIds.length);
     expect([...categorizedIds].sort()).toEqual(cpnsQuestionIds.sort());
   });

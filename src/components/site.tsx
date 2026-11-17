@@ -2145,6 +2145,7 @@ function CATSimulator() {
       endedAt,
       startedAt: finalSession.startedAt,
       packageId: finalSession.packageId,
+      questionSet: finalSession.questionSet,
     };
     if (completed.packageId) {
       const summary = scoreAttempt(completed, completed.answers);
@@ -2191,6 +2192,7 @@ function CATSimulator() {
     setSession({
       track,
       packageId,
+      questionSet: "hots-v1",
       mode,
       answers: {},
       currentIndex: 0,
@@ -3389,7 +3391,7 @@ function CATSimulator() {
         QUESTION_BANK.filter(
           (question) =>
             question.subject === subject &&
-            (!["twk", "tiu", "tkp"].includes(activePackage.track) ||
+            (!["cpns", "twk", "tiu", "tkp"].includes(activePackage.track) ||
               question.difficulty === "HOTS"),
         ).length >= count,
     );
@@ -3529,7 +3531,9 @@ function CATSimulator() {
           <p className="mt-1 text-sm leading-6 text-muted-foreground">
             {(["twk", "tiu", "tkp"] as string[]).includes(selectedTrack)
               ? "Setiap paket fokus berisi 50 soal HOTS."
-              : "Setiap paket berisi 110 soal."}{" "}
+              : selectedTrack === "cpns"
+                ? "Tersedia 100 paket CPNS, masing-masing berisi 110 soal HOTS: 30 TWK, 35 TIU, dan 45 TKP."
+                : "Setiap paket berisi 110 soal."}{" "}
             Tanpa pengulangan dalam satu sesi. Beberapa soal dapat muncul di paket lain.
           </p>
           <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter paket">
@@ -3580,7 +3584,7 @@ function CATSimulator() {
                   <span className="block text-base font-bold text-foreground">{item.title}</span>
                   <span className="mt-1 block text-xs text-muted-foreground">
                     {Object.values(item.composition).reduce((sum, count) => sum + count, 0)} soal
-                    {(["twk", "tiu", "tkp"] as string[]).includes(item.track) ? " HOTS" : ""} ·{" "}
+                    {(["cpns", "twk", "tiu", "tkp"] as string[]).includes(item.track) ? " HOTS" : ""} ·{" "}
                     Tryout {formatDuration(item.durationSeconds)}
                   </span>
                   <span className="mt-3 flex flex-wrap gap-1">

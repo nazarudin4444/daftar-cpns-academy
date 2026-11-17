@@ -2,6 +2,7 @@ import { rulesForTrack, TRACKS, type Track } from "@/lib/exam";
 import { EXAM_PACKAGES } from "@/lib/exam-packages";
 
 export type ExamSession = {
+  questionSet?: "hots-v1" | undefined;
   mode?: "exam" | "study";
   track: Track;
   packageId?: string | undefined;
@@ -15,6 +16,7 @@ export type ExamSession = {
 };
 
 export type ExamResult = {
+  questionSet?: "hots-v1" | undefined;
   track: Track;
   packageId?: string | undefined;
   answers: Record<string, string>;
@@ -90,6 +92,7 @@ export function loadExamSession(storage: BrowserStorage): ExamSession | null {
   if (!raw) return null;
   const value = readObject(raw) as Partial<ExamSession>;
   if (
+    (value.questionSet !== undefined && value.questionSet !== "hots-v1") ||
     !isTrack(value.track) ||
     !validPackage(value.track, value.packageId) ||
     !validAnswers(value.answers) ||
@@ -131,6 +134,7 @@ export function loadExamResult(storage: BrowserStorage): ExamResult | null {
 function parseExamResult(input: Record<string, unknown>): ExamResult | null {
   const value = input as Partial<ExamResult>;
   if (
+    (value.questionSet !== undefined && value.questionSet !== "hots-v1") ||
     !isTrack(value.track) ||
     !validPackage(value.track, value.packageId) ||
     !validAnswers(value.answers) ||

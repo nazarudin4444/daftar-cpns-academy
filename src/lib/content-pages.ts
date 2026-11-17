@@ -62,11 +62,11 @@ const passingGradeSources = [
 export const CONTENT_PAGES: Record<string, ContentPageData> = {
   "simulasi-cat-cpns": {
     title: "Simulasi CAT CPNS",
-    metaTitle: "Simulasi CAT CPNS Gratis 110 Soal | Daftar CPNS",
+    metaTitle: "100 Paket Simulasi CAT CPNS HOTS Gratis | Daftar CPNS",
     description:
-      "Kerjakan simulasi CAT CPNS gratis berisi 110 soal dalam 100 menit. Tandai soal ragu, simpan progres di browser, lalu tinjau hasil dan pembahasan.",
+      "Pilih 100 paket simulasi CAT CPNS gratis. Setiap paket berisi 110 soal HOTS TWK, TIU, dan TKP dalam 100 menit, dilengkapi pembahasan dan penyimpanan progres.",
     intro:
-      "Pilih satu dari 20 paket demo SKD CPNS. Setiap paket memuat 110 soal TWK, TIU, dan TKP dengan batas waktu 100 menit. Soal dan skor merupakan materi latihan independen, bukan soal resmi atau prediksi hasil seleksi.",
+      "Pilih satu dari 100 paket demo SKD CPNS. Setiap paket memuat 110 soal HOTS: 30 TWK, 35 TIU, dan 45 TKP dengan batas waktu 100 menit. Paket menggunakan bank soal bersama sehingga beberapa soal dapat muncul di paket lain. Soal dan skor merupakan materi latihan independen, bukan soal resmi atau prediksi hasil seleksi.",
     sections: [
       {
         heading: "Cara menggunakan latihan",
@@ -491,9 +491,9 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
   },
   panduan: {
     title: "Panduan Persiapan Seleksi ASN",
-    metaTitle: "Panduan Persiapan Seleksi ASN | Daftar CPNS",
+    metaTitle: "Panduan Belajar CPNS & PPPK: Rencana, HOTS, dan Evaluasi | Daftar CPNS",
     description:
-      "Panduan belajar CPNS, PPPK, dan sekolah kedinasan dengan latihan demo dan rujukan ke pengumuman resmi.",
+      "Susun rencana belajar CPNS dan PPPK, kerjakan tes pemetaan, pelajari materi dan pembahasan HOTS, catat kesalahan, serta evaluasi progres mingguan tanpa akun.",
     intro:
       "Persiapan yang terarah dapat dimulai dengan mencari informasi resmi, menyusun jadwal belajar pribadi, berlatih, dan memeriksa kembali penjelasan soal.",
     sections: [
