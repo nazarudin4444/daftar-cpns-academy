@@ -489,7 +489,7 @@ const NUMERIC_CASES: NumericQuestion[] = [
   {
     prompt: ([workers, hours, items]) =>
       `${workers} petugas menyelesaikan ${items} berkas dalam ${hours} jam dengan laju tetap. Berapa berkas yang dapat diselesaikan ${workers + 2} petugas dalam ${hours} jam?`,
-    values: (n) => [3 + (n % 5), 2 + (n % 4), 60 + n * 5],
+    values: (n) => [3 + (n % 5), 2 + (n % 4), (3 + (n % 5)) * (20 + n)],
     solve: ([workers, , items]) => (items / workers) * (workers + 2),
     explanation: ([workers, , items], answer) =>
       `Laju tiap petugas adalah ${items} ÷ ${workers}. Dengan ${workers + 2} petugas selama waktu sama, hasilnya ${answer} berkas.`,
@@ -498,7 +498,7 @@ const NUMERIC_CASES: NumericQuestion[] = [
   {
     prompt: ([count, average, known]) =>
       `Rata-rata waktu ${count} layanan adalah ${average} menit. Jumlah waktu ${count - 1} layanan pertama adalah ${known} menit. Berapa waktu layanan terakhir?`,
-    values: (n) => [4 + (n % 5), 8 + (n % 9), 24 + n * 4],
+    values: (n) => [4 + (n % 5), 20 + n, (3 + (n % 5)) * (20 + n) - 2],
     solve: ([count, average, known]) => count * average - known,
     explanation: ([count, average, known], answer) =>
       `Total waktu adalah ${count} × ${average} = ${count * average} menit. Kurangi ${known} menit yang sudah diketahui; sisanya ${answer} menit.`,
@@ -542,7 +542,7 @@ const NUMERIC_CASES: NumericQuestion[] = [
   {
     prompt: ([workers, days, jobs]) =>
       `${workers} petugas menyelesaikan pekerjaan dalam ${days} hari. Dengan produktivitas sama, berapa hari yang dibutuhkan ${workers + 2} petugas?`,
-    values: (n) => [4 + (n % 7), 6 + (n % 9), 0],
+    values: (n) => [4 + (n % 7), (6 + (n % 7)) * (6 + n), 0],
     solve: ([workers, days]) => (workers * days) / (workers + 2),
     explanation: ([workers, days], answer) =>
       `Beban kerja tetap ${workers} × ${days} = ${workers * days} petugas-hari. Bagi dengan ${workers + 2} petugas: ${workers * days} ÷ ${workers + 2} = ${answer} hari.`,
@@ -577,7 +577,7 @@ const NUMERIC_CASES: NumericQuestion[] = [
   },
   {
     prompt: ([a, b, both]) =>
-      `Dari ${a + b + 30} peserta, ${a + 30} memilih pelatihan A, ${b + 30} memilih B, dan ${both} memilih keduanya. Berapa peserta memilih sedikitnya satu?`,
+      `Dari ${a + b + 60} peserta, ${a + 30} memilih pelatihan A, ${b + 30} memilih B, dan ${both} memilih keduanya. Berapa peserta memilih sedikitnya satu?`,
     values: (n) => [20 + n * 2, 25 + n * 3, 5 + (n % 12)],
     solve: ([a, b, both]) => a + 30 + b + 30 - both,
     explanation: ([a, b, both], answer) =>
@@ -586,7 +586,7 @@ const NUMERIC_CASES: NumericQuestion[] = [
   },
   {
     prompt: ([success, total]) =>
-      `Dalam ${total} berkas, terdapat ${success} berkas yang memerlukan pemeriksaan ulang. Jika satu berkas dipilih acak, berapa peluang terpilihnya berkas yang perlu diperiksa?`,
+      `Dalam ${total} berkas, terdapat ${success} berkas yang memerlukan pemeriksaan ulang. Jika satu berkas dipilih acak, berapa peluang terpilihnya berkas yang perlu diperiksa, dalam persen?`,
     values: (n) => [2 + (n % 8), 20 + n * 3],
     solve: ([success, total]) => (success / total) * 100,
     explanation: ([success, total], answer) =>
@@ -596,7 +596,7 @@ const NUMERIC_CASES: NumericQuestion[] = [
   {
     prompt: ([rate, hours, target]) =>
       `Satu tim memproses ${rate} berkas per jam selama ${hours} jam. Berapa berkas yang masih harus diproses untuk mencapai target ${target}?`,
-    values: (n) => [12 + n * 2, 3 + (n % 6), 100 + n * 10],
+    values: (n) => [12 + n * 2, 3 + (n % 6), (12 + n * 2) * (3 + (n % 6)) + 20 + n],
     solve: ([rate, hours, target]) => target - rate * hours,
     explanation: ([rate, hours, target], answer) =>
       `Jumlah yang sudah diproses ${rate} × ${hours} = ${rate * hours}. Sisa menuju target ${target} adalah ${target} − ${rate * hours} = ${answer}.`,
@@ -613,11 +613,11 @@ const NUMERIC_CASES: NumericQuestion[] = [
   },
 ];
 
-function numericQuestions(): Question[] {
+function numericQuestions(variants = 10, start = 0): Question[] {
   return NUMERIC_CASES.flatMap((item, family) =>
-    Array.from({ length: 10 }, (_, variant) => {
-      const index = family * 10 + variant;
-      const values = item.values(variant);
+    Array.from({ length: variants }, (_, variant) => {
+      const index = family * variants + variant;
+      const values = item.values(variant + start);
       const answer = item.solve(values);
       const offsets = answer % 1 === 0 ? [-2, -1, 1, 2] : [-2, -1, 1, 2].map((n) => n / 2);
       const choices = shuffledOptions(
@@ -1098,6 +1098,15 @@ const PPPK_QUESTIONS = [
   ...pppkQuestions("Sosial Kultural", "pppk-sos", SOCIAL_CASES, 37),
   ...pppkQuestions("Teknis", "pppk-tek", TECHNICAL_CASES, 37),
 ];
+
+export const KEDINASAN_NUMERIC_QUESTIONS: Question[] = numericQuestions(68, 10)
+  .slice(0, 940)
+  .map((question, index) => ({
+    ...question,
+    id: `kedinasan-numerik-${index + 1}`,
+    subject: "Kedinasan",
+    difficulty: "Latihan",
+  }));
 
 export const BANK_EXPANSION_QUESTIONS: Question[] = [
   ...TWK_QUESTIONS,

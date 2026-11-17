@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { QuestionIllustration } from "@/components/site";
 import type { Question } from "@/lib/exam";
 import { GUIDE_CASE_ANALYSIS } from "@/lib/guide-case-analysis";
 import {
@@ -59,6 +60,7 @@ export function WorkedQuestion({
         {question.subject} · {question.difficulty}
       </p>
       <h4 className="mt-2 text-base font-bold leading-7">{question.prompt}</h4>
+      <QuestionIllustration question={question} />
       <QuestionChoices
         question={question}
         answer={answer}

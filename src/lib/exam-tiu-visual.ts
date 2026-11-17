@@ -10,35 +10,38 @@ const shapeSvg = (sequence: readonly number[]) => {
     if (shape === 2) return `<path d=\"M${x} 30 L${x + 22} 70 H${x - 22} Z\" ${common}/>`;
     if (shape === 3)
       return `<path d=\"M${x} 27 L${x + 22} 52 L${x} 77 L${x - 22} 52 Z\" ${common}/>`;
-    return `<path d=\"M${x - 20} 40 L${x - 10} 30 H${x + 10} L${x + 20} 40 V64 L${x + 10} 74 H${x - 10} L${x - 20} 64 Z\" ${common}/>`;
+    return `<path d=\"M${x - 24} 52 L${x - 12} 31 H${x + 12} L${x + 24} 52 L${x + 12} 73 H${x - 12} Z\" ${common}/>`;
   };
   return `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"600\" height=\"112\" viewBox=\"0 0 600 112\"><rect width=\"600\" height=\"112\" rx=\"16\" fill=\"#f8fafc\"/>${sequence.map((shape, index) => `<g>${index === sequence.length - 1 ? `<rect x=\"${65 + index * 116 - 25}\" y=\"27\" width=\"50\" height=\"50\" rx=\"10\" fill=\"white\" stroke=\"#64748b\" stroke-dasharray=\"5 4\"/>` : draw(shape, 65 + index * 116)}<text x=\"${65 + index * 116}\" y=\"105\" text-anchor=\"middle\" font-family=\"Arial,sans-serif\" font-size=\"13\" fill=\"#334155\">${index === sequence.length - 1 ? "?" : String.fromCharCode(65 + index)}</text></g>`).join("")}</svg>`;
 };
 
 const offsets = Array.from({ length: 30 }, (_, index) => ({
-  start: index % 5,
+  start: Math.floor(index / 4) % 5,
   step: 1 + (index % 4),
 }));
 export const TIU_VISUAL_QUESTIONS: Question[] = offsets.map(({ start, step }, index) => {
-  const sequence = Array.from({ length: 4 }, (_, i) => (start + i * step) % shapes.length);
-  const answerIndex = sequence[3]!;
+  const sequence = Array.from(
+    { length: index < 20 ? 4 : 5 },
+    (_, i) => (start + i * step) % shapes.length,
+  );
+  const answerIndex = sequence[sequence.length - 1]!;
   const labels = ["A", "B", "C", "D", "E"] as const;
   const options = shapes.map((text, i) => ({ label: labels[i]!, text }));
   return {
     id: `tiu-visual-${String(index + 1).padStart(3, "0")}`,
     subject: "TIU",
     prompt:
-      "Perhatikan urutan gambar. Setiap bentuk bergerak dengan pola yang sama. Bentuk berikutnya adalah ...",
+      "Gunakan siklus lingkaran → persegi → segitiga → belah ketupat → heksagon → kembali ke lingkaran. Setiap perpindahan melompati jumlah posisi yang tetap. Bentuk pada tanda tanya adalah ...",
     diagram: {
       alt: `Urutan bentuk ${sequence
-        .slice(0, 3)
+        .slice(0, -1)
         .map((n) => shapes[n])
         .join(", ")}, diikuti tanda tanya.`,
       svg: shapeSvg(sequence),
     },
     options,
     answer: labels[answerIndex]!,
-    explanation: `Urutan berpindah ${step} posisi setiap langkah pada siklus lima bentuk. Setelah ${shapes[sequence[2]!]!}, bentuk berikutnya adalah ${shapes[answerIndex]}.`,
+    explanation: `Urutan berpindah ${step} posisi setiap langkah pada siklus lima bentuk. Setelah ${shapes[sequence[sequence.length - 2]!]!}, bentuk berikutnya adalah ${shapes[answerIndex]}.`,
     tip: "Beri nomor pada setiap bentuk, lalu hitung perpindahan yang berulang.",
     difficulty: "HOTS",
   };

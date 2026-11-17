@@ -1,6 +1,6 @@
 import { QUESTION_TIPS } from "@/lib/exam-tips";
 import { CPNS_HOTS_QUESTIONS } from "@/lib/exam-cpns-hots";
-import { BANK_EXPANSION_QUESTIONS } from "@/lib/exam-bank-expansion";
+import { BANK_EXPANSION_QUESTIONS, KEDINASAN_NUMERIC_QUESTIONS } from "@/lib/exam-bank-expansion";
 import { EXTENSION_QUESTIONS } from "@/lib/exam-extension";
 import { CHAPTER_QUESTIONS } from "@/lib/exam-chapter-extension";
 import { PPPK_HOTS_QUESTIONS } from "@/lib/exam-pppk-hots";
@@ -1818,6 +1818,7 @@ export const QUESTION_BANK: Question[] = [
   ...CPNS_HOTS_QUESTIONS,
   ...BANK_EXPANSION_QUESTIONS,
   ...KEDINASAN_QUESTIONS,
+  ...KEDINASAN_NUMERIC_QUESTIONS,
   ...TIU_VISUAL_QUESTIONS,
   ...TIU_EXTRA_QUESTIONS,
 ];

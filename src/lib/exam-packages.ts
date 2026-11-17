@@ -73,7 +73,7 @@ function selectPackageQuestions(
   const examPackage = getExamPackage(id);
   const questions = Object.entries(examPackage.composition).flatMap(([subject, count]) => {
     const focusedTrack =
-      ["twk", "tiu", "tkp", "kedinasan"].includes(examPackage.track) ||
+      ["twk", "tiu", "tkp"].includes(examPackage.track) ||
       (hotsCPNS && examPackage.track === "cpns");
     const candidates = bank.filter(
       (question) =>

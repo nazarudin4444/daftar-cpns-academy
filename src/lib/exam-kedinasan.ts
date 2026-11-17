@@ -192,7 +192,12 @@ export const KEDINASAN_QUESTIONS: Question[] = cases.flatMap((item, caseIndex) =
   Array.from({ length: 3 }, (_, variant) => {
     const index = caseIndex * 3 + variant;
     const answerIndex = index % 5;
-    const options = [item[2], item[3], item[4], item[5]] as string[];
+    const options = [
+      item[2],
+      item[3],
+      item[4],
+      "Mengabaikan informasi yang diberikan dan memakai dugaan pribadi.",
+    ] as string[];
     options.splice(answerIndex, 0, item[1]);
     return {
       id: `kedinasan-hots-${String(index + 1).padStart(3, "0")}`,
@@ -200,8 +205,8 @@ export const KEDINASAN_QUESTIONS: Question[] = cases.flatMap((item, caseIndex) =
       prompt: `${frames[variant]} ${item[0]}`,
       options: options.map((text, i) => ({ label: labels[i]!, text })),
       answer: labels[answerIndex]!,
-      explanation: item[6],
-      tip: item[7],
+      explanation: item[5],
+      tip: item[6],
       difficulty: "HOTS",
     };
   }),

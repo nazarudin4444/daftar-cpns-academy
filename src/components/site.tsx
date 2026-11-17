@@ -87,7 +87,7 @@ const SUBJECT_NAMES: Record<Subject, string> = {
   Kedinasan: "Penalaran dasar kedinasan",
 };
 
-function QuestionIllustration({ question }: { question: Question }) {
+export function QuestionIllustration({ question }: { question: Question }) {
   if (!question.diagram) return null;
   return (
     <figure className="my-4 overflow-hidden rounded-xl border border-border bg-slate-50 p-3 dark:bg-slate-900 sm:p-4">
@@ -3619,7 +3619,7 @@ export function CATSimulator({ initialTrack = "cpns" }: { initialTrack?: "cpns" 
               : selectedTrack === "cpns"
                 ? "Tersedia 200 paket CPNS HOTS. Setiap paket berisi 110 soal: 30 TWK, 35 TIU, dan 45 TKP."
                 : selectedTrack === "kedinasan"
-                  ? "Tersedia 20 paket HOTS kedinasan. Setiap paket berisi 30 soal dengan pembahasan setelah sesi selesai."
+                  ? "Tersedia 20 paket dari bank 1.000 soal Kedinasan: latihan numerik dan kasus HOTS. Setiap paket berisi 30 soal dengan pembahasan setelah sesi selesai."
                   : "Setiap paket berisi 110 soal."}{" "}
             Tanpa pengulangan dalam satu sesi. Beberapa soal dapat muncul di paket lain.
           </p>
@@ -4081,6 +4081,7 @@ function ReviewQuestion({
       <h4 className="font-semibold">
         {index + 1}. {question.prompt}
       </h4>
+      <QuestionIllustration question={question} />
       {flagged && (
         <p className="mt-1 text-xs font-semibold text-amber-700 dark:text-amber-300">
           Ditandai untuk ditinjau
