@@ -9,9 +9,11 @@ import { PPPK_TECHNICAL_QUESTIONS } from "@/lib/exam-pppk-technical";
 import { PPPK_MANAGERIAL_EXTENSION_QUESTIONS } from "@/lib/exam-pppk-managerial-extension";
 import { PPPK_SOCIAL_EXTENSION_QUESTIONS } from "@/lib/exam-pppk-social-extension";
 import { PPPK_TECHNICAL_EXTENSION_QUESTIONS } from "@/lib/exam-pppk-technical-extension";
+import { KEDINASAN_QUESTIONS } from "@/lib/exam-kedinasan";
 
 export type Track = "cpns" | "pppk" | "kedinasan" | "twk" | "tiu" | "tkp";
-export type Subject = "TWK" | "TIU" | "TKP" | "Manajerial" | "Sosial Kultural" | "Teknis";
+export type Subject =
+  "TWK" | "TIU" | "TKP" | "Manajerial" | "Sosial Kultural" | "Teknis" | "Kedinasan";
 
 export type Question = {
   id: string;
@@ -56,7 +58,7 @@ export const TRACKS: { id: Track; name: string; description: string; subjects: S
     id: "kedinasan",
     name: "Sekolah kedinasan",
     description: "Latihan dasar penalaran, wawasan, dan situasi kerja.",
-    subjects: ["TWK", "TIU", "TKP"],
+    subjects: ["Kedinasan"],
   },
   {
     id: "twk",
@@ -1813,6 +1815,7 @@ export const QUESTION_BANK: Question[] = [
   ...LEGACY_QUESTION_BANK,
   ...CPNS_HOTS_QUESTIONS,
   ...BANK_EXPANSION_QUESTIONS,
+  ...KEDINASAN_QUESTIONS,
 ];
 
 function questionHash(value: string): number {

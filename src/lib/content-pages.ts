@@ -290,7 +290,7 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
     title: "Persiapan Sekolah Kedinasan",
     metaTitle: "Latihan dan Panduan Sekolah Kedinasan | Daftar CPNS",
     description:
-      "Mulai persiapan sekolah kedinasan dengan latihan demo dan tautan untuk memeriksa pengumuman instansi terkait.",
+      "Latih penalaran dasar sekolah kedinasan melalui 20 paket soal HOTS dengan kunci dan pembahasan, lalu periksa pengumuman resmi instansi.",
     intro:
       "Informasi seleksi sekolah kedinasan dapat berbeda menurut instansi dan periode. Gunakan laman resmi instansi terkait untuk memastikan ketentuan terbaru.",
     sections: [

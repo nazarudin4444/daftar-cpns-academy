@@ -7,7 +7,7 @@ import {
   type Subject,
 } from "@/lib/exam";
 
-export type PackageTrack = "cpns" | "pppk" | "twk" | "tiu" | "tkp";
+export type PackageTrack = "cpns" | "pppk" | "kedinasan" | "twk" | "tiu" | "tkp";
 export type ExamPackage = {
   id: string;
   track: PackageTrack;
@@ -19,17 +19,19 @@ export type ExamPackage = {
 
 // These are practice configurations, not official selection rules.
 export const EXAM_PACKAGES: ExamPackage[] = [
-  ...(["cpns", "pppk"] as const).flatMap((track) =>
+  ...(["cpns", "pppk", "kedinasan"] as const).flatMap((track) =>
     Array.from({ length: track === "cpns" ? 200 : 20 }, (_, index) => ({
       id: `${track}-paket-${index + 1}`,
       track,
       number: index + 1,
       title: `Paket ${String(index + 1).padStart(2, "0")}`,
-      durationSeconds: 100 * 60,
+      durationSeconds: track === "kedinasan" ? 50 * 60 : 100 * 60,
       composition:
         track === "cpns"
           ? { TWK: 30, TIU: 35, TKP: 45 }
-          : { Manajerial: 35, "Sosial Kultural": 35, Teknis: 40 },
+          : track === "pppk"
+            ? { Manajerial: 35, "Sosial Kultural": 35, Teknis: 40 }
+            : { Kedinasan: 30 },
     })),
   ),
   ...(["twk", "tiu", "tkp"] as const).flatMap((track) =>
@@ -71,7 +73,7 @@ function selectPackageQuestions(
   const examPackage = getExamPackage(id);
   const questions = Object.entries(examPackage.composition).flatMap(([subject, count]) => {
     const focusedTrack =
-      ["twk", "tiu", "tkp"].includes(examPackage.track) ||
+      ["twk", "tiu", "tkp", "kedinasan"].includes(examPackage.track) ||
       (hotsCPNS && examPackage.track === "cpns");
     const candidates = bank.filter(
       (question) =>

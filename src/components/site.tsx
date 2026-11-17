@@ -84,6 +84,7 @@ const SUBJECT_NAMES: Record<Subject, string> = {
   Manajerial: "Kompetensi Manajerial",
   "Sosial Kultural": "Kompetensi Sosial Kultural",
   Teknis: "Kompetensi Teknis",
+  Kedinasan: "Penalaran dasar kedinasan",
 };
 
 const BOOKMARKS_KEY = "daftar-cpns:bookmarked-questions:v1";
@@ -3589,7 +3590,7 @@ export function CATSimulator({ initialTrack = "cpns" }: { initialTrack?: "cpns" 
           ),
         )}
       </div>
-      {selectedTrack && selectedTrack !== "kedinasan" && (
+      {selectedTrack && (
         <fieldset className="mt-6">
           <legend className="font-bold">Pilih paket latihan</legend>
           <p className="mt-1 text-sm leading-6 text-muted-foreground">
@@ -3597,7 +3598,9 @@ export function CATSimulator({ initialTrack = "cpns" }: { initialTrack?: "cpns" 
               ? "Setiap paket fokus berisi 50 soal HOTS."
               : selectedTrack === "cpns"
                 ? "Tersedia 200 paket CPNS HOTS. Setiap paket berisi 110 soal: 30 TWK, 35 TIU, dan 45 TKP."
-                : "Setiap paket berisi 110 soal."}{" "}
+                : selectedTrack === "kedinasan"
+                  ? "Tersedia 20 paket HOTS kedinasan. Setiap paket berisi 30 soal dengan pembahasan setelah sesi selesai."
+                  : "Setiap paket berisi 110 soal."}{" "}
             Tanpa pengulangan dalam satu sesi. Beberapa soal dapat muncul di paket lain.
           </p>
           <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter paket">

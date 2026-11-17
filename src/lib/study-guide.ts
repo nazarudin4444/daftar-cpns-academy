@@ -187,6 +187,21 @@ export const SUBJECT_LESSONS: Record<
     review:
       "Gambarkan alur input, pemeriksaan, keluaran, dan penanggung jawab. Tandai bagian yang masih memerlukan bukti.",
   },
+  Kedinasan: {
+    principle:
+      "Soal kedinasan menilai penalaran dan ketepatan mengambil keputusan. Pisahkan informasi yang diberikan dari asumsi, lalu periksa kembali setiap langkah.",
+    steps: [
+      "Tandai fakta dan batasan pada soal.",
+      "Pilih konsep yang relevan.",
+      "Kerjakan secara runtut dan cek satuan atau dampaknya.",
+      "Pastikan jawaban memenuhi seluruh informasi kasus.",
+    ],
+    traps: [
+      "Menambah asumsi yang tidak disebutkan.",
+      "Terburu-buru memilih jawaban yang tampak familiar.",
+    ],
+    review: "Tuliskan langkah yang salah lalu ulangi soal dengan memeriksa tiap batasan.",
+  },
 };
 
 export type StudyPlan = {
