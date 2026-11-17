@@ -840,10 +840,10 @@ export function ContentPage({ page }: { page: ContentPageData }) {
           </div>
         </div>
         <div
-          className={`mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10 ${isSimulator || isQuestionBank ? "" : "grid gap-6 md:grid-cols-[minmax(0,1fr)_250px] md:gap-8"}`}
+          className={`mx-auto px-4 sm:px-6 lg:px-8 ${isSimulator ? "w-full py-5 lg:py-6" : "max-w-7xl py-8 lg:py-10"} ${isSimulator || isQuestionBank ? "" : "grid gap-6 md:grid-cols-[minmax(0,1fr)_250px] md:gap-8"}`}
         >
           <article
-            className={`min-w-0 ${isSimulator ? "" : "space-y-9 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-8"}`}
+            className={`min-w-0 ${isSimulator ? "space-y-8" : "space-y-9 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-8"}`}
           >
             {isSimulator && <CATSimulator />}
             {isPassingGrade && <PassingGradeCalculator />}
@@ -896,7 +896,7 @@ export function ContentPage({ page }: { page: ContentPageData }) {
               </aside>
             )}
             {page.sections.map((section) => (
-              <section key={section.heading}>
+              <section key={section.heading} className={isSimulator ? "max-w-4xl" : undefined}>
                 <h2 className="text-xl font-bold text-foreground">{section.heading}</h2>
                 {section.paragraphs.map((paragraph) => (
                   <p key={paragraph} className="mt-3 leading-7 text-muted-foreground">
@@ -2396,10 +2396,10 @@ function CATSimulator() {
           className="exam-room flex h-full flex-col overflow-y-auto bg-slate-50 dark:bg-background"
         >
           <header className="sticky top-0 z-20 shrink-0 bg-primary text-primary-foreground shadow-md">
-            <div className="mx-auto max-w-[1440px] px-3 pt-2 sm:px-6">
+            <div className="w-full px-3 pt-2 sm:px-6">
               <ExamControls target={examDialogRef} />
             </div>
-            <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2 px-3 py-2.5 sm:gap-3 sm:px-6 sm:py-3">
+            <div className="flex w-full flex-wrap items-center justify-between gap-2 px-3 py-2.5 sm:gap-3 sm:px-6 sm:py-3">
               <div className="flex min-w-0 items-center gap-3">
                 <img
                   src="/brand/daftar-cpns-mark.svg"
@@ -2489,7 +2489,7 @@ function CATSimulator() {
             </div>
           </header>
 
-          <div className="mx-auto grid w-full max-w-[1440px] flex-1 grid-cols-1 gap-4 px-3 py-4 pb-6 sm:gap-6 sm:px-6 sm:py-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-start">
+          <div className="grid w-full flex-1 grid-cols-1 gap-4 px-3 py-4 pb-6 sm:gap-6 sm:px-6 sm:py-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-start">
             <aside className="order-2 hidden h-fit rounded-lg border border-slate-200 bg-white p-4 dark:border-border dark:bg-card lg:sticky lg:top-5 lg:order-1 lg:block">
               {storageNotice}
               <div className="flex items-start justify-between gap-3">
@@ -3424,14 +3424,10 @@ function CATSimulator() {
     })) ?? [];
 
   return (
-    <section aria-labelledby="simulator-heading" className="mx-auto max-w-7xl space-y-5">
+    <section aria-labelledby="simulator-heading" className="w-full min-w-0 space-y-6">
       {storageNotice}
       {resumeCard}
-      <header className="relative overflow-hidden rounded-3xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-5 shadow-sm dark:border-blue-900 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 sm:p-8">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-10 -top-16 size-56 rounded-full bg-blue-400/10 blur-2xl"
-        />
+      <header className="rounded-xl border border-border bg-card p-5 sm:p-6">
         <div className="relative grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
           <div>
             <p className="inline-flex items-center rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-sm font-bold text-blue-800 shadow-sm dark:border-blue-800 dark:bg-slate-900/80 dark:text-blue-200">
@@ -3439,9 +3435,9 @@ function CATSimulator() {
             </p>
             <h1
               id="simulator-heading"
-              className="mt-4 max-w-3xl text-3xl font-extrabold tracking-tight text-slate-950 dark:text-white sm:text-4xl"
+              className="mt-3 max-w-3xl text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
             >
-              Latihan HOTS, ukur kesiapan, dan maju dengan ritme Anda.
+              Pilih paket simulasi CAT Anda.
             </h1>
             <p className="mt-3 max-w-2xl leading-7 text-slate-700 dark:text-slate-300">
               Pilih paket simulasi, kerjakan dengan timer, lalu gunakan pembahasan untuk menentukan
@@ -3473,7 +3469,7 @@ function CATSimulator() {
         </div>
       </header>
       <div
-        className="mt-4 flex w-fit max-w-full gap-1 overflow-x-auto rounded-xl bg-muted p-1.5"
+        className="grid w-full grid-cols-2 gap-1 rounded-xl bg-muted p-1.5 sm:grid-cols-4"
         role="tablist"
         aria-label="Jalur seleksi"
       >
@@ -3656,7 +3652,7 @@ function CATSimulator() {
               </button>
             </div>
           )}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,270px),1fr))] gap-4">
             {displayedPackages.map((item) => (
               <article
                 key={item.id}
