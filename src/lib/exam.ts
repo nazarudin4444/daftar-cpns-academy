@@ -10,6 +10,7 @@ import { PPPK_MANAGERIAL_EXTENSION_QUESTIONS } from "@/lib/exam-pppk-managerial-
 import { PPPK_SOCIAL_EXTENSION_QUESTIONS } from "@/lib/exam-pppk-social-extension";
 import { PPPK_TECHNICAL_EXTENSION_QUESTIONS } from "@/lib/exam-pppk-technical-extension";
 import { KEDINASAN_QUESTIONS } from "@/lib/exam-kedinasan";
+import { TIU_VISUAL_QUESTIONS, TIU_EXTRA_QUESTIONS } from "@/lib/exam-tiu-visual";
 
 export type Track = "cpns" | "pppk" | "kedinasan" | "twk" | "tiu" | "tkp";
 export type Subject =
@@ -24,6 +25,7 @@ export type Question = {
   explanation: string;
   tip: string;
   difficulty: "Latihan" | "HOTS";
+  diagram?: { alt: string; svg: string };
 };
 export type QuestionDraft = Omit<Question, "tip" | "difficulty">;
 
@@ -1816,6 +1818,8 @@ export const QUESTION_BANK: Question[] = [
   ...CPNS_HOTS_QUESTIONS,
   ...BANK_EXPANSION_QUESTIONS,
   ...KEDINASAN_QUESTIONS,
+  ...TIU_VISUAL_QUESTIONS,
+  ...TIU_EXTRA_QUESTIONS,
 ];
 
 function questionHash(value: string): number {

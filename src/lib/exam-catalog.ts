@@ -1,6 +1,7 @@
 import { QUESTION_BANK, type Question, type Subject } from "@/lib/exam";
 import { CPNS_HOTS_QUESTIONS } from "@/lib/exam-cpns-hots";
 import { BANK_EXPANSION_QUESTIONS } from "@/lib/exam-bank-expansion";
+import { TIU_VISUAL_QUESTIONS, TIU_EXTRA_QUESTIONS } from "@/lib/exam-tiu-visual";
 
 export type CPNSSubject = Extract<Subject, "TWK" | "TIU" | "TKP">;
 
@@ -581,6 +582,26 @@ for (const category of CPNS_SUBJECT_CATALOG) {
       },
     ],
   });
+  if (category.subject === "TIU") {
+    category.chapters.push({
+      id: "tiu-penalaran-visual",
+      title: "Penalaran visual dan numerik lanjutan",
+      subchapters: [
+        {
+          id: "tiu-visual-patterns",
+          title: "Pola bentuk dan urutan visual",
+          description: "Analisis urutan gambar dan temukan perpindahan bentuk yang berulang.",
+          questionIds: TIU_VISUAL_QUESTIONS.map((question) => question.id),
+        },
+        {
+          id: "tiu-numerik-lanjutan",
+          title: "Rasio dan pembagian beban",
+          description: "Gunakan perbandingan untuk menentukan alokasi dan beban kerja.",
+          questionIds: TIU_EXTRA_QUESTIONS.map((question) => question.id),
+        },
+      ],
+    });
+  }
 }
 
 for (const category of CPNS_SUBJECT_CATALOG) {

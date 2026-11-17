@@ -87,6 +87,23 @@ const SUBJECT_NAMES: Record<Subject, string> = {
   Kedinasan: "Penalaran dasar kedinasan",
 };
 
+function QuestionIllustration({ question }: { question: Question }) {
+  if (!question.diagram) return null;
+  return (
+    <figure className="my-4 overflow-hidden rounded-xl border border-border bg-slate-50 p-3 dark:bg-slate-900 sm:p-4">
+      <img
+        src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(question.diagram.svg)}`}
+        alt={question.diagram.alt}
+        className="mx-auto h-auto w-full max-w-2xl"
+        loading="lazy"
+      />
+      <figcaption className="mt-2 text-center text-xs text-muted-foreground">
+        Diagram soal · Perhatikan urutan dari kiri ke kanan.
+      </figcaption>
+    </figure>
+  );
+}
+
 const BOOKMARKS_KEY = "daftar-cpns:bookmarked-questions:v1";
 function readBookmarkedIds(): string[] {
   try {
@@ -682,6 +699,7 @@ function CPNSQuestionBank() {
                   {question.difficulty === "HOTS" ? " · HOTS" : ""}
                 </p>
                 <h4 className="mt-2 font-semibold leading-7 text-foreground">{question.prompt}</h4>
+                <QuestionIllustration question={question} />
                 <ol className="mt-4 space-y-2 text-sm leading-6 text-foreground">
                   {question.options.map((option) => (
                     <li
@@ -1893,6 +1911,7 @@ function QuickPractice({ subject }: { subject: "TWK" | "TIU" | "TKP" }) {
             Soal {questionIndex + 1} dari {questions.length} · {question.difficulty}
           </p>
           <h3 className="mt-2 font-semibold leading-7">{question.prompt}</h3>
+          <QuestionIllustration question={question} />
           <fieldset className="mt-4 grid gap-2">
             <legend className="sr-only">Pilih jawaban</legend>
             {question.options.map((option) => (
@@ -2644,6 +2663,7 @@ export function CATSimulator({ initialTrack = "cpns" }: { initialTrack?: "cpns" 
                 >
                   {question.prompt}
                 </h2>
+                <QuestionIllustration question={question} />
                 <fieldset className="mt-5 grid gap-3">
                   <legend className="sr-only">Pilih jawaban</legend>
                   {question.options.map((option) => {
