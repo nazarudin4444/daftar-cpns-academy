@@ -366,7 +366,7 @@ function CPNSQuestionBank() {
   );
   const activeSubchapter = subchapters.find((item) => item.id === selectedSubchapter);
   const series = selectedSubchapter ? seriesForSubchapter(selectedSubchapter, hotsOnly) : [];
-  const activeSeries = series.find((item) => item.id === selectedSeries);
+  const activeSeries = series.find((item) => item.id === selectedSeries) ?? series[0];
   const selectedSeriesOffset = activeSeries
     ? series.findIndex((item) => item.id === activeSeries.id) * 5
     : 0;
@@ -417,13 +417,16 @@ function CPNSQuestionBank() {
       <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-sm font-semibold text-primary">Kelompok Soal</p>
-            <h2 id="question-bank-heading" className="mt-1 text-2xl font-extrabold text-foreground">
-              CPNS / CASN
-            </h2>
+            <p className="text-sm font-semibold text-primary">Ruang belajar · Bank soal CPNS</p>
+            <h1
+              id="question-bank-heading"
+              className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+            >
+              Latihan sesuai materi yang ingin Anda kuasai.
+            </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              Pilih materi, buka bab, lalu tentukan subbab untuk mulai berlatih dan membaca
-              pembahasan.
+              Pilih TWK, TIU, atau TKP. Buka subbab untuk langsung membaca lima soal pertama, lalu
+              pelajari kunci dan pembahasannya saat Anda siap.
             </p>
           </div>
           <div className="rounded-lg bg-secondary px-3 py-2 text-sm font-semibold text-foreground">
@@ -431,7 +434,7 @@ function CPNSQuestionBank() {
           </div>
         </div>
 
-        <div className="mt-6 grid gap-2 sm:grid-cols-3" role="group" aria-label="Pilih materi CPNS">
+        <div className="mt-6 grid gap-3 sm:grid-cols-3" role="group" aria-label="Pilih materi CPNS">
           {CPNS_SUBJECT_CATALOG.map((item) => {
             const count = item.chapters.reduce(
               (total, chapter) =>
@@ -451,7 +454,11 @@ function CPNSQuestionBank() {
                 onClick={() => selectSubject(item.subject)}
                 className={`relative min-h-24 overflow-hidden rounded-xl border-2 px-4 pt-4 pb-3 text-left transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   active
-                    ? "border-primary bg-primary text-primary-foreground shadow-md"
+                    ? item.subject === "TWK"
+                      ? "border-blue-700 bg-blue-700 text-white"
+                      : item.subject === "TIU"
+                        ? "border-violet-700 bg-violet-700 text-white"
+                        : "border-emerald-700 bg-emerald-700 text-white"
                     : "border-border bg-background text-foreground hover:border-primary/50"
                 }`}
               >
@@ -460,7 +467,10 @@ function CPNSQuestionBank() {
                   className={`absolute inset-x-0 top-0 h-1 ${item.subject === "TWK" ? "bg-primary" : item.subject === "TIU" ? "bg-chart-2" : "bg-chart-4"}`}
                 />
                 <span className="flex items-center justify-between gap-3">
-                  <span className="text-lg font-extrabold">{item.subject}</span>
+                  <span className="text-lg font-extrabold">
+                    {item.subject}
+                    {active ? " · Dipilih" : ""}
+                  </span>
                   <span
                     className={`text-xs ${active ? "text-primary-foreground/80" : "text-muted-foreground"}`}
                   >
@@ -522,7 +532,7 @@ function CPNSQuestionBank() {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder={`Cari soal ${subject}...`}
-            className="min-w-0 flex-1 bg-transparent py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            className="min-w-0 flex-1 bg-transparent py-3 text-base text-foreground outline-none placeholder:text-muted-foreground"
           />
           {search && (
             <button
@@ -558,8 +568,8 @@ function CPNSQuestionBank() {
               Semua subbab
             </button>
           </div>
-        ) : (
-          <div className="space-y-4">
+        ) : !query ? (
+          <div className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
             {category.chapters.map((chapter, chapterIndex) => (
               <section
                 key={chapter.id}
@@ -580,13 +590,13 @@ function CPNSQuestionBank() {
                     soal
                   </span>
                 </div>
-                <div className="grid gap-3 md:grid-cols-2">
+                <div className="grid gap-3">
                   {chapter.subchapters.map((subchapter) => (
                     <button
                       key={subchapter.id}
                       type="button"
                       onClick={() => selectSubchapter(subchapter.id)}
-                      className="group flex min-h-20 items-start justify-between gap-3 rounded-lg border border-border bg-background p-4 text-left transition-colors hover:border-primary/50 hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="group flex min-h-20 flex-wrap items-start justify-between gap-3 rounded-lg border border-border bg-background p-4 text-left transition-colors hover:border-primary/50 hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       <span>
                         <span className="block font-semibold text-foreground">
@@ -607,7 +617,7 @@ function CPNSQuestionBank() {
               </section>
             ))}
           </div>
-        )}
+        ) : null}
 
         {activeSubchapter && !query && (
           <section aria-labelledby="question-series-heading" className="space-y-3">
@@ -619,25 +629,28 @@ function CPNSQuestionBank() {
                 Tiap seri berisi hingga 5 soal dengan kunci, pembahasan, serta tips.
               </p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7">
               {series.map((item, index) => {
                 const firstQuestion = index * 5 + 1;
                 const lastQuestion = firstQuestion + item.questions.length - 1;
-                const active = item.id === selectedSeries;
+                const active = item.id === activeSeries?.id;
                 return (
                   <button
                     key={item.id}
                     type="button"
                     aria-pressed={active}
                     onClick={() => setSelectedSeries(item.id)}
-                    className={`min-h-20 rounded-lg border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    className={`min-h-20 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                       active
                         ? "border-primary bg-secondary"
                         : "border-border bg-card hover:border-primary/50 hover:bg-secondary/60"
                     }`}
                   >
                     <span className="flex items-center justify-between gap-3">
-                      <span className="font-semibold text-foreground">{item.title}</span>
+                      <span className="font-semibold text-foreground">
+                        {item.title}
+                        {active ? " ✓" : ""}
+                      </span>
                       <span className="text-xs font-semibold text-primary">
                         {item.questions.length} soal
                       </span>
@@ -653,7 +666,7 @@ function CPNSQuestionBank() {
         )}
 
         {visibleQuestions.length > 0 ? (
-          <div className="space-y-4" aria-live="polite">
+          <div className="mx-auto max-w-4xl space-y-4" aria-live="polite">
             <p className="text-sm text-muted-foreground">
               {visibleQuestions.length} soal {query ? "ditemukan" : "dalam subbab ini"}
             </p>
@@ -670,14 +683,17 @@ function CPNSQuestionBank() {
                 <h4 className="mt-2 font-semibold leading-7 text-foreground">{question.prompt}</h4>
                 <ol className="mt-4 space-y-2 text-sm leading-6 text-foreground">
                   {question.options.map((option) => (
-                    <li key={option.label} className="flex gap-2">
+                    <li
+                      key={option.label}
+                      className="flex gap-3 rounded-lg border border-border bg-background px-4 py-3 text-base"
+                    >
                       <strong className="shrink-0">{option.label}.</strong>
                       <span>{option.text}</span>
                     </li>
                   ))}
                 </ol>
                 <details className="mt-4 border-t border-border pt-2">
-                  <summary className="min-h-11 cursor-pointer py-3 font-semibold text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  <summary className="min-h-11 cursor-pointer rounded-lg bg-positive/10 px-3 py-3 font-semibold text-positive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                     Lihat kunci dan pembahasan
                   </summary>
                   <p className="pb-2 leading-7 text-muted-foreground">
@@ -808,7 +824,7 @@ export function ContentPage({ page }: { page: ContentPageData }) {
           }}
         />
         <div
-          className={`bg-hero relative overflow-hidden text-primary-foreground ${isSimulator ? "hidden" : ""}`}
+          className={`bg-hero relative overflow-hidden text-primary-foreground ${isSimulator || isQuestionBank ? "hidden" : ""}`}
         >
           <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-14 lg:px-8">
             <nav aria-label="Breadcrumb" className="mb-5 text-sm text-primary-foreground/70">
@@ -840,10 +856,10 @@ export function ContentPage({ page }: { page: ContentPageData }) {
           </div>
         </div>
         <div
-          className={`mx-auto px-4 sm:px-6 lg:px-8 ${isSimulator ? "w-full py-5 lg:py-6" : "max-w-7xl py-8 lg:py-10"} ${isSimulator || isQuestionBank ? "" : "grid gap-6 md:grid-cols-[minmax(0,1fr)_250px] md:gap-8"}`}
+          className={`mx-auto px-4 sm:px-6 lg:px-8 ${isSimulator || isQuestionBank ? "w-full py-5 lg:py-6" : "max-w-7xl py-8 lg:py-10"} ${isSimulator || isQuestionBank ? "" : "grid gap-6 md:grid-cols-[minmax(0,1fr)_250px] md:gap-8"}`}
         >
           <article
-            className={`min-w-0 ${isSimulator ? "space-y-8" : "space-y-9 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-8"}`}
+            className={`min-w-0 ${isSimulator || isQuestionBank ? "space-y-8" : "space-y-9 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-8"}`}
           >
             {isSimulator && <CATSimulator />}
             {isPassingGrade && <PassingGradeCalculator />}
