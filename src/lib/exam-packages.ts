@@ -20,7 +20,7 @@ export type ExamPackage = {
 // These are practice configurations, not official selection rules.
 export const EXAM_PACKAGES: ExamPackage[] = [
   ...(["cpns", "pppk"] as const).flatMap((track) =>
-    Array.from({ length: track === "cpns" ? 100 : 20 }, (_, index) => ({
+    Array.from({ length: track === "cpns" ? 200 : 20 }, (_, index) => ({
       id: `${track}-paket-${index + 1}`,
       track,
       number: index + 1,

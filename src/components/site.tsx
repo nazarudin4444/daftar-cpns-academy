@@ -778,7 +778,7 @@ export function contentStructuredData(page: ContentPageData) {
                 priceCurrency: "IDR",
               },
               featureList: [
-                "20 paket demo SKD CPNS, masing-masing 110 soal",
+                "200 paket simulasi SKD CPNS HOTS, masing-masing 110 soal",
                 "Timer 100 menit dan navigasi nomor soal",
                 "Penanda soal ragu dan pemulihan progres di browser",
                 "Hasil per kategori dan pembahasan jawaban",
@@ -807,7 +807,9 @@ export function ContentPage({ page }: { page: ContentPageData }) {
             __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
           }}
         />
-        <div className={`bg-hero relative overflow-hidden text-primary-foreground ${isSimulator ? "hidden" : ""}`}>
+        <div
+          className={`bg-hero relative overflow-hidden text-primary-foreground ${isSimulator ? "hidden" : ""}`}
+        >
           <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-14 lg:px-8">
             <nav aria-label="Breadcrumb" className="mb-5 text-sm text-primary-foreground/70">
               <ol className="flex flex-wrap items-center gap-2">
@@ -1930,6 +1932,8 @@ function CATSimulator() {
   const [selectedTrack, setSelectedTrack] = useState<Track | null>("cpns");
   const [trackTab, setTrackTab] = useState<"cpns" | "pppk" | "kedinasan" | "drill">("cpns");
   const [packageFilter, setPackageFilter] = useState<"all" | "new" | "active" | "done">("all");
+  const [packageSearch, setPackageSearch] = useState("");
+  const [packageLimit, setPackageLimit] = useState(24);
   const [showPackageConfirm, setShowPackageConfirm] = useState(false);
   const [questionFilter, setQuestionFilter] = useState<"all" | "unanswered" | "flagged">("all");
   const [eliminatedOptions, setEliminatedOptions] = useState<Record<string, string[]>>({});
@@ -3373,6 +3377,11 @@ function CATSimulator() {
   const visiblePackages = EXAM_PACKAGES.filter(
     (item) =>
       item.track === selectedTrack &&
+      (!packageSearch.trim() ||
+        item.title
+          .toLocaleLowerCase("id-ID")
+          .includes(packageSearch.trim().toLocaleLowerCase("id-ID")) ||
+        String(item.number).includes(packageSearch.trim())) &&
       (packageFilter === "all" ||
         (packageFilter === "active"
           ? pendingResume?.packageId === item.id
@@ -3380,6 +3389,7 @@ function CATSimulator() {
             ? item.id in packageHistory && pendingResume?.packageId !== item.id
             : !(item.id in packageHistory) && pendingResume?.packageId !== item.id)),
   );
+  const displayedPackages = visiblePackages.slice(0, packageLimit);
   const activeTrack = TRACKS.find((track) => track.id === selectedTrack);
   const activePackage = EXAM_PACKAGES.find(
     (item) => item.track === selectedTrack && item.number === selectedPackageNumber,
@@ -3417,15 +3427,50 @@ function CATSimulator() {
     <section aria-labelledby="simulator-heading" className="mx-auto max-w-7xl space-y-5">
       {storageNotice}
       {resumeCard}
-      <header className="rounded-xl border border-border bg-card p-5 sm:p-7">
-        <p className="text-sm font-semibold text-primary">Ruang latihan · Gratis tanpa akun</p>
-        <h1 id="simulator-heading" className="mt-2 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-          Bangun ritme latihan CAT Anda.
-        </h1>
-        <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
-          Pilih jalur dan paket, kerjakan dengan timer, lalu pelajari pembahasan setelah sesi selesai.
-        </p>
-        <p className="mt-4 text-sm text-muted-foreground">Jawaban dan progres tersimpan di browser perangkat ini.</p>
+      <header className="relative overflow-hidden rounded-3xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-5 shadow-sm dark:border-blue-900 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 sm:p-8">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-10 -top-16 size-56 rounded-full bg-blue-400/10 blur-2xl"
+        />
+        <div className="relative grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <div>
+            <p className="inline-flex items-center rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-sm font-bold text-blue-800 shadow-sm dark:border-blue-800 dark:bg-slate-900/80 dark:text-blue-200">
+              Ruang latihan CAT · Gratis tanpa akun
+            </p>
+            <h1
+              id="simulator-heading"
+              className="mt-4 max-w-3xl text-3xl font-extrabold tracking-tight text-slate-950 dark:text-white sm:text-4xl"
+            >
+              Latihan HOTS, ukur kesiapan, dan maju dengan ritme Anda.
+            </h1>
+            <p className="mt-3 max-w-2xl leading-7 text-slate-700 dark:text-slate-300">
+              Pilih paket simulasi, kerjakan dengan timer, lalu gunakan pembahasan untuk menentukan
+              langkah belajar berikutnya.
+            </p>
+            <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">
+              Jawaban dan progres tersimpan di browser perangkat ini.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-2 sm:gap-3" aria-label="Ringkasan simulasi CPNS">
+            {[
+              ["200", "paket CPNS"],
+              ["110", "soal HOTS"],
+              ["100 mnt", "durasi tryout"],
+            ].map(([value, label]) => (
+              <div
+                key={label}
+                className="min-w-0 rounded-2xl border border-white bg-white/85 px-3 py-3 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900/80 sm:px-4 sm:py-4"
+              >
+                <strong className="block text-lg font-extrabold text-blue-800 dark:text-blue-200 sm:text-2xl">
+                  {value}
+                </strong>
+                <span className="mt-0.5 block text-[11px] font-semibold leading-4 text-slate-600 dark:text-slate-300 sm:text-xs">
+                  {label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </header>
       <div
         className="mt-4 flex w-fit max-w-full gap-1 overflow-x-auto rounded-xl bg-muted p-1.5"
@@ -3451,6 +3496,8 @@ function CATSimulator() {
               setSelectedTrack(track);
               setSelectedPackageNumber(1);
               setReadyToStart(false);
+              setPackageSearch("");
+              setPackageLimit(24);
             }}
             className={`min-h-11 shrink-0 rounded-lg px-4 text-sm font-bold transition-colors ${trackTab === tab ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
           >
@@ -3479,6 +3526,7 @@ function CATSimulator() {
               onClick={() => {
                 setSelectedTrack(track);
                 setSelectedPackageNumber(1);
+                setPackageLimit(24);
               }}
               className={`min-h-10 rounded-md border px-4 font-semibold ${selectedTrack === track ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background"}`}
             >
@@ -3517,6 +3565,7 @@ function CATSimulator() {
                   setSelectedTrack(track.id);
                   setSelectedPackageNumber(1);
                   setReadyToStart(false);
+                  setPackageLimit(24);
                 }}
               >
                 Pilih paket
@@ -3532,7 +3581,7 @@ function CATSimulator() {
             {(["twk", "tiu", "tkp"] as string[]).includes(selectedTrack)
               ? "Setiap paket fokus berisi 50 soal HOTS."
               : selectedTrack === "cpns"
-                ? "Tersedia 100 paket CPNS, masing-masing berisi 110 soal HOTS: 30 TWK, 35 TIU, dan 45 TKP."
+                ? "Tersedia 200 paket CPNS HOTS. Setiap paket berisi 110 soal: 30 TWK, 35 TIU, dan 45 TKP."
                 : "Setiap paket berisi 110 soal."}{" "}
             Tanpa pengulangan dalam satu sesi. Beberapa soal dapat muncul di paket lain.
           </p>
@@ -3542,7 +3591,10 @@ function CATSimulator() {
                 type="button"
                 key={filter}
                 aria-pressed={packageFilter === filter}
-                onClick={() => setPackageFilter(filter)}
+                onClick={() => {
+                  setPackageFilter(filter);
+                  setPackageLimit(24);
+                }}
                 className={`min-h-10 rounded-full border px-4 text-sm font-semibold ${packageFilter === filter ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-muted-foreground hover:text-foreground"}`}
               >
                 {filter === "all"
@@ -3555,6 +3607,36 @@ function CATSimulator() {
               </button>
             ))}
           </div>
+          <div className="mb-4 grid gap-3 rounded-2xl border border-border bg-card p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-4">
+            <label className="relative block min-w-0">
+              <Search
+                size={18}
+                aria-hidden="true"
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
+              <span className="sr-only">Cari nomor atau nama paket</span>
+              <input
+                type="search"
+                value={packageSearch}
+                onChange={(event) => {
+                  setPackageSearch(event.target.value);
+                  setPackageLimit(24);
+                }}
+                placeholder="Cari paket, misalnya 125"
+                className="min-h-12 w-full rounded-xl border border-input bg-background pl-10 pr-3 text-base text-foreground shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-ring"
+              />
+            </label>
+            <p
+              className="text-sm font-semibold text-muted-foreground sm:text-right"
+              aria-live="polite"
+            >
+              Menampilkan{" "}
+              <span className="text-foreground">
+                {Math.min(displayedPackages.length, visiblePackages.length)}
+              </span>{" "}
+              dari {visiblePackages.length} paket
+            </p>
+          </div>
           {visiblePackages.length === 0 && (
             <div
               role="status"
@@ -3563,7 +3645,11 @@ function CATSimulator() {
               Belum ada paket pada filter ini.{" "}
               <button
                 type="button"
-                onClick={() => setPackageFilter("all")}
+                onClick={() => {
+                  setPackageFilter("all");
+                  setPackageSearch("");
+                  setPackageLimit(24);
+                }}
                 className="min-h-11 font-semibold text-primary underline"
               >
                 Tampilkan semua paket
@@ -3571,10 +3657,10 @@ function CATSimulator() {
             </div>
           )}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {visiblePackages.map((item) => (
+            {displayedPackages.map((item) => (
               <article
                 key={item.id}
-                className={`relative flex min-h-48 flex-col justify-between overflow-hidden rounded-xl border p-4 text-sm shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md ${selectedPackageNumber === item.number ? "border-primary bg-primary/5" : "border-border bg-card"}`}
+                className={`relative flex min-h-48 flex-col justify-between overflow-hidden rounded-2xl border p-4 text-sm shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${selectedPackageNumber === item.number ? "border-blue-500 bg-blue-50/70 ring-2 ring-blue-500/15 dark:bg-blue-950/30" : "border-border bg-card hover:border-blue-300"}`}
               >
                 <span
                   aria-hidden="true"
@@ -3584,8 +3670,10 @@ function CATSimulator() {
                   <span className="block text-base font-bold text-foreground">{item.title}</span>
                   <span className="mt-1 block text-xs text-muted-foreground">
                     {Object.values(item.composition).reduce((sum, count) => sum + count, 0)} soal
-                    {(["cpns", "twk", "tiu", "tkp"] as string[]).includes(item.track) ? " HOTS" : ""} ·{" "}
-                    Tryout {formatDuration(item.durationSeconds)}
+                    {(["cpns", "twk", "tiu", "tkp"] as string[]).includes(item.track)
+                      ? " HOTS"
+                      : ""}{" "}
+                    · Tryout {formatDuration(item.durationSeconds)}
                   </span>
                   <span className="mt-3 flex flex-wrap gap-1">
                     {Object.entries(item.composition).map(([subject, count]) => (
@@ -3642,6 +3730,24 @@ function CATSimulator() {
               </article>
             ))}
           </div>
+          {displayedPackages.length < visiblePackages.length && (
+            <div className="mt-5 flex flex-col items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="min-h-12 w-full border-blue-300 bg-blue-50 font-bold text-blue-800 hover:bg-blue-100 hover:text-blue-900 sm:w-auto sm:min-w-64 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-200 dark:hover:bg-blue-950"
+                onClick={() =>
+                  setPackageLimit((limit) => Math.min(limit + 24, visiblePackages.length))
+                }
+              >
+                Tampilkan {Math.min(24, visiblePackages.length - displayedPackages.length)} paket
+                lagi
+              </Button>
+              <p className="text-xs text-muted-foreground">
+                Paket berikutnya dimuat tanpa mengubah progres Anda.
+              </p>
+            </div>
+          )}
           {!packageReady && (
             <p role="status" className="mt-3 text-sm text-muted-foreground">
               Bank soal paket ini sedang dilengkapi.

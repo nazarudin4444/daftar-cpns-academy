@@ -62,11 +62,11 @@ const passingGradeSources = [
 export const CONTENT_PAGES: Record<string, ContentPageData> = {
   "simulasi-cat-cpns": {
     title: "Simulasi CAT CPNS",
-    metaTitle: "100 Paket Simulasi CAT CPNS HOTS Gratis | Daftar CPNS",
+    metaTitle: "200 Paket Simulasi CAT CPNS HOTS Gratis | Daftar CPNS",
     description:
-      "Pilih 100 paket simulasi CAT CPNS gratis. Setiap paket berisi 110 soal HOTS TWK, TIU, dan TKP dalam 100 menit, dilengkapi pembahasan dan penyimpanan progres.",
+      "Pilih 200 paket simulasi CAT CPNS gratis. Setiap paket berisi 110 soal HOTS TWK, TIU, dan TKP dalam 100 menit, dilengkapi pembahasan dan penyimpanan progres.",
     intro:
-      "Pilih satu dari 100 paket demo SKD CPNS. Setiap paket memuat 110 soal HOTS: 30 TWK, 35 TIU, dan 45 TKP dengan batas waktu 100 menit. Paket menggunakan bank soal bersama sehingga beberapa soal dapat muncul di paket lain. Soal dan skor merupakan materi latihan independen, bukan soal resmi atau prediksi hasil seleksi.",
+      "Pilih satu dari 200 paket demo SKD CPNS. Setiap paket memuat 110 soal HOTS: 30 TWK, 35 TIU, dan 45 TKP dengan batas waktu 100 menit. Paket menggunakan bank soal bersama sehingga beberapa soal dapat muncul di paket lain. Soal dan skor merupakan materi latihan independen, bukan soal resmi atau prediksi hasil seleksi.",
     sections: [
       {
         heading: "Cara menggunakan latihan",

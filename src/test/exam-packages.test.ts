@@ -9,10 +9,10 @@ import { LEGACY_QUESTION_BANK, QUESTION_BANK } from "@/lib/exam";
 import { CPNS_HOTS_QUESTIONS } from "@/lib/exam-cpns-hots";
 
 describe("Identitas paket CAT", () => {
-  it("menyediakan 100 paket CPNS dan mempertahankan 20 paket PPPK", () => {
+  it("menyediakan 200 paket CPNS dan mempertahankan 20 paket PPPK", () => {
     for (const track of ["cpns", "pppk"]) {
       const packages = EXAM_PACKAGES.filter((item) => item.track === track);
-      const count = track === "cpns" ? 100 : 20;
+      const count = track === "cpns" ? 200 : 20;
       expect(packages).toHaveLength(count);
       expect(new Set(packages.map((item) => item.id)).size).toBe(count);
       expect(
@@ -54,7 +54,7 @@ describe("Identitas paket CAT", () => {
       expect(scoreAttempt(attempt, answers).correct).toBe(110);
       expect(scoreAttempt(attempt, {}).correct).toBe(0);
     }
-    expect(selections.size).toBe(100);
+    expect(selections.size).toBe(200);
   });
 
   it("menambah 100 soal HOTS dengan opsi berbeda dan pembahasan", () => {
