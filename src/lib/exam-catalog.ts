@@ -1,5 +1,6 @@
 import { QUESTION_BANK, type Question, type Subject } from "@/lib/exam";
 import { CPNS_HOTS_QUESTIONS } from "@/lib/exam-cpns-hots";
+import { BANK_EXPANSION_QUESTIONS } from "@/lib/exam-bank-expansion";
 
 export type CPNSSubject = Extract<Subject, "TWK" | "TIU" | "TKP">;
 
@@ -560,6 +561,27 @@ export const CPNS_SUBJECT_CATALOG: {
     ],
   },
 ];
+
+for (const category of CPNS_SUBJECT_CATALOG) {
+  const subject = category.subject.toLowerCase();
+  category.chapters.push({
+    id: `${subject}-bank-tambahan`,
+    title: "Bank Soal Tambahan",
+    subchapters: [
+      {
+        id: `${subject}-bank-tambahan-latihan`,
+        title: "Latihan dan pendalaman kasus",
+        description:
+          category.subject === "TIU"
+            ? "Latihan numerik dengan variasi persentase, perbandingan, pola, rata-rata, dan produktivitas."
+            : "Latihan kasus dengan pembahasan, alasan pilihan, dan langkah tindak lanjut.",
+        questionIds: BANK_EXPANSION_QUESTIONS.filter(
+          (question) => question.subject === category.subject,
+        ).map((question) => question.id),
+      },
+    ],
+  });
+}
 
 for (const category of CPNS_SUBJECT_CATALOG) {
   const subject = category.subject.toLowerCase();

@@ -1,5 +1,6 @@
 import { QUESTION_TIPS } from "@/lib/exam-tips";
 import { CPNS_HOTS_QUESTIONS } from "@/lib/exam-cpns-hots";
+import { BANK_EXPANSION_QUESTIONS } from "@/lib/exam-bank-expansion";
 import { EXTENSION_QUESTIONS } from "@/lib/exam-extension";
 import { CHAPTER_QUESTIONS } from "@/lib/exam-chapter-extension";
 import { PPPK_HOTS_QUESTIONS } from "@/lib/exam-pppk-hots";
@@ -1808,7 +1809,11 @@ export const LEGACY_QUESTION_BANK: Question[] = [
   ...PPPK_TECHNICAL_EXTENSION_QUESTIONS,
 ];
 
-export const QUESTION_BANK: Question[] = [...LEGACY_QUESTION_BANK, ...CPNS_HOTS_QUESTIONS];
+export const QUESTION_BANK: Question[] = [
+  ...LEGACY_QUESTION_BANK,
+  ...CPNS_HOTS_QUESTIONS,
+  ...BANK_EXPANSION_QUESTIONS,
+];
 
 function questionHash(value: string): number {
   let hash = 2166136261;
