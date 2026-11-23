@@ -3,6 +3,9 @@ import { ContentPage, contentHead } from "@/components/site";
 import { CONTENT_PAGES } from "@/lib/content-pages";
 
 export const Route = createFileRoute("/$slug")({
+  beforeLoad: ({ params }) => {
+    if (!Object.hasOwn(CONTENT_PAGES, params.slug)) throw notFound();
+  },
   component: ContentBySlug,
   head: ({ params }) => {
     const page = CONTENT_PAGES[params.slug];

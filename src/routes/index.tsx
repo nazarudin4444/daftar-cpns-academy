@@ -48,6 +48,7 @@ export const Route = createFileRoute("/")({
       { property: "og:url", content: canonicalUrl("/") },
       { property: "og:locale", content: "id_ID" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
       { name: "twitter:title", content: "Belajar & Latihan CAT CPNS | Simulasi Gratis" },
       {
         name: "twitter:description",

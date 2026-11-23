@@ -2,6 +2,7 @@ import { QUESTION_BANK, type Question, type Subject } from "@/lib/exam";
 import { CPNS_HOTS_QUESTIONS } from "@/lib/exam-cpns-hots";
 import { BANK_EXPANSION_QUESTIONS } from "@/lib/exam-bank-expansion";
 import { TIU_VISUAL_QUESTIONS, TIU_EXTRA_QUESTIONS } from "@/lib/exam-tiu-visual";
+import { TIU_FIGURAL_HOTS_QUESTIONS } from "@/lib/exam-tiu-figural-hots";
 
 export type CPNSSubject = Extract<Subject, "TWK" | "TIU" | "TKP">;
 
@@ -589,10 +590,39 @@ for (const category of CPNS_SUBJECT_CATALOG) {
       subchapters: [
         {
           id: "tiu-visual-patterns",
-          title: "Pola bentuk dan urutan visual",
-          description: "Analisis urutan gambar dan temukan perpindahan bentuk yang berulang.",
-          questionIds: TIU_VISUAL_QUESTIONS.map((question) => question.id),
+          title: "Pola gambar dan penalaran figural",
+          description:
+            "Latih urutan bentuk, rotasi, pencerminan, lintasan kisi, dan matriks titik.",
+          questionIds: TIU_VISUAL_QUESTIONS.filter(
+            (question) => !question.id.startsWith("tiu-figural-hots-"),
+          ).map((question) => question.id),
         },
+        ...(
+          [
+            [
+              "analogi",
+              "HOTS: analogi transformasi",
+              "Simpulkan gabungan pencerminan, rotasi, dan pertukaran warna dari dua contoh.",
+            ],
+            [
+              "matriks",
+              "HOTS: matriks gabungan pola",
+              "Temukan sudut rotasi serta aturan gabungan sel yang sesuai dengan kedua baris.",
+            ],
+            [
+              "deret",
+              "HOTS: deret dua aturan",
+              "Pisahkan dua transformasi bergantian untuk menentukan pola berikutnya.",
+            ],
+          ] as const
+        ).map(([family, title, description]) => ({
+          id: `tiu-figural-hots-${family}`,
+          title,
+          description,
+          questionIds: TIU_FIGURAL_HOTS_QUESTIONS.filter((question) =>
+            question.id.startsWith(`tiu-figural-hots-${family}-`),
+          ).map((question) => question.id),
+        })),
         {
           id: "tiu-numerik-lanjutan",
           title: "Rasio dan pembagian beban",

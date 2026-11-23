@@ -11,7 +11,8 @@ import {
   Play,
   X,
 } from "lucide-react";
-import { SiteShell } from "@/components/site";
+import { SiteShell, contentHead } from "@/components/site";
+import { CONTENT_PAGES } from "@/lib/content-pages";
 import { DirectoryTips } from "@/components/directory-tips";
 
 type SourceCategory = "pemerintah" | "youtube" | "literasi" | "meterai" | "aplikasi";
@@ -41,9 +42,12 @@ function SourceLogo({ source }: { source: Source }) {
         </span>
       ) : (
         <img
-          src={source.icon ?? (isChannel
-            ? "/brand/channels/" + handle + ".jpg"
-            : "https://www.google.com/s2/favicons?domain=" + host + "&sz=128")}
+          src={
+            source.icon ??
+            (isChannel
+              ? "/brand/channels/" + handle + ".jpg"
+              : "https://www.google.com/s2/favicons?domain=" + host + "&sz=128")
+          }
           alt={"Logo " + source.name}
           width={56}
           height={56}
@@ -169,11 +173,51 @@ const sources: Source[] = [
     tags: ["CAT", "Simulasi", "Antarmuka ujian"],
     action: "Buka portal CAT BKN",
   },
-  { name: "Siap SKD", category: "aplikasi", url: "https://play.google.com/store/apps/details?id=com.perawatcenter.siapskd", icon: "/apps/siapskd.png", description: "Aplikasi untuk latihan Seleksi Kompetensi Dasar CPNS.", tags: ["Android", "CPNS", "SKD"], action: "Lihat di Google Play" },
-  { name: "Siap SKB", category: "aplikasi", url: "https://play.google.com/store/apps/details?id=com.perawatcenter.siapskb", icon: "/apps/siapskb.png", description: "Aplikasi untuk belajar Seleksi Kompetensi Bidang CPNS.", tags: ["Android", "CPNS", "SKB"], action: "Lihat di Google Play" },
-  { name: "CPNS Gratis", category: "aplikasi", url: "https://play.google.com/store/apps/details?id=com.perawatcenter.cpnsgratis", icon: "/apps/cpnsgratis.png", description: "Aplikasi belajar dan latihan CPNS dari Perawat Center.", tags: ["Android", "CPNS", "Latihan soal"], action: "Lihat di Google Play" },
-  { name: "Siap CPNS", category: "aplikasi", url: "https://play.google.com/store/apps/details?id=com.perawatcenter.siapcpns", icon: "/apps/siapcpns.png", description: "Aplikasi untuk persiapan dan latihan CPNS.", tags: ["Android", "CPNS", "Persiapan"], action: "Lihat di Google Play" },
-  { name: "Lolos ASN", category: "aplikasi", url: "https://play.google.com/store/apps/details?id=com.perawatcenter.lolosasn", icon: "/apps/lolosasn.png", description: "Aplikasi persiapan seleksi ASN dari Perawat Center.", tags: ["Android", "ASN", "CPNS"], action: "Lihat di Google Play" },
+  {
+    name: "Siap SKD",
+    category: "aplikasi",
+    url: "https://play.google.com/store/apps/details?id=com.perawatcenter.siapskd",
+    icon: "/apps/siapskd.png",
+    description: "Aplikasi untuk latihan Seleksi Kompetensi Dasar CPNS.",
+    tags: ["Android", "CPNS", "SKD"],
+    action: "Lihat di Google Play",
+  },
+  {
+    name: "Siap SKB",
+    category: "aplikasi",
+    url: "https://play.google.com/store/apps/details?id=com.perawatcenter.siapskb",
+    icon: "/apps/siapskb.png",
+    description: "Aplikasi untuk belajar Seleksi Kompetensi Bidang CPNS.",
+    tags: ["Android", "CPNS", "SKB"],
+    action: "Lihat di Google Play",
+  },
+  {
+    name: "CPNS Gratis",
+    category: "aplikasi",
+    url: "https://play.google.com/store/apps/details?id=com.perawatcenter.cpnsgratis",
+    icon: "/apps/cpnsgratis.png",
+    description: "Aplikasi belajar dan latihan CPNS dari Perawat Center.",
+    tags: ["Android", "CPNS", "Latihan soal"],
+    action: "Lihat di Google Play",
+  },
+  {
+    name: "Siap CPNS",
+    category: "aplikasi",
+    url: "https://play.google.com/store/apps/details?id=com.perawatcenter.siapcpns",
+    icon: "/apps/siapcpns.png",
+    description: "Aplikasi untuk persiapan dan latihan CPNS.",
+    tags: ["Android", "CPNS", "Persiapan"],
+    action: "Lihat di Google Play",
+  },
+  {
+    name: "Lolos ASN",
+    category: "aplikasi",
+    url: "https://play.google.com/store/apps/details?id=com.perawatcenter.lolosasn",
+    icon: "/apps/lolosasn.png",
+    description: "Aplikasi persiapan seleksi ASN dari Perawat Center.",
+    tags: ["Android", "ASN", "CPNS"],
+    action: "Lihat di Google Play",
+  },
   {
     name: "Privat Al Faiz",
     category: "youtube",
@@ -247,57 +291,15 @@ const filters: { id: CategoryFilter; label: string }[] = [
 
 export const Route = createFileRoute("/situs")({
   component: DirectoryPage,
-  head: () => ({
-    meta: [
-      { title: "Direktori Portal Resmi & Kanal Belajar CPNS Terpercaya | daftar-cpns.com" },
-      {
-        name: "description",
-        content:
-          "Kumpulan tautan resmi SSCASN BKN, regulasi MenPAN-RB, serta rekomendasi kanal YouTube edukasi latihan soal SKD TIU, TWK, dan TKP terpercaya.",
-      },
-      { property: "og:site_name", content: "Daftar CPNS" },
-      {
-        property: "og:title",
-        content: "Direktori Portal Resmi & Kanal Belajar CPNS Terpercaya",
-      },
-      {
-        property: "og:description",
-        content:
-          "Direktori portal pemerintah, kanal belajar independen, dan sumber literasi untuk persiapan CASN.",
-      },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "/situs" },
-      { property: "og:locale", content: "id_ID" },
-      { property: "og:image", content: "/brand/social-card.jpg" },
-      { property: "og:image:type", content: "image/jpeg" },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
-      {
-        property: "og:image:alt",
-        content: "Direktori rujukan belajar CPNS dari Daftar CPNS",
-      },
-      { name: "twitter:card", content: "summary_large_image" },
-      {
-        name: "twitter:title",
-        content: "Direktori Portal Resmi & Kanal Belajar CPNS",
-      },
-      {
-        name: "twitter:description",
-        content:
-          "Portal pemerintah, kanal belajar independen, dan sumber literasi untuk persiapan CASN.",
-      },
-      { name: "twitter:image", content: "/brand/social-card.jpg" },
-      {
-        name: "twitter:image:alt",
-        content: "Direktori rujukan belajar CPNS dari Daftar CPNS",
-      },
-    ],
-    links: [{ rel: "canonical", href: "/situs" }],
-  }),
+  head: () => contentHead(CONTENT_PAGES["situs"]!, "/situs"),
 });
 
 const categoryDetails = {
-  aplikasi: { icon: Play, title: "Aplikasi belajar CPNS", copy: "Aplikasi Perawat Center untuk mendampingi persiapan seleksi." },
+  aplikasi: {
+    icon: Play,
+    title: "Aplikasi belajar CPNS",
+    copy: "Aplikasi Perawat Center untuk mendampingi persiapan seleksi.",
+  },
   meterai: {
     icon: ShieldCheck,
     title: "e-Meterai & dokumen pendaftaran",
@@ -354,8 +356,8 @@ function DirectoryPage() {
               <span className="text-primary">Belajar lebih terarah.</span>
             </h1>
             <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
-              Aplikasi CPNS, portal resmi, e-Meterai, pengajar pilihan, dan bahan bacaan dalam satu direktori. Cari
-              sumber yang Anda perlukan, lalu lanjutkan belajar.
+              Aplikasi CPNS, portal resmi, e-Meterai, pengajar pilihan, dan bahan bacaan dalam satu
+              direktori. Cari sumber yang Anda perlukan, lalu lanjutkan belajar.
             </p>
           </div>
           <aside className="rounded-xl border border-primary/15 bg-secondary/60 p-5">
@@ -500,89 +502,91 @@ function DirectoryPage() {
                 </button>
               </div>
             ) : (
-              (["aplikasi", "pemerintah", "meterai", "youtube", "literasi"] as const).map((category) => {
-                const items = visibleSources.filter((source) => source.category === category);
-                if (!items.length) return null;
-                const { icon: Icon, title, copy } = categoryDetails[category];
-                return (
-                  <section
-                    key={category}
-                    aria-labelledby={"category-" + category}
-                    className="mb-9 last:mb-0"
-                  >
-                    <div className="mb-4 flex items-start gap-3">
-                      <Icon size={20} className="mt-1 shrink-0 text-primary" aria-hidden="true" />
-                      <div>
-                        <h2
-                          id={"category-" + category}
-                          className="text-xl font-bold tracking-tight"
-                        >
-                          {title}
-                        </h2>
-                        <p className="mt-1 text-sm leading-6 text-muted-foreground">{copy}</p>
-                      </div>
-                    </div>
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {items.map((source) => (
-                        <article
-                          key={source.url}
-                          className="group flex min-w-0 flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/40 sm:p-6"
-                        >
-                          <div className="flex items-center gap-3">
-                            <SourceLogo source={source} />
-                            <div className="min-w-0">
-                              <h3 className="break-words text-lg font-bold leading-snug">
-                                {source.name}
-                              </h3>
-                              <p className="mt-1 break-all text-xs text-muted-foreground">
-                                {category === "youtube"
-                                  ? new URL(source.url).pathname.slice(1)
-                                  : new URL(source.url).hostname.replace(/^www\./, "")}
-                              </p>
-                              {(category === "pemerintah" &&
-                                new URL(source.url).hostname.endsWith(".go.id")) ||
-                              [
-                                "https://e-meterai.co.id/",
-                                "https://posind.e-meterai.co.id/",
-                              ].includes(source.url) ? (
-                                <span className="mt-2 inline-flex min-h-6 items-center gap-1 rounded-full border border-positive/30 bg-positive/10 px-2 py-1 text-[11px] font-bold text-positive">
-                                  <BadgeCheck size={13} aria-hidden="true" />
-                                  {category === "pemerintah"
-                                    ? "Domain Resmi Pemerintah RI · .go.id"
-                                    : "Terdaftar Resmi PERURI"}
-                                </span>
-                              ) : null}
-                            </div>
-                          </div>
-                          <p className="mt-4 flex-1 text-sm leading-6 text-muted-foreground">
-                            {source.description}
-                          </p>
-                          <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Topik terkait">
-                            {source.tags.map((tag) => (
-                              <li
-                                key={tag}
-                                className="rounded-md bg-secondary/60 px-2 py-1 text-xs font-medium text-secondary-foreground"
-                              >
-                                {tag}
-                              </li>
-                            ))}
-                          </ul>
-                          <a
-                            href={source.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-5 flex min-h-11 items-center justify-between gap-3 rounded-lg border border-border px-3 text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              (["aplikasi", "pemerintah", "meterai", "youtube", "literasi"] as const).map(
+                (category) => {
+                  const items = visibleSources.filter((source) => source.category === category);
+                  if (!items.length) return null;
+                  const { icon: Icon, title, copy } = categoryDetails[category];
+                  return (
+                    <section
+                      key={category}
+                      aria-labelledby={"category-" + category}
+                      className="mb-9 last:mb-0"
+                    >
+                      <div className="mb-4 flex items-start gap-3">
+                        <Icon size={20} className="mt-1 shrink-0 text-primary" aria-hidden="true" />
+                        <div>
+                          <h2
+                            id={"category-" + category}
+                            className="text-xl font-bold tracking-tight"
                           >
-                            {source.action}
-                            <ExternalLink size={16} className="shrink-0" aria-hidden="true" />
-                            <span className="sr-only"> (tab baru)</span>
-                          </a>
-                        </article>
-                      ))}
-                    </div>
-                  </section>
-                );
-              })
+                            {title}
+                          </h2>
+                          <p className="mt-1 text-sm leading-6 text-muted-foreground">{copy}</p>
+                        </div>
+                      </div>
+                      <div className="grid gap-4 md:grid-cols-2">
+                        {items.map((source) => (
+                          <article
+                            key={source.url}
+                            className="group flex min-w-0 flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/40 sm:p-6"
+                          >
+                            <div className="flex items-center gap-3">
+                              <SourceLogo source={source} />
+                              <div className="min-w-0">
+                                <h3 className="break-words text-lg font-bold leading-snug">
+                                  {source.name}
+                                </h3>
+                                <p className="mt-1 break-all text-xs text-muted-foreground">
+                                  {category === "youtube"
+                                    ? new URL(source.url).pathname.slice(1)
+                                    : new URL(source.url).hostname.replace(/^www\./, "")}
+                                </p>
+                                {(category === "pemerintah" &&
+                                  new URL(source.url).hostname.endsWith(".go.id")) ||
+                                [
+                                  "https://e-meterai.co.id/",
+                                  "https://posind.e-meterai.co.id/",
+                                ].includes(source.url) ? (
+                                  <span className="mt-2 inline-flex min-h-6 items-center gap-1 rounded-full border border-positive/30 bg-positive/10 px-2 py-1 text-[11px] font-bold text-positive">
+                                    <BadgeCheck size={13} aria-hidden="true" />
+                                    {category === "pemerintah"
+                                      ? "Domain Resmi Pemerintah RI · .go.id"
+                                      : "Terdaftar Resmi PERURI"}
+                                  </span>
+                                ) : null}
+                              </div>
+                            </div>
+                            <p className="mt-4 flex-1 text-sm leading-6 text-muted-foreground">
+                              {source.description}
+                            </p>
+                            <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Topik terkait">
+                              {source.tags.map((tag) => (
+                                <li
+                                  key={tag}
+                                  className="rounded-md bg-secondary/60 px-2 py-1 text-xs font-medium text-secondary-foreground"
+                                >
+                                  {tag}
+                                </li>
+                              ))}
+                            </ul>
+                            <a
+                              href={source.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mt-5 flex min-h-11 items-center justify-between gap-3 rounded-lg border border-border px-3 text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                            >
+                              {source.action}
+                              <ExternalLink size={16} className="shrink-0" aria-hidden="true" />
+                              <span className="sr-only"> (tab baru)</span>
+                            </a>
+                          </article>
+                        ))}
+                      </div>
+                    </section>
+                  );
+                },
+              )
             )}
           </div>
         </div>

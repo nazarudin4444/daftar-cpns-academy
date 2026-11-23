@@ -1,21 +1,12 @@
 import { FileCheck } from "lucide-react";
 import { PageHero, heroGhostLink, heroPrimaryLink } from "@/components/page-hero";
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteShell } from "@/components/site";
+import { SiteShell, contentHead } from "@/components/site";
+import { CONTENT_PAGES } from "@/lib/content-pages";
 import { DocumentPreparation, LetterGenerator } from "@/components/document-preparation";
 
 export const Route = createFileRoute("/persiapan-dokumen")({
-  head: () => ({
-    meta: [
-      { title: "Cek Berkas SSCASN, Kompres Lokal & Draf Surat CASN | Daftar CPNS" },
-      {
-        name: "description",
-        content:
-          "Periksa ukuran JPG/PDF, kompres dokumen di browser, dan susun draf surat CASN tanpa mengunggah berkas ke server.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "/persiapan-dokumen" }],
-  }),
+  head: () => contentHead(CONTENT_PAGES["persiapan-dokumen"]!, "/persiapan-dokumen"),
   component: () => (
     <SiteShell>
       <PageHero

@@ -85,11 +85,13 @@ function selectPackageQuestions(
       );
     }
     return candidates
+      .map((question) => ({ question, rank: rank(`${id}:${question.id}`) }))
       .sort(
         (left, right) =>
-          rank(`${id}:${left.id}`) - rank(`${id}:${right.id}`) || left.id.localeCompare(right.id),
+          left.rank - right.rank || left.question.id.localeCompare(right.question.id),
       )
-      .slice(0, count);
+      .slice(0, count)
+      .map(({ question }) => question);
   });
   const expectedCount = Object.values(examPackage.composition).reduce(
     (sum, count) => sum + count,

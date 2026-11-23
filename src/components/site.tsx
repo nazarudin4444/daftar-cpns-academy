@@ -30,6 +30,11 @@ import {
   YAxis,
 } from "recharts";
 import { Button } from "@/components/ui/button";
+import { BankQuestionCard } from "@/components/bank-question-card";
+import { FiguralExamples, FiguralLinks } from "@/components/figural-learning";
+import { FIGURAL_PAGES } from "@/lib/figural-pages";
+import { QuestionIllustration } from "@/components/question-illustration";
+export { QuestionIllustration } from "@/components/question-illustration";
 import { ExamControls, ReadingMode, VisualScorecard } from "@/components/study-tools";
 import { canonicalUrl, SITE_ORIGIN, OPERATOR_NAME, CONTACT_EMAIL } from "@/lib/site-config";
 import { CONTENT_PAGES, type ContentPageData } from "@/lib/content-pages";
@@ -86,23 +91,6 @@ const SUBJECT_NAMES: Record<Subject, string> = {
   Teknis: "Kompetensi Teknis",
   Kedinasan: "Penalaran dasar kedinasan",
 };
-
-export function QuestionIllustration({ question }: { question: Question }) {
-  if (!question.diagram) return null;
-  return (
-    <figure className="my-4 overflow-hidden rounded-xl border border-border bg-slate-50 p-3 dark:bg-slate-900 sm:p-4">
-      <img
-        src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(question.diagram.svg)}`}
-        alt={question.diagram.alt}
-        className="mx-auto h-auto w-full max-w-2xl"
-        loading="lazy"
-      />
-      <figcaption className="mt-2 text-center text-xs text-muted-foreground">
-        Diagram soal · Perhatikan urutan dari kiri ke kanan.
-      </figcaption>
-    </figure>
-  );
-}
 
 const BOOKMARKS_KEY = "daftar-cpns:bookmarked-questions:v1";
 function readBookmarkedIds(): string[] {
@@ -300,6 +288,9 @@ export function SiteFooter() {
             <Link to="/soal-tiu" className="min-h-8 hover:text-primary">
               Latihan TIU
             </Link>
+            <Link to="/soal-tiu-figural" className="min-h-8 hover:text-primary">
+              TIU figural bergambar
+            </Link>
             <Link to="/soal-tkp" className="min-h-8 hover:text-primary">
               Latihan TKP
             </Link>
@@ -472,18 +463,11 @@ function CPNSQuestionBank() {
                 onClick={() => selectSubject(item.subject)}
                 className={`relative min-h-24 overflow-hidden rounded-xl border-2 px-4 pt-4 pb-3 text-left transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   active
-                    ? item.subject === "TWK"
-                      ? "border-blue-700 bg-blue-700 text-white"
-                      : item.subject === "TIU"
-                        ? "border-violet-700 bg-violet-700 text-white"
-                        : "border-emerald-700 bg-emerald-700 text-white"
+                    ? "border-primary bg-primary text-primary-foreground"
                     : "border-border bg-background text-foreground hover:border-primary/50"
                 }`}
               >
-                <span
-                  aria-hidden="true"
-                  className={`absolute inset-x-0 top-0 h-1 ${item.subject === "TWK" ? "bg-primary" : item.subject === "TIU" ? "bg-chart-2" : "bg-chart-4"}`}
-                />
+                <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-primary" />
                 <span className="flex items-center justify-between gap-3">
                   <span className="text-lg font-extrabold">
                     {item.subject}
@@ -562,6 +546,67 @@ function CPNSQuestionBank() {
             </button>
           )}
         </label>
+
+        {!activeSubchapter && !query && (
+          <section
+            className="overflow-hidden rounded-2xl border border-border bg-card"
+            aria-label="Latihan figural HOTS"
+          >
+            <div className="grid gap-6 p-5 sm:p-7 lg:grid-cols-[1fr_1.4fr] lg:gap-10">
+              <div className="flex flex-col justify-center border-l-4 border-primary pl-5">
+                <p className="text-sm font-semibold text-primary">Ruang latihan figural</p>
+                <h3 className="mt-3 text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl">
+                  Baca polanya.
+                  <br />
+                  Temukan jawabannya.
+                </h3>
+                <p className="mt-3 max-w-sm text-sm leading-7 text-muted-foreground">
+                  Latih ketelitian melalui analogi, matriks, dan deret gambar. Setiap soal disertai
+                  pilihan visual dan pembahasan langkah berpikir.
+                </p>
+                <p className="mt-5 text-sm font-semibold text-foreground">
+                  {QUESTION_BANK.filter((q) => q.id.startsWith("tiu-figural-hots-")).length} soal
+                  HOTS bergambar
+                </p>
+              </div>
+              <div className="divide-y divide-border">
+                {CPNS_SUBJECT_CATALOG.find((item) => item.subject === "TIU")!
+                  .chapters.flatMap((chapter) => chapter.subchapters)
+                  .filter((item) => item.id.startsWith("tiu-figural-hots-"))
+                  .map((item, index) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        setSubject("TIU");
+                        setHotsOnly(true);
+                        selectSubchapter(item.id);
+                      }}
+                      className="group flex min-h-24 w-full cursor-pointer items-center gap-4 rounded-lg px-2 py-5 text-left transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <span className="text-2xl font-medium tabular-nums text-primary">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-semibold text-foreground">
+                          {item.title.replace("HOTS: ", "")}
+                        </span>
+                        <span className="mt-1 block text-sm leading-6 text-muted-foreground">
+                          {item.description}
+                        </span>
+                      </span>
+                      <span className="shrink-0 text-right text-sm font-semibold text-foreground">
+                        {item.questionIds.length}
+                        <span className="block text-xs font-normal text-muted-foreground">
+                          soal
+                        </span>
+                      </span>
+                    </button>
+                  ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {activeSubchapter ? (
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-secondary/60 p-4">
@@ -684,46 +729,16 @@ function CPNSQuestionBank() {
         )}
 
         {visibleQuestions.length > 0 ? (
-          <div className="mx-auto max-w-4xl space-y-4" aria-live="polite">
+          <div className="mx-auto max-w-6xl space-y-6" aria-live="polite">
             <p className="text-sm text-muted-foreground">
               {visibleQuestions.length} soal {query ? "ditemukan" : "dalam subbab ini"}
             </p>
             {visibleQuestions.map((question, index) => (
-              <article
+              <BankQuestionCard
                 key={question.id}
-                className="rounded-xl border border-border bg-card p-5 sm:p-6"
-              >
-                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-                  {query ? `Hasil ${index + 1}` : `Soal ${selectedSeriesOffset + index + 1}`} ·{" "}
-                  {subject}
-                  {question.difficulty === "HOTS" ? " · HOTS" : ""}
-                </p>
-                <h4 className="mt-2 font-semibold leading-7 text-foreground">{question.prompt}</h4>
-                <QuestionIllustration question={question} />
-                <ol className="mt-4 space-y-2 text-sm leading-6 text-foreground">
-                  {question.options.map((option) => (
-                    <li
-                      key={option.label}
-                      className="flex gap-3 rounded-lg border border-border bg-background px-4 py-3 text-base"
-                    >
-                      <strong className="shrink-0">{option.label}.</strong>
-                      <span>{option.text}</span>
-                    </li>
-                  ))}
-                </ol>
-                <details className="mt-4 border-t border-border pt-2">
-                  <summary className="min-h-11 cursor-pointer rounded-lg bg-positive/10 px-3 py-3 font-semibold text-positive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                    Lihat kunci dan pembahasan
-                  </summary>
-                  <p className="pb-2 leading-7 text-muted-foreground">
-                    <strong className="text-foreground">Jawaban {question.answer}.</strong>{" "}
-                    {question.explanation}
-                  </p>
-                  <p className="pb-3 text-sm leading-6 text-muted-foreground">
-                    <strong className="text-foreground">Tips &amp; trik:</strong> {question.tip}
-                  </p>
-                </details>
-              </article>
+                question={question}
+                number={query ? index + 1 : selectedSeriesOffset + index + 1}
+              />
             ))}
           </div>
         ) : query ? (
@@ -783,6 +798,7 @@ export function contentStructuredData(page: ContentPageData) {
         name: page.title,
         description: page.description,
         inLanguage: "id",
+        isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
         publisher: { "@id": `${SITE_ORIGIN}/#operator` },
         breadcrumb: { "@id": `${canonicalPath}#breadcrumb` },
         ...(isSimulator ? { mainEntity: { "@id": `${canonicalPath}#application` } } : {}),
@@ -832,48 +848,41 @@ export function ContentPage({ page }: { page: ContentPageData }) {
   const isPassingGrade = page === CONTENT_PAGES["passing-grade-cpns"];
   const isDashboard = slug === "dashboard";
   const isQuestionBank = slug === "latihan-soal-cpns";
-  const structuredData = contentStructuredData(page);
   return (
     <SiteShell>
       <main className="min-h-[65vh]">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
-          }}
-        />
-        <div
-          className={`bg-hero relative overflow-hidden text-primary-foreground ${isSimulator || isQuestionBank ? "hidden" : ""}`}
-        >
-          <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-14 lg:px-8">
-            <nav aria-label="Breadcrumb" className="mb-5 text-sm text-primary-foreground/70">
-              <ol className="flex flex-wrap items-center gap-2">
-                <li>
-                  <Link
-                    to="/"
-                    className="inline-flex min-h-11 items-center hover:text-primary-foreground"
-                  >
-                    Beranda
-                  </Link>
-                </li>
-                <li aria-hidden="true">/</li>
-                <li aria-current="page" className="font-semibold text-primary-foreground">
-                  {page.title}
-                </li>
-              </ol>
-            </nav>
-            <p className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3.5 py-1.5 text-sm font-semibold text-primary-foreground backdrop-blur-md">
-              <ShieldCheck size={16} aria-hidden="true" />
-              Platform Edukasi &amp; Simulasi CAT Independen
-            </p>
-            <h1 className="mt-5 max-w-3xl text-3xl font-bold leading-tight tracking-tight text-primary-foreground sm:text-4xl">
-              {page.title}
-            </h1>
-            <p className="mt-4 max-w-3xl text-base leading-7 text-primary-foreground/80">
-              {page.intro}
-            </p>
+        {!isSimulator && !isQuestionBank && (
+          <div className="bg-hero relative overflow-hidden text-primary-foreground">
+            <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-14 lg:px-8">
+              <nav aria-label="Breadcrumb" className="mb-5 text-sm text-primary-foreground/70">
+                <ol className="flex flex-wrap items-center gap-2">
+                  <li>
+                    <Link
+                      to="/"
+                      className="inline-flex min-h-11 items-center hover:text-primary-foreground"
+                    >
+                      Beranda
+                    </Link>
+                  </li>
+                  <li aria-hidden="true">/</li>
+                  <li aria-current="page" className="font-semibold text-primary-foreground">
+                    {page.title}
+                  </li>
+                </ol>
+              </nav>
+              <p className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3.5 py-1.5 text-sm font-semibold text-primary-foreground backdrop-blur-md">
+                <ShieldCheck size={16} aria-hidden="true" />
+                Platform Edukasi &amp; Simulasi CAT Independen
+              </p>
+              <h1 className="mt-5 max-w-3xl text-3xl font-bold leading-tight tracking-tight text-primary-foreground sm:text-4xl">
+                {page.title}
+              </h1>
+              <p className="mt-4 max-w-3xl text-base leading-7 text-primary-foreground/80">
+                {page.intro}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
         <div
           className={`mx-auto px-4 sm:px-6 lg:px-8 ${isSimulator || isQuestionBank ? "w-full py-5 lg:py-6" : "max-w-7xl py-8 lg:py-10"} ${isSimulator || isQuestionBank ? "" : "grid gap-6 md:grid-cols-[minmax(0,1fr)_250px] md:gap-8"}`}
         >
@@ -947,6 +956,10 @@ export function ContentPage({ page }: { page: ContentPageData }) {
                 )}
               </section>
             ))}
+            {(slug === "soal-tiu" || isQuestionBank || FIGURAL_PAGES[slug]) && (
+              <FiguralLinks currentSlug={slug} />
+            )}
+            {FIGURAL_PAGES[slug] && <FiguralExamples slug={slug} />}
             <section className="border-t border-border pt-6">
               <h2 className="text-lg font-bold">Lanjutkan belajar</h2>
               <div className="mt-4 flex flex-wrap gap-3">
@@ -1809,6 +1822,7 @@ function PassingGradeCalculator() {
 }
 
 function QuickPractice({ subject }: { subject: "TWK" | "TIU" | "TKP" }) {
+  const resultRef = useRef<HTMLDivElement>(null);
   const subjectCatalog = CPNS_SUBJECT_CATALOG.find((item) => item.subject === subject);
   const subchapters = subjectCatalog?.chapters.flatMap((chapter) => chapter.subchapters) ?? [];
   const [subchapterId, setSubchapterId] = useState(subchapters[0]?.id ?? "");
@@ -1822,6 +1836,10 @@ function QuickPractice({ subject }: { subject: "TWK" | "TIU" | "TKP" }) {
   const question = questions[questionIndex];
   const finished = questions.length > 0 && questionIndex >= questions.length;
   const chosenSubchapter = subchapters.find((item) => item.id === subchapterId);
+
+  useEffect(() => {
+    if (finished) resultRef.current?.focus();
+  }, [finished]);
 
   function changeSubchapter(value: string) {
     setSubchapterId(value);
@@ -1837,102 +1855,194 @@ function QuickPractice({ subject }: { subject: "TWK" | "TIU" | "TKP" }) {
   }
 
   return (
-    <section aria-labelledby="quick-practice-heading" className="space-y-5">
-      <div>
-        <h2 id="quick-practice-heading" className="text-xl font-bold">
+    <section
+      aria-labelledby="quick-practice-heading"
+      className="space-y-5 rounded-2xl border border-border bg-card p-5 sm:p-8"
+    >
+      <div className="border-l-4 border-primary pl-5">
+        <p className="mb-2 text-sm font-semibold text-primary">Ruang latihan mandiri</p>
+        <h2 id="quick-practice-heading" className="text-2xl font-bold tracking-tight sm:text-3xl">
           Latihan kilat {subject}
         </h2>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Pilih subtopik dan kerjakan lima soal. Pembahasan terbuka setelah Anda memilih jawaban.
         </p>
       </div>
-      <label className="block text-sm font-semibold">
-        Subtopik
-        <select
-          value={subchapterId}
-          onChange={(event) => changeSubchapter(event.target.value)}
-          className="mt-2 min-h-11 w-full rounded-md border border-input bg-background px-3 text-foreground"
+      {subject === "TIU" && (
+        <div
+          className="grid gap-2 sm:grid-cols-3"
+          role="group"
+          aria-label="Pilih latihan figural HOTS"
         >
-          {subjectCatalog?.chapters.map((chapter) => (
-            <optgroup key={chapter.id} label={chapter.title}>
-              {chapter.subchapters.map((subchapter) => (
-                <option key={subchapter.id} value={subchapter.id}>
-                  {subchapter.title}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-      </label>
-      {series.length > 1 && (
+          {subchapters
+            .filter((item) => item.id.startsWith("tiu-figural-hots-"))
+            .map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                aria-pressed={subchapterId === item.id}
+                onClick={() => changeSubchapter(item.id)}
+                className={`min-h-20 cursor-pointer rounded-xl border p-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${subchapterId === item.id ? "border-primary bg-primary/10" : "border-border bg-background hover:bg-secondary"}`}
+              >
+                <span className="block text-sm font-semibold">
+                  {item.title.replace("HOTS: ", "")}
+                </span>
+                <span className="mt-1 block text-xs text-muted-foreground">
+                  {item.questionIds.length} soal bergambar
+                  {subchapterId === item.id ? " · Dipilih" : ""}
+                </span>
+              </button>
+            ))}
+        </div>
+      )}
+      <div className="grid gap-4 rounded-xl bg-secondary/40 p-4 sm:grid-cols-2">
         <label className="block text-sm font-semibold">
-          Set soal
+          Subtopik
           <select
-            value={seriesIndex}
-            onChange={(event) => {
-              setSeriesIndex(Number(event.target.value));
-              setQuestionIndex(0);
-              setSelectedAnswer(null);
-              setCorrectCount(0);
-            }}
+            value={subchapterId}
+            onChange={(event) => changeSubchapter(event.target.value)}
             className="mt-2 min-h-11 w-full rounded-md border border-input bg-background px-3 text-foreground"
           >
-            {series.map((item, index) => (
-              <option key={item.id} value={index}>
-                {item.title} · {item.questions.length} soal
-              </option>
+            {subjectCatalog?.chapters.map((chapter) => (
+              <optgroup key={chapter.id} label={chapter.title}>
+                {chapter.subchapters.map((subchapter) => (
+                  <option key={subchapter.id} value={subchapter.id}>
+                    {subchapter.title}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </label>
-      )}
+        {series.length > 1 && (
+          <label className="block text-sm font-semibold">
+            Set soal
+            <select
+              value={seriesIndex}
+              onChange={(event) => {
+                setSeriesIndex(Number(event.target.value));
+                setQuestionIndex(0);
+                setSelectedAnswer(null);
+                setCorrectCount(0);
+              }}
+              className="mt-2 min-h-11 w-full rounded-md border border-input bg-background px-3 text-foreground"
+            >
+              {series.map((item, index) => (
+                <option key={item.id} value={index}>
+                  {item.title} · {item.questions.length} soal
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+      </div>
       {chosenSubchapter && (
         <p className="text-sm leading-6 text-muted-foreground">{chosenSubchapter.description}</p>
       )}
       {finished ? (
-        <div className="rounded-lg border border-positive/40 bg-positive/5 p-5" aria-live="polite">
-          <p className="text-sm font-semibold text-positive">Set latihan selesai</p>
-          <p className="mt-1 text-xl font-bold">
-            {correctCount} dari {questions.length} jawaban sesuai kunci
+        <div
+          ref={resultRef}
+          tabIndex={-1}
+          className="scroll-mt-24 rounded-xl border border-border bg-secondary/40 p-6 outline-none sm:p-8"
+          aria-live="polite"
+        >
+          <p className="text-sm font-semibold text-primary">Set latihan selesai</p>
+          <p className="mt-3 text-4xl font-bold tabular-nums text-foreground">
+            {correctCount}
+            <span className="text-xl font-normal text-muted-foreground"> / {questions.length}</span>
           </p>
-          <Button
-            className="mt-4 min-h-11"
-            onClick={() => {
-              setQuestionIndex(0);
-              setSelectedAnswer(null);
-              setCorrectCount(0);
-            }}
-          >
-            Ulangi set soal
-          </Button>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Jawaban sesuai kunci. Ulangi set ini untuk memperkuat pemahaman, atau lanjutkan ke set
+            berikutnya.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Button
+              className="min-h-11"
+              onClick={() => {
+                setQuestionIndex(0);
+                setSelectedAnswer(null);
+                setCorrectCount(0);
+              }}
+            >
+              Ulangi set soal
+            </Button>
+            {seriesIndex + 1 < series.length && (
+              <Button
+                variant="outline"
+                className="min-h-11"
+                onClick={() => {
+                  setSeriesIndex(seriesIndex + 1);
+                  setQuestionIndex(0);
+                  setSelectedAnswer(null);
+                  setCorrectCount(0);
+                }}
+              >
+                Set berikutnya
+              </Button>
+            )}
+          </div>
         </div>
       ) : question ? (
-        <article className="rounded-lg border border-border bg-card p-4 sm:p-5">
-          <p className="text-sm font-semibold text-primary">
-            Soal {questionIndex + 1} dari {questions.length} · {question.difficulty}
-          </p>
-          <h3 className="mt-2 font-semibold leading-7">{question.prompt}</h3>
-          <QuestionIllustration question={question} />
-          <fieldset className="mt-4 grid gap-2">
-            <legend className="sr-only">Pilih jawaban</legend>
-            {question.options.map((option) => (
-              <button
-                key={option.label}
-                type="button"
-                disabled={selectedAnswer !== null}
-                aria-pressed={selectedAnswer === option.label}
-                onClick={() => {
-                  setSelectedAnswer(option.label);
-                  if (option.label === question.answer) setCorrectCount((count) => count + 1);
-                }}
-                className={`min-h-12 rounded-md border px-3 py-2 text-left text-sm leading-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${selectedAnswer === option.label ? (option.label === question.answer ? "border-positive bg-positive/5" : "border-destructive bg-destructive/5") : selectedAnswer !== null && option.label === question.answer ? "border-positive bg-positive/5" : "border-border hover:border-primary/50"}`}
-              >
-                <strong className="mr-2">{option.label}.</strong>
-                {option.text}
-              </button>
-            ))}
-          </fieldset>
+        <article className="overflow-hidden rounded-xl border border-border bg-background p-4 sm:p-6">
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
+            <p className="text-sm font-semibold text-primary">
+              Soal {questionIndex + 1} dari {questions.length} · {question.difficulty}
+            </p>
+            <span className="text-xs text-muted-foreground">{correctCount} jawaban benar</span>
+          </div>
+          <progress
+            className="mb-5 h-1.5 w-full accent-primary"
+            value={questionIndex + (selectedAnswer !== null ? 1 : 0)}
+            max={questions.length}
+            aria-label="Progres latihan"
+          />
+          <h3 className="mt-2 text-base font-medium leading-8 sm:text-lg">{question.prompt}</h3>
+          <div
+            className={
+              question.diagram
+                ? "mt-3 grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(250px,1fr)]"
+                : "mt-3"
+            }
+          >
+            {question.diagram && (
+              <div className="min-w-0">
+                <QuestionIllustration key={question.id} question={question} />
+              </div>
+            )}
+            <fieldset className="mt-4 flex min-w-0 flex-col gap-3">
+              <legend className="sr-only">Pilih jawaban</legend>
+              {question.options.map((option) => (
+                <button
+                  key={option.label}
+                  type="button"
+                  disabled={selectedAnswer !== null}
+                  aria-pressed={selectedAnswer === option.label}
+                  onClick={() => {
+                    setSelectedAnswer(option.label);
+                    if (option.label === question.answer) setCorrectCount((count) => count + 1);
+                  }}
+                  className={`flex min-h-14 cursor-pointer items-center gap-3 rounded-xl border p-3 text-left text-sm leading-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default ${selectedAnswer === option.label ? (option.label === question.answer ? "border-positive bg-positive/5" : "border-destructive bg-destructive/5") : selectedAnswer !== null && option.label === question.answer ? "border-positive bg-positive/5" : "border-border hover:border-primary/50"}`}
+                >
+                  <strong className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-secondary">
+                    {option.label}
+                  </strong>
+                  <span>
+                    {option.text}
+                    {selectedAnswer !== null && option.label === question.answer
+                      ? " · Kunci jawaban"
+                      : selectedAnswer === option.label
+                        ? " · Pilihan Anda"
+                        : ""}
+                  </span>
+                </button>
+              ))}
+            </fieldset>
+          </div>
           {selectedAnswer !== null && (
-            <div className="mt-4 border-t border-border pt-4" aria-live="polite">
+            <div
+              className="mt-5 rounded-xl border border-border bg-secondary/40 p-5"
+              aria-live="polite"
+            >
               <p className="font-semibold">
                 {selectedAnswer === question.answer
                   ? "Jawaban sesuai kunci latihan."
@@ -2302,7 +2412,12 @@ export function CATSimulator({ initialTrack = "cpns" }: { initialTrack?: "cpns" 
   if (!hydrated)
     return (
       <section aria-live="polite" className="border-t-2 border-primary bg-card p-5">
-        <p className="font-bold">Memulihkan sesi latihan...</p>
+        <h1 className="text-2xl font-bold">Simulasi CAT CPNS Gratis dan Pembahasan</h1>
+        <p className="mt-3 leading-7 text-muted-foreground">
+          Latihan SKD dengan paket TWK, TIU, dan TKP, timer, navigasi soal, serta pembahasan hasil.
+          Mulai tanpa akun; progres latihan tersimpan di perangkat ini.
+        </p>
+        <p className="mt-4 font-semibold">Menyiapkan sesi latihan...</p>
         <p className="mt-2 text-sm text-muted-foreground">
           Data dibaca dari penyimpanan browser perangkat ini.
         </p>
@@ -4077,17 +4192,25 @@ function ReviewQuestion({
     `ID soal: ${question.id}\nMateri: ${question.subject}\n\nTemuan / koreksi:\n${reportText}\n\nMohon periksa kembali soal dan kunci latihan ini.`,
   );
   return (
-    <article className="border-l-2 border-border pl-4">
-      <h4 className="font-semibold">
-        {index + 1}. {question.prompt}
-      </h4>
+    <article className="rounded-2xl border border-border bg-card p-5 sm:p-7">
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
+        <span className="font-semibold text-foreground">
+          Pembahasan {String(index + 1).padStart(2, "0")} · {question.subject}
+        </span>
+        <span
+          className={`rounded-md px-3 py-1 text-sm font-semibold ${correct ? "bg-positive/10 text-positive" : "bg-secondary text-foreground"}`}
+        >
+          {correct ? "Benar" : answer ? "Perlu ditinjau" : "Belum dijawab"}
+        </span>
+      </div>
+      <h4 className="text-base font-medium leading-8 sm:text-lg">{question.prompt}</h4>
       <QuestionIllustration question={question} />
       {flagged && (
         <p className="mt-1 text-xs font-semibold text-amber-700 dark:text-amber-300">
           Ditandai untuk ditinjau
         </p>
       )}
-      <p className="mt-2 text-sm">
+      <p className="mt-4 rounded-lg border border-border bg-secondary/40 p-4 text-sm leading-7">
         <span className="font-semibold">Jawaban Anda:</span> {answer ?? "Belum dijawab"}.{" "}
         <span className="font-semibold">Kunci latihan:</span> {question.answer}.
       </p>
@@ -4199,6 +4322,12 @@ function formatDuration(totalSeconds: number) {
 
 export function contentHead(page: ContentPageData, canonical: string) {
   return {
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(contentStructuredData(page)).replace(/</g, "\\u003c"),
+      },
+    ],
     meta: [
       { title: page.metaTitle },
       { name: "description", content: page.description },
@@ -4221,7 +4350,10 @@ export function contentHead(page: ContentPageData, canonical: string) {
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: page.metaTitle },
       { name: "twitter:description", content: page.description },
-      ...(page.noIndex ? [{ name: "robots", content: "noindex, nofollow" }] : []),
+      {
+        name: "robots",
+        content: page.noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large",
+      },
     ],
     links: [{ rel: "canonical", href: canonicalUrl(canonical) }],
   };

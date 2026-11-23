@@ -2,22 +2,13 @@ import { ListTree } from "lucide-react";
 import { PageHero, heroGhostLink, heroPrimaryLink } from "@/components/page-hero";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteShell } from "@/components/site";
+import { SiteShell, contentHead } from "@/components/site";
+import { CONTENT_PAGES } from "@/lib/content-pages";
 import { CPNS_SUBJECT_CATALOG, questionsForSubchapter } from "@/lib/exam-catalog";
 import type { Question } from "@/lib/exam";
 
 export const Route = createFileRoute("/kisi-kisi-skd")({
-  head: () => ({
-    meta: [
-      { title: "Kisi-kisi SKD TWK, TIU, TKP & Latihan Topik | Daftar CPNS" },
-      {
-        name: "description",
-        content:
-          "Pelajari ruang lingkup materi SKD dan kerjakan latihan per submateri dengan pembahasan.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "/kisi-kisi-skd" }],
-  }),
+  head: () => contentHead(CONTENT_PAGES["kisi-kisi-skd"]!, "/kisi-kisi-skd"),
   component: Syllabus,
 });
 const scope: Record<string, string[]> = {
@@ -64,7 +55,11 @@ function Syllabus() {
       </PageHero>
       <main className="mx-auto max-w-5xl space-y-8 px-4 py-12 sm:px-6">
         {CPNS_SUBJECT_CATALOG.map((subject) => (
-          <section className="study-panel scroll-mt-28" id={`materi-${subject.subject}`} key={subject.subject}>
+          <section
+            className="study-panel scroll-mt-28"
+            id={`materi-${subject.subject}`}
+            key={subject.subject}
+          >
             <h2 className="text-2xl font-bold">{subject.subject}</h2>
             <ul className="my-4 list-disc space-y-1 pl-5 text-muted-foreground">
               {(scope[subject.subject] ?? []).map((item) => (
@@ -75,7 +70,9 @@ function Syllabus() {
             <div className="divide-y divide-border">
               {subject.chapters.map((chapter) => (
                 <details key={chapter.id} className="py-3">
-                  <summary className="flex min-h-11 cursor-pointer items-center rounded-lg px-2 py-2 font-semibold transition-colors hover:bg-secondary">{chapter.title}</summary>
+                  <summary className="flex min-h-11 cursor-pointer items-center rounded-lg px-2 py-2 font-semibold transition-colors hover:bg-secondary">
+                    {chapter.title}
+                  </summary>
                   {chapter.subchapters.map((sub) => {
                     const questions = questionsForSubchapter(sub.id).slice(0, 10);
                     return (

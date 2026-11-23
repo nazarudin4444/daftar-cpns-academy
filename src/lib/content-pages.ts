@@ -1,3 +1,5 @@
+import { FIGURAL_PAGES } from "@/lib/figural-pages";
+
 export type ContentPageData = {
   title: string;
   metaTitle: string;
@@ -60,6 +62,39 @@ const passingGradeSources = [
 ];
 
 export const CONTENT_PAGES: Record<string, ContentPageData> = {
+  ...FIGURAL_PAGES,
+  "alat-belajar": {
+    title: "Kalkulator Belajar dan Kamus CASN",
+    metaTitle: "Kalkulator SKD SKB dan Kamus CASN | Daftar CPNS",
+    description:
+      "Bandingkan skenario nilai latihan SKD dan SKB, hitung kebutuhan nilai, dan pahami istilah CASN melalui alat belajar gratis di browser.",
+    intro: "Alat bantu untuk memahami skenario nilai dan istilah seleksi.",
+    sections: [],
+  },
+  "persiapan-dokumen": {
+    title: "Persiapan Dokumen CASN",
+    metaTitle: "Cek Berkas CASN, Kompres dan Draf Surat | Daftar CPNS",
+    description:
+      "Periksa ukuran JPG/PDF, kompres dokumen di browser, dan susun draf surat CASN tanpa mengunggah berkas ke server. Cocokkan syarat dengan instansi.",
+    intro: "Persiapkan dokumen dan periksa ukurannya langsung di perangkat Anda.",
+    sections: [],
+  },
+  "kisi-kisi-skd": {
+    title: "Materi SKD dan Latihan per Topik",
+    metaTitle: "Materi SKD TWK, TIU, TKP dan Latihan Topik | Daftar CPNS",
+    description:
+      "Pelajari kelompok materi TWK, TIU, dan TKP, lalu coba latihan per subtopik dengan pembahasan. Cakupan seleksi tetap mengikuti pengumuman resmi.",
+    intro: "Peta belajar SKD untuk memilih topik latihan.",
+    sections: [],
+  },
+  situs: {
+    title: "Direktori Rujukan dan Sumber Belajar CPNS",
+    metaTitle: "Direktori Portal dan Sumber Belajar CPNS | Daftar CPNS",
+    description:
+      "Temukan portal pemerintah, sumber literasi, kanal belajar, dan layanan dokumen CASN. Pilih rujukan sesuai kebutuhan belajar atau persiapan administrasi.",
+    intro: "Direktori rujukan persiapan CASN dengan tautan ke sumbernya.",
+    sections: [],
+  },
   "simulasi-cat-cpns": {
     title: "Simulasi CAT CPNS",
     metaTitle: "200 Paket Simulasi CAT CPNS HOTS Gratis | Daftar CPNS",
@@ -195,11 +230,11 @@ export const CONTENT_PAGES: Record<string, ContentPageData> = {
   },
   "soal-tiu": {
     title: "Latihan Soal TIU",
-    metaTitle: "Latihan Soal TIU, Logika dan Numerik | Daftar CPNS",
+    metaTitle: "Soal TIU: Numerik, Logika dan Figural HOTS | Daftar CPNS",
     description:
-      "Latihan contoh TIU tentang pola bilangan, perbandingan, dan penalaran, dilengkapi pembahasan orisinal.",
+      "Latihan soal TIU numerik, verbal, logika, dan figural HOTS bergambar. Pilih subtopik dan seri latihan gratis, lengkap dengan kunci serta pembahasan.",
     intro:
-      "Latihan TIU demo mencakup pola sederhana, hitungan dasar, dan kesimpulan logis. Setiap soal dilengkapi penjelasan langkah berpikir.",
+      "Latihan TIU mencakup numerik, verbal, logika, dan soal figural HOTS bergambar. Pilih subtopik, kerjakan satu set, lalu pelajari penjelasan langkah berpikir.",
     sections: [
       {
         heading: "Biasakan memeriksa premis",

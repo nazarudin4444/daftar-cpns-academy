@@ -1,4 +1,7 @@
 import type { Question } from "@/lib/exam";
+import { TIU_SPATIAL_QUESTIONS } from "@/lib/exam-tiu-spatial";
+import { TIU_GRID_QUESTIONS } from "@/lib/exam-tiu-grid";
+import { TIU_FIGURAL_HOTS_QUESTIONS } from "@/lib/exam-tiu-figural-hots";
 
 const shapes = ["lingkaran", "persegi", "segitiga", "belah ketupat", "heksagon"] as const;
 const shapeSvg = (sequence: readonly number[]) => {
@@ -19,7 +22,7 @@ const offsets = Array.from({ length: 30 }, (_, index) => ({
   start: Math.floor(index / 4) % 5,
   step: 1 + (index % 4),
 }));
-export const TIU_VISUAL_QUESTIONS: Question[] = offsets.map(({ start, step }, index) => {
+const cyclicQuestions: Question[] = offsets.map(({ start, step }, index) => {
   const sequence = Array.from(
     { length: index < 20 ? 4 : 5 },
     (_, i) => (start + i * step) % shapes.length,
@@ -46,6 +49,13 @@ export const TIU_VISUAL_QUESTIONS: Question[] = offsets.map(({ start, step }, in
     difficulty: "HOTS",
   };
 });
+
+export const TIU_VISUAL_QUESTIONS = [
+  ...cyclicQuestions,
+  ...TIU_SPATIAL_QUESTIONS,
+  ...TIU_GRID_QUESTIONS,
+  ...TIU_FIGURAL_HOTS_QUESTIONS,
+];
 
 const arithmetic = Array.from({ length: 30 }, (_, index) => {
   const base = 8 + index * 3;

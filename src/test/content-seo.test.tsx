@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { CONTENT_PAGES } from "@/lib/content-pages";
@@ -20,6 +20,8 @@ describe("Route dan metadata konten", () => {
       const head = contentHead(page, `/${slug}`);
       expect(head.meta).toContainEqual({ title: page.metaTitle });
       expect(head.links).toContainEqual({ rel: "canonical", href: canonicalUrl(`/${slug}`) });
+      expect(head.scripts).toHaveLength(1);
+      expect(JSON.parse(head.scripts[0]!.children)["@context"]).toBe("https://schema.org");
       if (page.noIndex)
         expect(head.meta).toContainEqual({ name: "robots", content: "noindex, nofollow" });
     });
@@ -56,5 +58,12 @@ describe("Route dan metadata konten", () => {
     }
     expect(sitemap).toContain(`<loc>${canonicalUrl("/")}</loc>`);
     expect(sitemap).not.toContain(`<loc>${canonicalUrl("/simulasi")}</loc>`);
+  });
+  it("mendaftarkan seluruh route publik, termasuk halaman khusus, dalam katalog sitemap", () => {
+    const excluded = new Set(["index", "__root", "$slug", "simulasi", "dashboard"]);
+    for (const file of readdirSync("src/routes").filter((file) => file.endsWith(".tsx"))) {
+      const slug = file.replace(/\.tsx$/, "");
+      if (!excluded.has(slug)) expect(CONTENT_PAGES[slug], slug).toBeDefined();
+    }
   });
 });

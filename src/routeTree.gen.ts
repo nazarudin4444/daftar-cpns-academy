@@ -31,6 +31,10 @@ import { Route as SimulasiRouteImport } from './routes/simulasi'
 import { Route as SimulasiCatCpnsRouteImport } from './routes/simulasi-cat-cpns'
 import { Route as SitusRouteImport } from './routes/situs'
 import { Route as SoalTiuRouteImport } from './routes/soal-tiu'
+import { Route as SoalTiuAnalogiGambarRouteImport } from './routes/soal-tiu-analogi-gambar'
+import { Route as SoalTiuDeretGambarRouteImport } from './routes/soal-tiu-deret-gambar'
+import { Route as SoalTiuFiguralRouteImport } from './routes/soal-tiu-figural'
+import { Route as SoalTiuMatriksGambarRouteImport } from './routes/soal-tiu-matriks-gambar'
 import { Route as SoalTkpRouteImport } from './routes/soal-tkp'
 import { Route as SoalTwkRouteImport } from './routes/soal-twk'
 import { Route as SyaratCpnsRouteImport } from './routes/syarat-cpns'
@@ -148,6 +152,26 @@ const SoalTiuRoute = SoalTiuRouteImport.update({
   path: '/soal-tiu',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SoalTiuAnalogiGambarRoute = SoalTiuAnalogiGambarRouteImport.update({
+  id: '/soal-tiu-analogi-gambar',
+  path: '/soal-tiu-analogi-gambar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SoalTiuDeretGambarRoute = SoalTiuDeretGambarRouteImport.update({
+  id: '/soal-tiu-deret-gambar',
+  path: '/soal-tiu-deret-gambar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SoalTiuFiguralRoute = SoalTiuFiguralRouteImport.update({
+  id: '/soal-tiu-figural',
+  path: '/soal-tiu-figural',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SoalTiuMatriksGambarRoute = SoalTiuMatriksGambarRouteImport.update({
+  id: '/soal-tiu-matriks-gambar',
+  path: '/soal-tiu-matriks-gambar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SoalTkpRoute = SoalTkpRouteImport.update({
   id: '/soal-tkp',
   path: '/soal-tkp',
@@ -202,6 +226,10 @@ export interface FileRoutesByFullPath {
   '/simulasi-cat-cpns': typeof SimulasiCatCpnsRoute
   '/situs': typeof SitusRoute
   '/soal-tiu': typeof SoalTiuRoute
+  '/soal-tiu-analogi-gambar': typeof SoalTiuAnalogiGambarRoute
+  '/soal-tiu-deret-gambar': typeof SoalTiuDeretGambarRoute
+  '/soal-tiu-figural': typeof SoalTiuFiguralRoute
+  '/soal-tiu-matriks-gambar': typeof SoalTiuMatriksGambarRoute
   '/soal-tkp': typeof SoalTkpRoute
   '/soal-twk': typeof SoalTwkRoute
   '/syarat-cpns': typeof SyaratCpnsRoute
@@ -232,6 +260,10 @@ export interface FileRoutesByTo {
   '/simulasi-cat-cpns': typeof SimulasiCatCpnsRoute
   '/situs': typeof SitusRoute
   '/soal-tiu': typeof SoalTiuRoute
+  '/soal-tiu-analogi-gambar': typeof SoalTiuAnalogiGambarRoute
+  '/soal-tiu-deret-gambar': typeof SoalTiuDeretGambarRoute
+  '/soal-tiu-figural': typeof SoalTiuFiguralRoute
+  '/soal-tiu-matriks-gambar': typeof SoalTiuMatriksGambarRoute
   '/soal-tkp': typeof SoalTkpRoute
   '/soal-twk': typeof SoalTwkRoute
   '/syarat-cpns': typeof SyaratCpnsRoute
@@ -263,6 +295,10 @@ export interface FileRoutesById {
   '/simulasi-cat-cpns': typeof SimulasiCatCpnsRoute
   '/situs': typeof SitusRoute
   '/soal-tiu': typeof SoalTiuRoute
+  '/soal-tiu-analogi-gambar': typeof SoalTiuAnalogiGambarRoute
+  '/soal-tiu-deret-gambar': typeof SoalTiuDeretGambarRoute
+  '/soal-tiu-figural': typeof SoalTiuFiguralRoute
+  '/soal-tiu-matriks-gambar': typeof SoalTiuMatriksGambarRoute
   '/soal-tkp': typeof SoalTkpRoute
   '/soal-twk': typeof SoalTwkRoute
   '/syarat-cpns': typeof SyaratCpnsRoute
@@ -295,6 +331,10 @@ export interface FileRouteTypes {
     | '/simulasi-cat-cpns'
     | '/situs'
     | '/soal-tiu'
+    | '/soal-tiu-analogi-gambar'
+    | '/soal-tiu-deret-gambar'
+    | '/soal-tiu-figural'
+    | '/soal-tiu-matriks-gambar'
     | '/soal-tkp'
     | '/soal-twk'
     | '/syarat-cpns'
@@ -325,6 +365,10 @@ export interface FileRouteTypes {
     | '/simulasi-cat-cpns'
     | '/situs'
     | '/soal-tiu'
+    | '/soal-tiu-analogi-gambar'
+    | '/soal-tiu-deret-gambar'
+    | '/soal-tiu-figural'
+    | '/soal-tiu-matriks-gambar'
     | '/soal-tkp'
     | '/soal-twk'
     | '/syarat-cpns'
@@ -355,6 +399,10 @@ export interface FileRouteTypes {
     | '/simulasi-cat-cpns'
     | '/situs'
     | '/soal-tiu'
+    | '/soal-tiu-analogi-gambar'
+    | '/soal-tiu-deret-gambar'
+    | '/soal-tiu-figural'
+    | '/soal-tiu-matriks-gambar'
     | '/soal-tkp'
     | '/soal-twk'
     | '/syarat-cpns'
@@ -386,6 +434,10 @@ export interface RootRouteChildren {
   SimulasiCatCpnsRoute: typeof SimulasiCatCpnsRoute
   SitusRoute: typeof SitusRoute
   SoalTiuRoute: typeof SoalTiuRoute
+  SoalTiuAnalogiGambarRoute: typeof SoalTiuAnalogiGambarRoute
+  SoalTiuDeretGambarRoute: typeof SoalTiuDeretGambarRoute
+  SoalTiuFiguralRoute: typeof SoalTiuFiguralRoute
+  SoalTiuMatriksGambarRoute: typeof SoalTiuMatriksGambarRoute
   SoalTkpRoute: typeof SoalTkpRoute
   SoalTwkRoute: typeof SoalTwkRoute
   SyaratCpnsRoute: typeof SyaratCpnsRoute
@@ -550,6 +602,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SoalTiuRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/soal-tiu-analogi-gambar': {
+      id: '/soal-tiu-analogi-gambar'
+      path: '/soal-tiu-analogi-gambar'
+      fullPath: '/soal-tiu-analogi-gambar'
+      preLoaderRoute: typeof SoalTiuAnalogiGambarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/soal-tiu-deret-gambar': {
+      id: '/soal-tiu-deret-gambar'
+      path: '/soal-tiu-deret-gambar'
+      fullPath: '/soal-tiu-deret-gambar'
+      preLoaderRoute: typeof SoalTiuDeretGambarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/soal-tiu-figural': {
+      id: '/soal-tiu-figural'
+      path: '/soal-tiu-figural'
+      fullPath: '/soal-tiu-figural'
+      preLoaderRoute: typeof SoalTiuFiguralRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/soal-tiu-matriks-gambar': {
+      id: '/soal-tiu-matriks-gambar'
+      path: '/soal-tiu-matriks-gambar'
+      fullPath: '/soal-tiu-matriks-gambar'
+      preLoaderRoute: typeof SoalTiuMatriksGambarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/soal-tkp': {
       id: '/soal-tkp'
       path: '/soal-tkp'
@@ -618,6 +698,10 @@ const rootRouteChildren: RootRouteChildren = {
   SimulasiCatCpnsRoute: SimulasiCatCpnsRoute,
   SitusRoute: SitusRoute,
   SoalTiuRoute: SoalTiuRoute,
+  SoalTiuAnalogiGambarRoute: SoalTiuAnalogiGambarRoute,
+  SoalTiuDeretGambarRoute: SoalTiuDeretGambarRoute,
+  SoalTiuFiguralRoute: SoalTiuFiguralRoute,
+  SoalTiuMatriksGambarRoute: SoalTiuMatriksGambarRoute,
   SoalTkpRoute: SoalTkpRoute,
   SoalTwkRoute: SoalTwkRoute,
   SyaratCpnsRoute: SyaratCpnsRoute,

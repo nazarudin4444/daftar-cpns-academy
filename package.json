@@ -9,6 +9,7 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "sync:formasi": "node scripts/sync-formasi.mjs",
+    "audit:seo": "node scripts/audit-seo.mjs",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run",
